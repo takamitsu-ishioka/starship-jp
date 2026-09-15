@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" class="translated-ltr">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>基本設計書</title>
+<style type="text/css">
+body {
+    background: black;
+    color: orange;
+}
+a {
+    color: cyan;
+    text-decoration: none;
+}
+@media print {
+    body {
+        background: white;
+        color: black;
+    }
+    a {
+        color: blue;
+    }
+}
+
+.right {
+    text-align: right;
+}
+    
+.money {
+    white-space: nowrap;
+    text-align: right;
+    vertical-align: bottom;
+}
+
+p {
+    font-size: 1rem;
+}
+.terminology {
+    text-decoration: underline;
+    font-weight: bold;
+}
+table th {
+    white-space: nowrap;
+}
+table th,
+table td {
+    padding: 0 0.5rem 0 0.5rem;
+    text-align: left;
+    vertical-align: top;
+    font-size: 120%;
+}
+table.jobs {
+    border: solid 1px gray;
+    border-collapse: collapse;
+}
+table.jobs th,
+table.jobs td {
+    border: solid 1px gray;
+}
+h2 {
+    margin-top: 3rem;
+}
+
+.pagebreak {
+    page-break-before: always;
+}
+</style>
+<body>
+
+<h1>基本設計書</h1>
+<h4 class="right">2023-08-29 石岡隆光</h4>
+
+<div style="white-space: pre-wrap;">
+・前提
+    ・データベースの詳細な設計はまだ無い（あっても実装を進めると設計変更は必ず頻繁に発生する）
+
+・何を作るのか（☆付きが今回の開発対象）
+    ・駐車場シェアクラウドのオーナー用管理画面
+      以下のオブジェクトの参照（施設とロットに関しては作成、更新、削除も）
+        ・☆施設（名前、場所、契約ロット番号、契約プラン、手数料率、施設提供者）
+        ・☆パーキングロット（施設名、ロット番号、画像、図面、利用可能時間、予約可能時間、価格、周辺の施設、現在のステータス（予約可能、予約済み、支払い済み））
+        ・☆状況（どのロットをいつからいつまでどのユーザーが予約したか。予約ステータス（予約可能、予約済み、支払い済み）。駐車ステータス（未入庫、入庫済み、出庫済み））
+        ・☆売上、収益、入金（保有する施設別、ロット別の売り上げ、収益、入金の詳細なログ。全施設・全ロットの月別の合計）
+        ・ユーザー管理、プロモーション（メール配信、PUSH通知、クーポン配信）
+        ・☆コメント、評価（星の数）
+        ・利用後ケア
+
+・どう作るのか
+    ・ウェブアプリ。
+    ・レスポンシブ。とりあえずスマホメイン。スマホで使いやすいのが命。
+    ・見た目のかっこよさや PC の画面の広さを有効活用するのは後回し。
+    ・Joli テンプレートを使う。このテンプレート集には管理画面作成に使われるあらゆる部品が揃っている。
+        ・今回作成する部分で使う部品は「メインメニュー」「アイテムの一覧」「アイテムの内容」だけなので、Joli の既成の部品だけで済む。
+        ・画面遷移は極力避ける（一覧表のアイテムをタップするとダイアログが出てきてそこに詳細な情報が記載されている。アイテムの新規作成や内容更新もダイアログで行う）
+        ・このドキュメントの末尾の画像参照。
+    ・メインメニュー
+        ・施設
+        ・状況
+        ・売り上げ
+        ・評価
+
+・アプリの全体的構造
+    ・GUI は javascript + jquery + bootstrap + Joli（HTML テンプレートのセット）で実装。フレームワークは使わない。
+        ・Joli の画面サンプルはこのドキュメントの末尾の画像を参照。
+    ・GUI はユーザー（この場合、駐車ロットのオーナー）の画面操作に応じた「コマンド」（例えば「パーキングロット新規登録」）を内部 API に $.ajax() で送信。送信するデータの形式は x-www-form-urlencoded（普通のウェブフォームと同じ形式）。
+    ・内部 API は生の PHP で実装（フレームワークは使わない）。コマンドに対応する関数（例えば CreateParkingLot()）を呼び出す。
+    ・内部 API 関数（例えば CreateParkingLot()）は生の SQL クエリーで DB テーブルを操作し、結果を JSON 形式で返す。
+        ・DB は Multi-AZ の RDS を直接使う。「サーバーレス」などの抽象化技術は使わない（高価な上に細かい調整がしにくいから）。
+    ・返された JSON 形式のデータを $.ajax() のコールバック関数が受け取り、画面に反映する。
+    ・以上の構造を持つ EC2 (Amazon Linux 2) インスタンスを、とりあえず 2 台作成し、ELB にぶら下げる。
+    ・以上の構造を持つウェブアプリを「開発」「商用β」「商用」の 3 セット作成する（EC2, ELB は共用）。
+        ・たいていのウェブアプリでは開発環境と商用環境の構造が大きく違っているので、「商用環境でしか再現しないエラー」が発生すると詰むが、この構造ならば開発環境と商用環境が全く同じなので、その種のエラーは発生しない。
+        ・次の機能を持つ bash スクリプトを作成する。
+            ・「開発」と「商用β」、「商用β」と「商用」のスクリプトや .htaccess などのファイルの差分を表示する。
+            ・同じく、どのファイルが更新されているかを表示する。
+            ・同じく、更新されているファイルをコピーする。
+
+    ※この 10 年ほどの間に私が作ったウェブアプリは全部この構造です。つまり、実現可能性もパフォーマンスも検証済み。
+      実際、例えば https://www.tcpdetective.com/ の GUI のスクリプトと API のスクリプトと DNS 設定と Apache 設定をまるごとコピーしてドメイン名だけ書き換えれば、骨組みは完成です。あとは DB の中身、内部 API の関数、GUI の HTML とスクリプトを書き換えれば出来上がり。
+
+    ※この構造は「コンテナ」や「サーバーレス」などの余計な抽象化フレームワークを使わないので安上がりだし細かい調整が自由自在にできます。
+      また、時間がたつと必ず発生する、「あれこれのフレームワークやライブラリや言語のバージョンが合わない」問題も少なくて済みます。
+      結果としてテスト、デバッグ、機能拡張が、非常にやりやすくなります。
+
+・将来の機能拡張のご提案
+    ・オーナーのログイン、ユーザー登録機能を追加
+        ・https://www.tcpdetective.com/ にはユーザー登録、アドレス有効性確認、ログイン、ログアウトの機能が既に実装済みなので、この機能を削除する方がむしろ手間がかかります。
+        ・その機能をそのまま使えば、クッキーによる「疑似セッション」（サーバー側での「状態管理」）が不要になります。
+        ・https://www.tcpdetective.com/ のログイン（ユーザー登録）ダイアログは Google Chrome によるパスワード生成・管理の仕組みに対応しており、ユーザーはパスワードを自分で作成する必要も憶える必要もありません。次回からはアカウント名とパスワードを Google Chrome が自動的に入力してくれます。
+    ・ウェブアプリの評価はQA担当者が行うものではなく、すべてのユーザーが行うものです。
+      ユーザーがアプリを使っていてイラッとしたら、その瞬間に「どこがどうイラッとしたのか」をレポートする機能が無ければならない。
+      ところが、そんな機能を持っているアプリはほとんど無い。
+      運営側の勝手なタイミングで「評価してください」と星を並べたダイアログが出てきたときには、イラッとしたことだけ憶えていて、どこがどうダメなのかは忘れている。
+      そこがまたイラッとする。
+      すべての画面からサポートケース作成を実行するインタフェースは必須です。
+      https://www.tcpdetective.com/ には「サポートセンター」機能が実装済みです。
+    ・観光のインバウンド需要が盛り上がれば、アプリの英語版が必要になります。
+      しかし、i18n などの規格はあまりに使いにくい。
+      https://www.tcpdetective.com/ には「あるページの英語版 HTML を作成するだけで、そのページが表示できる」仕組みが実装済みです。
+      画像参照。
+
+・画像
+    ・Joli テンプレート
+      https://www.tcpdetective.com/ のシステム管理者用管理画面
+      <img src="/documents/tcpdetective_1.png" style="width: 80%;"/>
+      <img src="/documents/tcpdetective_2.png" style="width: 80%;"/>
+      <img src="/documents/tcpdetective_3.png" style="width: 80%;"/>
+
+    ・Bootstrap ダイアログ
+      https://www.tcpdetective.com/ のシステム管理者用サポートケースへの回答の作成
+      任意の種類のファイルを任意個添付できるようにしてあります。
+      <img src="/documents/tcpdetective_dialog.png" style="width: 80%;"/>
+
+    ・多言語化
+      https://www.tcpdetective.com/ のユーザーガイドの日本語版
+      <img src="/documents/tcpdetective_user_guide_ja.png" style="width: 80%;"/>
+
+      同じく言語切替用ダイアログ
+      <img src="/documents/tcpdetective_preference_dialog.png" style="width: 80%;"/>
+
+      同じくユーザーガイドの英語版
+      <img src="/documents/tcpdetective_user_guide_en.png" style="width: 80%;"/>
+
+</div>
+
+</body>
+</html>

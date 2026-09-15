@@ -1,0 +1,900 @@
+.bg_text_danger {
+    color: white;
+    background-color: #E04B4A;
+    font-weight: bold;
+}
+.page-content-wrap {
+    background: #eee;
+}
+.xn-profile .profile-mini {
+    padding: 0 0 0 0 !important;
+/*
+    height: 50px !important;
+    border-bottom: solid 1px white !important;
+*/
+}
+.xn-profile .profile-mini .fa-user {
+    display: inline-block;
+    height: 50px;
+    font-size: 24px;
+    padding-top: 14px;
+/*
+    border: solid 1px white;
+*/
+}
+.profile-clock {
+    text-align: center;
+    color: white;
+}
+.x-navigation .fa_literal {
+    font-family: FontAwesome;
+    font-size: 70%;
+    padding-right: 8px;
+}
+.x-navigation.x-navigation-horizontal .xn-trademark {
+    float: left;
+    display: inline-block;
+    height: 64px;
+}
+.x-navigation.x-navigation-horizontal .xn-trademark span {
+    display: inline-block;
+    padding-top: 8px;
+    font-size: 20px;
+    color: white;
+}
+.dialog {
+    display: none;
+    position: absolute;
+    -moz-box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+    -webkit-box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+    box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+}
+.dialog textarea {
+    resize: vertical;
+}
+.dialog_container {
+    display: none;
+    position: absolute;
+    z-index: 1000;
+    padding: 0 0 0 0;
+}
+.dialog_container > .panel {
+    margin-bottom: 0;
+    border-left: solid 1px #ccc;
+    box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.3);
+}
+.visible_dialog {
+    display: block;
+}
+.panel_transparent {
+    border: none;
+    background: transparent;
+    -moz-box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+}
+button.btn {
+    margin-left: 4px;
+}
+button.btn.btn-primary {
+    /*background: #1b1e24;*/
+    opacity: 0.8;
+}
+button.btn.btn-primary:hover {
+    opacity: 1.0;
+}
+.form-control-container {
+    width: 100%;
+    padding: 0 0 0 0;
+    font-size: 12px;
+}
+.form-control-container input#user_editor_password,
+.form-control-container input#user_user_editor_password {
+    display: inline-block;
+    width: calc(100% - 84px);
+    height: 30px;
+    line-height: 18px;
+    margin: 0 0 0 0;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    -webkit-appearance: none;
+    border: 1px solid #D5D5D5;
+    background: #F9F9F9;
+    padding-left: 12px;
+    padding-right: 12px;
+    border-radius: 4px;
+}
+.form-control-container input#user_editor_password:focus,
+.form-control-container input#user_user_editor_password:focus {
+    border-color: #C5C5C5;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border-color: #C1C1C1;
+    background: #FFF;
+}
+.form-control-container button#user_editor_generate_password,
+.form-control-container button#user_user_editor_generate_password {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    top: -2px;
+    left: 2px;
+    height: 30px;
+    margin: 0 0 0 0;
+}
+#user_editor #copy_password,
+.user_editor #copy_password,
+#user_user_editor #user_copy_password {
+    display: none;
+    font-weight: bold;
+    color: red;
+}
+#user_editor #copy_password.visible,
+.user_editor #copy_password.visible,
+#user_user_editor #user_copy_password.visible {
+    display: inline;
+}
+.login-container .login-box .login_logo {
+    /*background: url("../images/logo.png") top center no-repeat;*/
+    width: 100%;
+    height: 90px;
+    float: left;
+    /*margin-bottom: 10px;*/
+    text-align: center;
+}
+.login-container .login-box .login_logo img {
+    border-radius: 8px;
+}
+#sms_batch_wrap #create_pb {
+    padding: 0 4px 0 4px;
+}
+#resource_pbs_wrap #edit_pb.btn,
+#resource_pbs_wrap #create_pb.btn {
+    margin-left: 1px;   /* 不可解 */
+    margin-right: 0;
+}
+.table th label {
+    /*border: solid 1px red;*/
+    position: relative;
+    top: 6px;
+    font-weight: bold;
+}
+.table th label input[type=checkbox]:not(.checkbox) {
+    position: relative;
+    top: 4px;
+    width: 16px;
+    height: 16px;
+}
+.table thead th {
+    padding-top: 0 !important;
+}
+.table thead tr th.title.sorting:before,
+.table thead tr th.title.sorting_desc:before,
+.table thead tr th.title.sorting_asc:before {
+    position: relative;
+    top: 10px;
+}
+.table tbody td {
+    padding-bottom: 2px !important;
+}
+.table tbody td label {
+    display: inline-block;
+    position: relative;
+    top: -6px;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+.table tbody td input[type=checkbox]:not(.checkbox) {
+    position: relative;
+    top: 4px;
+    width: 16px;
+    height: 16px;
+}
+
+/* テーブルセル内のアイコンボタン */
+table thead tr th.login,
+table tbody tr td.login,
+table tbody tr td div.login,
+table thead tr th.edit,
+table tbody tr td.edit,
+table tbody tr td div.edit,
+table thead tr th.delete,
+table tbody tr td.delete,
+table tbody tr td div.delete {
+    text-align: center;
+}
+table tbody tr td.numeric,
+table tbody tr td div.numeric {
+    text-align: right;
+}
+table tbody tr td.login>.fa,
+table tbody tr td div.login>.fa,
+table tbody tr td.edit>.fa,
+table tbody tr td div.edit>.fa,
+table tbody tr td.delete>.fa,
+table tbody tr td div.delete>.fa {
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+table tbody tr td.login:hover>.fa,
+table tbody tr td:hover div.login>.fa,
+table tbody tr td.edit:hover>.fa,
+table tbody tr td:hover div.edit>.fa,
+table tbody tr td.delete:hover>.fa,
+table tbody tr td:hover div.delete>.fa {
+    cursor: pointer;
+    opacity: 1.0;
+}
+/* END テーブルセル内のアイコンボタン */
+
+/* BEGIN USER TABLE */
+#user_table.table th label {
+    position: relative;
+    top: 4px;
+    font-weight: bold;
+}
+#user_table.table th label input[type=checkbox] {
+    position: relative;
+    top: 4px;
+    width: 16px;
+    height: 16px;
+}
+#user_table.table thead th {
+    padding-top: 0 !important;
+}
+#user_table.table thead tr th.account.sorting:before,
+#user_table.table thead tr th.account.sorting_desc:before,
+#user_table.table thead tr th.account.sorting_asc:before {
+    position: relative;
+    top: 10px;
+}
+#user_table.table tbody td {
+    padding-bottom: 2px !important;
+}
+#user_table.table tbody td label {
+    display: inline-block;
+    position: relative;
+    top: -6px;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+#user_table.table tbody td input[type=checkbox] {
+    position: relative;
+    top: 4px;
+    width: 16px;
+    height: 16px;
+}
+/* END USER TABLE */
+
+div.tagsinput #tag_names_addTag {
+    margin-top: 3px;
+    font-size: 14px;
+}
+div.tagsinput #tag_names_addTag input {
+    width: 108px;
+}
+div.tagsinput span.tag {
+    margin-top: 3px;
+    margin-left: 4px;
+}
+div.tagsinput span.tag span {
+    font-size: 14px;
+}
+.pencil {
+    display: inline-block;
+    float: right;
+    padding: 0px 2px 2px 2px;
+    opacity: 0;
+    font-size: 16px;
+}
+td:hover .pencil {
+    opacity: 1;
+}
+.pencil:hover {
+    cursor: pointer;
+}
+#pb_editor .btn {
+    margin-left: 1px;   /* 不可解 */
+    margin-right: 0;
+}
+#dropzone
+{
+    height: 200px;
+    width: 100%;
+    border: solid #ccc 2px;
+    border-style: dashed;
+    background: #eee;
+    /*background: url(../images/upload.png) 85px 40px no-repeat;*/
+    background: url(../images/upload.png) center center no-repeat;
+    background-size: 150px;
+    background-color: #f7f7f7;
+    transition: all 512ms ease;
+}
+#dropzone:hover
+{
+    background: url(../images/upload_hovered.png) center center no-repeat;
+    background-size: 150px;
+    background-color: #f7f7f7;
+    cursor: pointer;
+    transition: all 512ms ease;
+}
+#dropzone.dragging
+{
+    background: url(../images/upload_hovered.png) center center no-repeat;
+    background-size: 150px;
+    background-color: #f7f7f7;
+    transition: all 512ms ease;
+}
+#dropzone .comment {
+    position: relative;
+    top: 160px;
+    text-align: center;
+}
+input[type=radio] {
+    position: relative;
+    top: 2px;
+}
+.pbe_cell_value {
+    display: inline-block;
+}
+#pbe_table .phone_cell .pbe_cell_value {
+    position: relative;
+    top: 4px;
+}
+#sms_batch_wrap #tag_names_addTag {
+    display: none;
+}
+#sms_batch_wrap .tag a {
+    display: none;
+}
+#sms_batch_wrap .tag {
+    background-color: #888;
+    transition: background-color 1s;
+}
+#sms_batch_wrap .tag:hover {
+    background-color: #000;
+    transition: background-color 1s;
+    cursor: pointer;
+}
+#sms_batch_wrap .tag.selected {
+    background-color: #000;
+    transition: background-color 1s;
+}
+#sms_batch_wrap .tag span {
+    position: relative;
+    left: -4px;         /* x があった分だけ右へズレるので戻す */
+}
+.character_counter {
+    display: inline-block;
+    position: relative;
+    top: 8px;
+    padding: 0 4px 0 4px;
+    font-weight: bold;
+    color: white;
+}
+#resource_log_wrap #job_table tr {
+    cursor: default;
+}
+#resource_log_wrap #job_table input[type=checkbox],
+#resource_log_wrap #job_table span {
+    position: relative;
+    left: 4px;
+}
+#resource_log_wrap #job_table tbody input[type=checkbox] {
+    position: relative;
+    top: 0;
+}
+#resource_log_wrap #job_table thead tr th.created_at.sorting:before,
+#resource_log_wrap #job_table thead tr th.created_at.sorting_desc:before,
+#resource_log_wrap #job_table thead tr th.created_at.sorting_asc:before {
+    position: relative;
+    top: 10px;
+}
+#message_dialog tr {
+    cursor: default;
+}
+#message_dialog thead tr th {
+    padding-top: 4px !important;
+    padding-bottom: 4px !important;
+}
+#message_dialog tbody tr td {
+    padding-top: 4px !important;
+    padding-bottom: 4px !important;
+}
+#message_dialog tbody tr td div.numeric {
+    text-align: right;
+    padding-right: 8px !important;
+}
+p {
+    font-size: 14px;
+}
+.guest_button,
+.user_button,
+.guest_block,
+.user_block {
+    display: none;
+}
+.code {
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
+}
+.code pre {
+    width: 256px;
+    x-overflow: scroll;
+}
+.buy_tickets .ticket {
+    float: left;
+    width: 100px;
+    height: 112px;
+    margin-left: 16px;
+    margin-right: 16px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    //border: solid 1px black;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.5s;
+}
+.buy_tickets .ticket:hover {
+    opacity: 1.0;
+}
+.buy_tickets .ticket .type {
+    display: inline-block;
+    float: left;
+    width: 68px;
+    /*border: solid 1px green;*/
+    position: relative;
+    left: 0px;
+    top: -56px;
+    left: 12px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    color: orange;
+    transform: rotate(-45deg);
+}
+.buy_tickets .ticket .price {
+    display: inline-block;
+    width: 100%;
+    float: left;
+    position: relative;
+    left: 52px;
+    top: -38px;
+    /*text-align: right;*/
+    font-weight: bold;
+}
+.disabler {
+    background: white;
+    opacity: 0.8;
+    z-index: 1100;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+}
+.loading {
+    z-index: 1101;
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    left: calc(50% - 32px);
+    /*top: calc(50% - 32px); こうするとドキュメントの 50% という意味になってしまう*/
+}
+.intl-tel-input {
+    width: 100%;
+}
+.notice_inline {
+    position: absolute;
+    height: auto;
+    color: white;
+    font-weight: bold;
+    padding: 8px 16px 8px 8px;
+    border-radius: 4px;
+    cursor: default;
+    z-index: 1000;
+}
+.notice_inline:before {
+    content: "";
+    display: inline-block;
+    position: relative;
+    top: -20px;
+    left: -4px;
+    width: 0px;
+    height: 0px;
+    border-top: none;
+    border-left: solid 4px transparent;
+    border-right: solid 4px transparent;
+    background: transparent;
+}
+.notice_inline:after {
+    content: "";
+    clear: both;
+}
+.notice_inline.danger {
+    background: #b64645;    /* noty の error タイプと同じ色 */
+}
+.notice_inline.danger:before {
+    border-bottom: solid 8px #b64645;
+    color: #b64645;
+}
+.notice_inline.info {
+    background: #3FBAE4;    /* noty の information タイプと同じ色 */
+}
+.notice_inline.info:before {
+    border-bottom: solid 8px #3FBAE4;
+    color: #3FBAE4;
+}
+/***********************************************************************
+サポートセンター
+ ***********************************************************************/
+#support_center_wrap #cases a {
+    background: #e0e0e0;
+    transition: all 0.2s;
+}
+#support_center_wrap #cases a:hover {
+    background: #f9f9f9;
+}
+#support_center_wrap #cases a.selected {
+    background: #f9f9f9;
+}
+#support_center_wrap #cases a span.fa {
+    display: inline-block;
+    width: 24px;
+    padding: 8px 0 0 0;
+    font-size: 24px;
+    text-align: center;
+    font-weight: bold;
+}
+.support_case_dialog {
+    width: 60%;
+}
+/*.support_case_dialog .attached_file_table tbody tr td.type {*/
+.attached_file_table tbody tr td.type {
+    width: 200px;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+/*.support_case_dialog .attached_file_table tbody tr td.type div.type {*/
+.attached_file_table tbody tr td.type div.type {
+    width: 216px;
+    padding-left: 0;
+    padding-right: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+/*.support_case_dialog .attached_file_table tr .size {*/
+.attached_file_table tr .size {
+    text-align: right;
+}
+/*.support_case_dialog .attached_file_table tr .button_delete {*/
+.attached_file_table tr .button_delete {
+    width: 2rem;
+    text-align: center;
+}
+/*.support_case_dialog .attached_file_table tr td.button_delete {*/
+.attached_file_table tr td.button_delete {
+    opacity: 0.6;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+/*.support_case_dialog .attached_file_table tr td.button_delete:hover {*/
+.attached_file_table tr td.button_delete:hover {
+    opacity: 1.0;
+}
+#cases.list-group {
+    width: 280px;
+}
+#cases.list-group>.list-group-item {
+    display: inline-block;
+    width: 258px;
+}
+#cases.list-group>.list-group-item>.list-group-status {
+    width: 20px;
+    /*border: solid 1px blue;*/
+    padding-left: 0;
+    padding-right: 0;
+    margin: 0 0 0 0 !important;
+}
+#cases.list-group>.list-group-item>.icon {
+    width: 32px;
+    /*border: solid 1px red;*/
+    padding-left: 0;
+    padding-right: 0;
+    margin: 0 0 0 0 !important;
+}
+#cases.list-group>.list-group-item>.body {
+    width: 184px;
+    /*border: solid 1px green;*/
+    padding-left: 0;
+    padding-right: 0;
+    margin: 0 0 0 0 !important;
+}
+#cases.list-group>.list-group-item>.body>.created_at {
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 20px;
+}
+#cases.list-group>.list-group-item>.body>.case_title {
+    margin: 0 0 0 0 !important;
+    padding-left: 0;
+    padding-right: 0;
+    width: 184px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+#messages .item {
+    position: relative;
+    width: auto !important;
+    float: left;
+}
+#messages .item .text .heading {
+    display: block;
+    float: right;
+    width: auto !important;
+    margin-left: 16px;
+}
+#messages .item .text .heading .reply_button {
+    display: inline-block;
+    float: right;
+    padding: 2px 4px 2px 4px;
+    border: solid 1px #ccc;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+#messages .item .text .heading .reply_button:hover {
+    opacity: 1.0;
+    cursor: pointer;
+}
+#messages .item .text .heading .date {
+    float: right;
+    margin-right: 8px;
+    color: #888;
+}
+#messages .item .text .content {
+    display: block;
+    float: left;
+}
+#messages .item .text .content .body {
+    white-space: pre-wrap;
+}
+.question_editor_dialog {
+    width: 96%;
+}
+.user_name {
+    display: inline-block;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+/***********************************************************************
+ドロップゾーン
+ ***********************************************************************/
+.drop_zone {
+    width: 100%;
+    border: dashed 1px #888;
+    padding: 10px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #666;
+    background: #f9f9f9;
+    text-align: center;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+}
+.drop_zone:hover,
+.drop_zone.dragging {
+    opacity: 1.0;
+    background: white;
+}
+.file_info {
+    text-align: center;
+    opacity: 0.0;
+    height: 0px;
+}
+/***********************************************************************
+あっさりした表
+ ***********************************************************************/
+table.simple_table {
+    margin: 0 0 0 0;
+    width: 100%;
+    border-collapse: collapse;
+}
+table.simple_table thead th,
+table.simple_table tbody td {
+    padding: 4px 8px 4px 8px;
+}
+table.simple_table thead th {
+    background: #666666;
+    border-top: none;
+    border-bottom: none;
+    border-left: solid 1px #ccc;
+    border-right: solid 1px #ccc;
+    color: white;
+}
+table.simple_table thead>tr>th:nth-child(1) {
+    border-left: solid 1px #666666;
+}
+table.simple_table thead>tr>th:last-child {
+    border-right: solid 1px #666666;
+}
+table.simple_table tbody td {
+/*
+    border-top: none;                   こういうことをすると、一番上の tr>td だけ上の border が無くなり、inline_input の top の計算が狂う
+    border-bottom: solid 1px #ccc;
+    border-left: solid 1px #ccc;
+    border-right: solid 1px #ccc;
+*/
+    border: solid 1px #ccc;
+    background: #f9f9f9;
+}
+/***********************************************************************
+チェックボックス
+ ***********************************************************************/
+.checkbox_box { /* クリックに反応してチェックボックスの checked を切り替える箱 */
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.checkbox_box:hover {
+    background: #f5f5f5;
+}
+input[type=checkbox].checkbox {
+    width: 0;
+    z-index: 2;
+    position: relative;
+    top: 1px;
+}
+input[type=checkbox].checkbox:before {
+    content: "";                        /* ボックス挿入 */
+    padding: 0;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-style: solid;
+    border-width: 1px;
+    /*border-color: transparent;    これ結構ウザい*/
+    border-color: #888;
+    border-radius: 4px;
+    position: relative;
+    top: 0px;
+}
+input[type=checkbox].checkbox.hover:before,
+input[type=checkbox].checkbox:hover:before,
+input[type=checkbox].checkbox:checked:before {
+    border-color: #888;
+}
+.checkbox_wrap {
+    display: inline-block;
+}
+.checkbox_wrap+.checkbox_wrap {
+    margin-left: 24px;
+}
+/***********************************************************************
+チェックボックスの直後のラベル
+ ***********************************************************************/
+input[type=checkbox].checkbox+.checkbox_label {
+    position: relative;
+    left: 8px;
+    top: 2px;
+    cursor: default;
+}
+input[type=checkbox].checkbox+.checkbox_label:before {
+    position: relative;
+    top: 1px;
+    left: -6px;
+    content: "\f00c";                   /* チェックマーク挿入 */
+    font-family: FontAwesome;
+    font-weight: 900;
+    color: transparent;
+    z-index: 1;
+}
+input[type=checkbox].checkbox.hover+.checkbox_label:before,
+input[type=checkbox].checkbox:hover+.checkbox_label:before {
+    /*color: #faa;*/
+}
+input[type=checkbox].checkbox:checked+.checkbox_label:before {
+    color: red;
+}
+/***********************************************************************
+顧客テーブル
+ ***********************************************************************/
+table.customer_table tbody tr td {
+    padding-top: 1px;
+    padding-bottom: 4px !important;
+}
+/***********************************************************************
+顧客テーブル（システム管理者用）
+ ***********************************************************************/
+table.customer_table thead tr th {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: hidden;
+}
+table.customer_table tbody tr td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: hidden;
+}
+table.customer_table tbody tr[main_service_user_flag="0"] td {
+    color: white;
+    background: #666;
+}
+table.customer_table thead tr th.customer_name,
+table.customer_table tbody tr td.customer_name {
+    width: 256px;
+}
+table.customer_table tbody tr td div.customer_name {
+    float: left;
+    width: 236px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+table.customer_table tbody tr td div.customer_name+.case_count {
+    float: right;
+    border-radius: 2px;
+    color: white;
+    padding-left: 2px;
+    padding-right: 2px;
+}
+/***********************************************************************
+サポートセンター（システム管理者用）
+ ***********************************************************************/
+.support_cases_dialog {
+    width: 96%;
+}
+.support_cases_dialog table thead th.unread,
+.support_cases_dialog table tbody td .unread {
+    text-align: right;
+}
+.support_cases_dialog table tbody td .fa.menu_icon {
+    display: inline-block;
+    width: 1.2rem;
+    text-align: center;
+}
+.support_case_messages_dialog {
+    width: auto !important;
+}
+.support_case_messages_dialog .support_case_messages_container.messages .item {
+    position: relative;
+    width: auto !important;
+    float: left;
+}
+.support_case_messages_dialog .support_case_messages_container .item .text .heading {
+    display: block;
+    float: right;
+    width: auto !important;
+}
+.support_case_messages_dialog .support_case_messages_container .item .text .heading .reply_button {
+    display: inline-block;
+    float: right;
+    padding: 2px 4px 2px 4px;
+    border: solid 1px #ccc;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+.support_case_messages_dialog .support_case_messages_container .item .text .heading .reply_button:hover {
+    opacity: 1.0;
+    cursor: pointer;
+}
+.support_case_messages_dialog .support_case_messages_container .item .text .heading .date {
+    float: right;
+    margin-right: 8px;
+    color: #888;
+}
+.support_case_messages_dialog .support_case_messages_container .item .text .content {
+    display: block;
+    float: left;
+}
+.support_case_messages_dialog .support_case_messages_container .item .text .content .body {
+    white-space: pre-wrap;
+}
+.answer_editor_dialog {
+    width: 60%;
+}

@@ -1,0 +1,28 @@
+########################################################################
+# ファイル名によるアクセス制限
+
+<Files ~ "^_">
+    Deny from all
+    # www1.bad-design.jp
+    Allow from 172.31.15.108
+    # Starship office
+    Allow from 121.1.142.207
+    # www.starship.jp (private)
+    Allow from 172.31.14.151
+    # www.starship.jp (public)
+    Allow from 13.114.212.175
+</Files>
+
+########################################################################
+# URI の書き換え
+
+RewriteEngine On
+
+# Googlebot は Single Page Application のコンテンツを取得できない？
+RewriteCond %{HTTP_USER_AGENT} Googlebot [NC]
+RewriteRule ^(.*)$ http://localhost:8080/$1 [P,L]
+
+# 存在しないページを要求されたら / へリダイレクトする（クエリー文字列はそのまま保持される）。
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ / [L,R=301]

@@ -1,0 +1,1662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- META SECTION -->
+<title>Starship.jp - It's philosophy that matters</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="Takamitsu Ishioka - Master of System Architecture and Innovative Software Development">
+<meta name="robots" content="index,follow">
+<!-- END META SECTION -->
+<!-- META SECTION FOR TWITTER CARD -->
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:site" content="@kisaburo_y" />
+<meta name="twitter:domain" content="www.starship.jp" />
+<meta name="twitter:title" content="Takamitsu Ishioka - Master of System Architecture and Innovative Software Development" />
+<meta name="twitter:description" content="Software Engineer: No matter the OS, language, or framework" />
+<meta name="twitter:image" content="https://www.starship.jp/img/portfolio.png" />
+<!-- END META SECTION FOR TWITTER CARD -->
+<link rel="icon" type="image/png" href="/starship.png"/>
+<!-- CSS INCLUDE START -->
+<link rel="stylesheet" type="text/css" id="theme" href="/css/theme-default.css"/>
+<link rel="stylesheet" type="text/css" href="/css/common.css?v=2023-07-18T10:22:52ZJST"/>
+<!-- CSS INCLUDE END -->
+
+<!-- START PLUGINS -->
+<script src="https://kit.fontawesome.com/7910b039f8.js" crossorigin="anonymous"></script>
+<script src="/js/plugins/jquery/jquery.min.js"></script>
+<script src="/js/plugins/jquery/jquery-ui.min.js"></script>
+<script src="/js/plugins/bootstrap/bootstrap.min.js"></script>
+<script src="/js/website.js?v=2023-06-26T15:28:46ZJST"></script>
+<script src="/js/common.js?v=2023-07-10T17:01:44ZJST"></script>
+<script src="/js/paypal.js?v=2023-06-26T15:28:46ZJST"></script>
+<!-- END PLUGINS -->
+
+<script>
+$(document).ready(function(e) {
+
+    // href を解析し、クエリーがあれば読み取る。
+    try {
+        Location.setCurrent(location);
+    } catch (e) {
+        var e_str = JSON.stringify(e, null, '    ');
+        alert("can't parse location.href: e: " + e_str);
+        return;
+    }
+
+    // サイトの初期化。
+    InitializeSite();
+
+    // ユーザーの初期化（最初は常に guest）。
+    User.initialize();
+});
+</script>
+
+<meta name="google-site-verification" content="9m1n7venPJLCq941SKwRQkTmVGBpyhyItouV1K2to_A" />
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-11242594429"></script>
+<script>
+$(document).ready(function(e) {
+
+    // href を解析し、クエリーがあれば読み取る。
+    try {
+        Location.setCurrent(location);
+    } catch (e) {
+        var e_str = JSON.stringify(e, null, '    ');
+        alert("can't parse location.href: e: " + e_str);
+        return;
+    }
+
+    // サイトの初期化。
+    InitializeSite();
+
+    // ユーザーの初期化（最初は常に guest）。
+    User.initialize();
+});
+</script>
+
+</head>
+
+<body>
+<div style="position: fixed; top: 82px; right: 0; z-index: 1000;">
+<iframe id="twitter-widget-2" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen="true" class="twitter-follow-button twitter-follow-button-rendered" style="position: static; visibility: visible; width: 84px; height: 28px;" title="Twitter Follow Button" src="https://platform.twitter.com/widgets/follow_button.2b2d73daf636805223fb11d48f3e94f7.en.html#dnt=false&amp;id=twitter-widget-2&amp;lang=en&amp;screen_name=kisaburo_y&amp;show_count=false&amp;show_screen_name=false&amp;size=l&amp;time=1690102762555" data-screen-name="kisaburo_y"></iframe>
+<script async="" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+</div>
+<div style="position: fixed; top: 52px; right: 0; z-index: 1000;">
+<iframe id="twitter-widget-3" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen="true" class="twitter-share-button twitter-share-button-rendered twitter-tweet-button" style="position: static; visibility: visible; width: 81px; height: 28px;" title="Twitter Tweet Button" src="https://platform.twitter.com/widgets/tweet_button.2b2d73daf636805223fb11d48f3e94f7.en.html#dnt=false&amp;id=twitter-widget-3&amp;lang=en&amp;original_referer=http%3A%2F%2Fwww-dev1.starship.jp%2F%3Flog%3Dno%26lang%3Den%26prerender%3D1%26login%3Dishioka%40starship.jp&amp;size=l&amp;text=Starship.jp%20-%20Master%20of%20System%20Architecture%20and%20Innovative%20Software%20Development%0A%0AThe%20OS%2C%20language%2C%20or%20framework%20doesn%27t%20matter.%0AIt%27s%20philosophy%20that%20matters.%0A&amp;time=1690102762556&amp;type=share&amp;url=http%3A%2F%2Fwww-dev1.starship.jp%2F" data-url="http://www-dev1.starship.jp/"></iframe>
+<script async="" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+</div>
+
+
+    <!-- START head.html -->
+<script>
+
+$(document).ready(function(e) {
+    HeadInitializePage();
+});
+
+</script>
+<!-- END head.html -->
+
+
+        <!-- START PAGE CONTAINER -->
+        <div class="page-container">
+
+            <!-- START PAGE SIDEBAR -->
+            <div class="page-sidebar page-sidebar-fixed scroll mCustomScrollbar _mCS_1 mCS-autoHide mCS_no_scrollbar" style="height: 914px;"><div id="mCSB_1" class="mCustomScrollBox mCS-light mCSB_vertical mCSB_inside" tabindex="0"><div id="mCSB_1_container" class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y" style="position:relative; top:0; left:0;" dir="ltr">
+                <!-- START X-NAVIGATION -->
+                <ul class="x-navigation">
+                    <li class="xn-logo">
+                        <a href="javascript:LoadBody(&quot;/index.html&quot;);">Starship.jp</a>
+                        <a href="#" class="x-navigation-control"></a>
+                    </li>
+                    <li class="xn-profile">
+                        <a href="#" class="profile-mini">
+                            <!-- <img src="/assets/images/users/no-image.jpg" alt="Guest"/> -->
+                            <img src="/img/me.png" alt="Ishioka">
+                        </a>
+                        <div class="profile">
+                            <div class="profile-image">
+                                <!-- ゲスト用アイコン -->
+<!--
+<svg class="svg_icon_user">
+    <rect x="5" y="5" width="90" height="90" style="fill: gray;"></rect>
+    <text fill="white">
+        <tspan x="15" y="48">GUE</tspan>
+        <tspan x="27" y="77">ST</tspan>
+    </text>
+</svg>
+-->
+<img class="img_icon_user" src="/img/me.png" width="90" height="90" alt="me" title="Change Language" target_of_notice="notice_5422423301">
+
+                            </div>
+                            <div class="profile-data">
+                                <div class="profile-data-name">Welcome, Ishioka!</div>
+                                <div class="profile-data-title">ishioka@starship.jp</div>
+                            </div>
+                            <div class="profile-controls">
+                                <a href="javascript:LoadBody(&quot;/guest_user_guide.html&quot;);" class="profile-control-left"><span class="fa fa-info" aria-hidden="true"></span></a>
+                                <a href="javascript:LoadBody(&quot;/contact.html&quot;);" class="profile-control-right"><span class="fa fa-comment-dots" aria-hidden="true"></span></a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="xn-title">Navigation</li>
+                    <!-- ユーザーガイド -->
+                    <li class="active">
+                        <a href="javascript:LoadBody(&quot;/guest_user_guide.html&quot;);"><span class="fa fa-circle-info" aria-hidden="true"></span><span class="xn-text">Portfolio</span></a>
+                    </li>
+                    <!-- コンタクト -->
+                    <li>
+                        <a href="javascript:LoadBody(&quot;/contact.html&quot;);"><span class="fa fa-envelope" aria-hidden="true"></span><span class="xn-text"> Contact Me</span></a>
+                    </li>
+                </ul>
+                <!-- END X-NAVIGATION -->
+            </div><div id="mCSB_1_scrollbar_vertical" class="mCSB_scrollTools mCSB_1_scrollbar mCS-light mCSB_scrollTools_vertical" style="display: none;"><div class="mCSB_draggerContainer"><div id="mCSB_1_dragger_vertical" class="mCSB_dragger" style="position: absolute; min-height: 30px; height: 0px; top: 0px;" oncontextmenu="return false;"><div class="mCSB_dragger_bar" style="line-height: 30px;"></div></div><div class="mCSB_draggerRail"></div></div></div></div></div>
+            <!-- END PAGE SIDEBAR -->
+
+            <!-- PAGE CONTENT -->
+            <div class="page-content">
+
+                <!-- START X-NAVIGATION VERTICAL -->
+                <ul class="x-navigation x-navigation-horizontal x-navigation-panel">
+                    <!-- TOGGLE NAVIGATION -->
+                    <li class="xn-icon-button">
+                        <a href="#" class="x-navigation-minimize"><span class="fa fa-dedent" aria-hidden="true"></span></a>
+                    </li>
+                    <!-- END TOGGLE NAVIGATION -->
+                    <!-- SEARCH -->
+                    <li class="xn-search hidden">
+                        <form role="form">
+                            <input type="text" name="search" placeholder="Search..." class="">
+                        </form>
+                    </li>
+                    <!-- END SEARCH -->
+                    <!-- SIGN OUT -->
+                    <li class="xn-icon-button pull-right">
+                        <a href="#" class="mb-control" data-box="#mb-signout"><span class="fa fa-sign-out" title="Logout" aria-hidden="true"></span><span class="sr-only">Logout</span></a>
+                    </li>
+                    <!-- END SIGN OUT -->
+                                        <!-- QRCODE hidden 付けました -->
+                    <li class="xn-icon-button pull-right hidden">
+                        <a class="qrcode" href="#"><span class="fa fa-qrcode" title="QR Code" aria-hidden="true"></span><span class="sr-only">QR Code</span></a>
+                        <!-- <div class="informer informer-warning">3</div> -->
+                        <div class="panel panel-primary animated zoomIn xn-drop-left xn-panel-dragging ui-draggable" style="width: 240px;">
+                            <div class="panel-heading ui-draggable-handle">
+                                <h3 class="panel-title"><span class="fa fa-qrcode" aria-hidden="true"></span>&nbsp;QR code of this page's URI</h3>
+                            </div>
+                            <div class="panel-body list-group scroll mCustomScrollbar _mCS_2 mCS-autoHide mCS_no_scrollbar" style="padding: 10px 0 10px 0; text-align: center;"><div id="mCSB_2" class="mCustomScrollBox mCS-light mCSB_vertical mCSB_inside" tabindex="0"><div id="mCSB_2_container" class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y" style="position:relative; top:0; left:0;" dir="ltr">
+                                <img class="qrcode" src="/img/loading.png" style="width: 150px; height: 150px;">
+                            </div><div id="mCSB_2_scrollbar_vertical" class="mCSB_scrollTools mCSB_2_scrollbar mCS-light mCSB_scrollTools_vertical" style="display: none;"><div class="mCSB_draggerContainer"><div id="mCSB_2_dragger_vertical" class="mCSB_dragger" style="position: absolute; min-height: 30px; top: 0px;" oncontextmenu="return false;"><div class="mCSB_dragger_bar" style="line-height: 30px;"></div></div><div class="mCSB_draggerRail"></div></div></div></div></div>
+                            <div class="panel-footer text-center" style="padding: 0.7rem;">
+                                <button class="btn btn-success btn-rounded btn-sm download">Download</button>
+                            </div>
+                        </div>
+                    </li>
+                    <!-- END QRCODE -->
+
+
+                    <!-- PRE_RENDER -->
+                    <li class="xn-icon-button pull-right">
+                        <a class="pre_render"><span class="fa fa-camera" title="Pre-render this page" aria-hidden="true"></span><span class="sr-only">Pre-render this page</span></a>
+                    </li>
+                    <!-- END PRE_RENDER -->
+
+                </ul>
+                <!-- END X-NAVIGATION VERTICAL -->
+
+                <!-- START BREADCRUMB -->
+                <ul class="breadcrumb">
+                    <li><a href="#">Home</a></li>
+                    <li class="active">Portfolio</li>
+                </ul>
+                <!-- END BREADCRUMB -->
+
+                <!-- PAGE TITLE -->
+                <div class="page-title">
+                    <h2 class="preference" title="Change the language"><span class="fa fa-circle-info" aria-hidden="true"></span> My Portfolio</h2>
+                </div>
+                <!-- END PAGE TITLE -->
+
+                <!-- PAGE CONTENT WRAPPER -->
+                <div class="page-content-wrap">
+                    <!-- 英語のユーザーガイド。/guest_user_guide.html から include される。 -->
+                    <!-- EN USER GUIDE -->
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <!-- PANEL -->
+                            <div class="panel panel-primary _panel-toggled">
+
+                                <div class="panel-heading ui-draggable-handle">
+                                    <h3 class="panel-title panel-collapse" title="Click to view/hide content"><span class="fa fa-user" aria-hidden="true"></span> Introduction</h3>
+                                    <ul class="panel-controls" style="margin-top: 2px;">
+                                        <li><a href="#" class="panel-collapse"><span class="fa fa-angle-up" aria-hidden="true"></span></a></li>
+                                    </ul>
+                                </div>
+
+                                <div class="panel-body">
+I am a computer software professional with a unique blend of philosophical thinking and comprehensive development skills.
+                                </div>
+
+                            </div>
+                            <!-- END PANEL -->
+                        </div>
+                        <!-- END COLUMN -->
+                    </div>
+                    <!-- END ROW -->
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <!-- PANEL -->
+                            <div class="panel panel-primary _panel-toggled">
+
+                                <div class="panel-heading ui-draggable-handle">
+                                    <h3 class="panel-title panel-collapse" title="Click to view/hide content"><span class="fa fa-id-card" aria-hidden="true"></span> Profile</h3>
+                                    <ul class="panel-controls" style="margin-top: 2px;">
+                                        <li><a href="#" class="panel-collapse"><span class="fa fa-angle-up" aria-hidden="true"></span></a></li>
+                                    </ul>
+                                </div>
+
+                                <div class="panel-body">
+
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Name</label>
+                                        <div class="col-md-6 col-xs-12">
+                                            Takamitsu Ishioka
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Email</label>
+                                        <div class="col-md-6 col-xs-12">
+                                            ishioka@starship.jp
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">SMS</label>
+                                        <div class="col-md-6 col-xs-12">
+                                            +817042298709
+                                        </div>
+                                    </div>
+                                    <!--
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Phone</label>
+                                        <div class="col-md-6 col-xs-12">
+                                            Please inquire via the <a href="contact.html"><span class="fa fa-envelope"></span> Contact Me</a> page.
+                                        </div>
+                                    </div>
+                                    -->
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Address</label>
+                                        <div class="col-md-6 col-xs-12">
+                                            Kawaguchi City, Saitama Prefecture, Japan<br>
+                                            For further details, please inquire via <a href="javascript:LoadBody(&quot;/contact.html&quot;);"><span class="fa fa-envelope" aria-hidden="true"></span> Contact Me</a>.
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Final Education</label>
+                                        <div class="col-md-6 col-xs-12">
+Graduated from Tokyo University of Foreign Studies,
+<ul>
+    <li>Department of English and American Studies
+</li></ul>
+Areas of Special Interest:
+<ul>
+    <li>International Relations
+    </li><li>Linguistics
+    </li><li>Translation
+    </li><li>Law
+    </li><li>Economics
+</li></ul>
+<style>
+ul {
+    list-style: none;
+}
+</style>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Project History</label>
+                                        <div class="col-md-6 col-xs-12">
+                                            The main highlights follow.
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <!-- END PANEL -->
+                        </div>
+                        <!-- END COLUMN -->
+                    </div>
+                    <!-- END ROW -->
+<div class="pagebreak"></div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <!-- PANEL -->
+                            <div class="panel panel-primary _panel-toggled">
+
+                                <div class="panel-heading ui-draggable-handle">
+                                    <h3 class="panel-title panel-collapse" title="Click to view/hide content"><span class="fa fa-timeline" aria-hidden="true"></span> Project History 1 - Machine Translation</h3>
+                                    <ul class="panel-controls" style="margin-top: 2px;">
+                                        <li><a href="#" class="panel-collapse"><span class="fa fa-angle-up" aria-hidden="true"></span></a></li>
+                                    </ul>
+                                </div>
+
+                                <div class="panel-body">
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Overview</label>
+                                        <div class="col-md-6 col-xs-12">
+Machine Translation Project of MITI (Ministry of International Trade and Industry), commonly known as the Mu Project. Located at Nagao Laboratory, Kyoto University.
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Period</label>
+                                        <div class="col-md-6 col-xs-12">
+                                            1983-1985
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Hardware</label>
+                                        <div class="col-md-6 col-xs-12">
+Fujitsu mainframe (Kyoto University Computer Center)<br>
+Symbolics lisp machine
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">OS</label>
+                                        <div class="col-md-6 col-xs-12">
+Unknown (at the time, the OS was integrated with the hardware)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Languages, Libraries, and Frameworks</label>
+                                        <div class="col-md-6 col-xs-12">
+UTI-LISP (LISP dialect developed by the University of Tokyo)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Details</label>
+                                        <div class="col-md-6 col-xs-12">
+<ol>
+    <li>Development of English-Japanese and Japanese-English translation algorithms
+</li></ol>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Role</label>
+                                        <div class="col-md-6 col-xs-12">
+<ol>
+    <li>Designing, implementing, and testing an English parser
+    </li><li>Designing, implementing, and testing of the English-Japanese Transfer Module
+</li></ol>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <!-- END PANEL -->
+                        </div>
+                        <!-- END COLUMN -->
+                    </div>
+                    <!-- END ROW -->
+<div class="pagebreak"></div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <!-- PANEL -->
+                            <div class="panel panel-primary _panel-toggled">
+
+                                <div class="panel-heading ui-draggable-handle">
+                                    <h3 class="panel-title panel-collapse" title="Click to view/hide content"><span class="fa fa-timeline" aria-hidden="true"></span> Project History 2 - Machine Translation</h3>
+                                    <ul class="panel-controls" style="margin-top: 2px;">
+                                        <li><a href="#" class="panel-collapse"><span class="fa fa-angle-up" aria-hidden="true"></span></a></li>
+                                    </ul>
+                                </div>
+
+                                <div class="panel-body">
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Overview</label>
+                                        <div class="col-md-6 col-xs-12">
+                                            NEC's Machine Translation Project (Central Research Laboratories for the first two years, then Mita's Business Division)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Period</label>
+                                        <div class="col-md-6 col-xs-12">
+                                            1985-2000
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Hardware</label>
+                                        <div class="col-md-6 col-xs-12">
+VAX, NEC's UNIX workstation, NEC PC-9801 series (personal computer)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">OS</label>
+                                        <div class="col-md-6 col-xs-12">
+BSD UNIX (VAX)<br>
+System V UNIX (workstation)<br>
+Windows NT, Windows 95 (personal computer)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Languages, Libraries, and Frameworks</label>
+                                        <div class="col-md-6 col-xs-12">
+C (cc), Visual C/C++, Visual Basic, Franz Lisp, UTI-LISP, csh, awk, perl
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Details</label>
+                                        <div class="col-md-6 col-xs-12">
+<ol>
+    <li>Development of English-Japanese and Japanese-English translation algorithms
+    </li><li>Development of English-Japanese and Japanese-English translation dictionaries
+    </li><li>Development tool development
+        <ol>
+            <li>Source code version control
+            </li><li>Automated batch translation testing
+            </li><li>Semi-automated quality assessment
+            </li><li>Issue tracking
+            </li><li>Communication tools
+        </li></ol>
+        I created and operated a set of tools that support what is now called the DevOps or CI/CD system.
+</li></ol>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Role</label>
+                                        <div class="col-md-6 col-xs-12">
+<ol>
+    <li>Basic design, implementation, and testing of English parser.
+    </li><li>Leader of the dictionary development team.
+    </li><li>Planning, basic design, implementation, and testing of development tools.
+</li></ol>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <!-- END PANEL -->
+                        </div>
+                        <!-- END COLUMN -->
+                    </div>
+                    <!-- END ROW -->
+<div class="pagebreak"></div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <!-- PANEL -->
+                            <div class="panel panel-primary _panel-toggled">
+
+                                <div class="panel-heading ui-draggable-handle">
+                                    <h3 class="panel-title panel-collapse" title="Click to view/hide content"><span class="fa fa-timeline" aria-hidden="true"></span> Project History 3 - Japanese Morphological and Syntactic Analysis</h3>
+                                    <ul class="panel-controls" style="margin-top: 2px;">
+                                        <li><a href="#" class="panel-collapse"><span class="fa fa-angle-up" aria-hidden="true"></span></a></li>
+                                    </ul>
+                                </div>
+
+                                <div class="panel-body">
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Overview</label>
+                                        <div class="col-md-6 col-xs-12">
+                                            Development of a Japanese syntactic analysis system (initially at Tokyo Soft Corporation, later the system department spun off)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Period</label>
+                                        <div class="col-md-6 col-xs-12">
+                                            2000-2009
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Hardware</label>
+                                        <div class="col-md-6 col-xs-12">
+IBM PC-AT compatible machine (personal computer)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">OS</label>
+                                        <div class="col-md-6 col-xs-12">
+FreeBSD, Linux (Fedora), Windows, Windows Server
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Middleware</label>
+                                        <div class="col-md-6 col-xs-12">
+httpd (Apache)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Languages, Libraries, and Frameworks</label>
+                                        <div class="col-md-6 col-xs-12">
+Visual C/C++, C++ (gcc), Visual C#, Java, HTML
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Details</label>
+                                        <div class="col-md-6 col-xs-12">
+<ol>
+<li>Development of a Japanese syntactic analysis library<br>
+    Developed a generic Tree Transducer library that finds small tree structures within larger ones and converts found tree structures into any other tree structures (Visual C++).<br>
+    This kind of Tree Transducer can become extremely slow if made improperly, but I introduced the concepts of "focus" and "traversal" to avoid this and successfully accelerated it.<br>
+    This was a combination of the best features of the Tree Transducer GRADE, which I used at Kyoto University, and NEC's system.<br>
+    I developed a rule-based syntactic analysis system using this.
+</li><li>Development of a web demo system that displays parsing results as a graphical tree structure (Java Applet)<br>
+    Developed a website that takes any Japanese text input by visitors, performs morphological and syntactic analysis, and displays the results as a graphical tree structure.<br>
+    It caught the attention of Nomura Research Institute, and was adopted for their CRM product TRUE TELLER (which has now been replaced by something else).<br>
+    This later became the main source of revenue for the system department, which eventually spun off into a separate company.
+</li><li>Development of a Japanese morphological analysis library (Visual C++)<br>
+    Developed a library that represents multiple interpretations of morphological analysis as a directed graph, where multiple morpheme nodes branch at interpretation forks. The library evaluates and compares the costs of multiple paths in the directed graph and selects the one with the lowest cost.<br>
+    I also developed a development tool that graphically displays this directed graph and allows users to adjust the cost by clicking the "correct" arc (edge) at the branch points.
+</li><li>Porting these systems to Linux<br>
+    Web service implementation with Apache + CGI + REST API
+</li><li>Development of an OCR result correction support tool<br>
+    A tool to support receipt entry, the main business of Tokyo Soft (Visual C++)<br>
+    The image data of the original handwritten documents and the coordinate-attached text data recognized by OCR are displayed side by side on the left and right of the screen.<br>
+    The text data area is an editor, and moving the cursor in this area highlights the corresponding location in the image.<br>
+    In other words, it clearly displays "where in the image this character was recognized from".<br>
+    This reportedly contributed greatly to productivity improvement and I was complimented by the person in charge of input work, saying "This is the first useful tool I've seen made by the system department".
+</li></ol>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Role</label>
+                                        <div class="col-md-6 col-xs-12">
+<ol>
+    <li>Planning, designing, implementing, testing, and operating the product.
+    </li><li>Designing, implementing, testing, and operating the web demo site.
+    </li><li>Designing and building the network infrastructure.
+    </li><li>Installing and configuring Linux (on physical machines at that time, not virtual machines).
+    </li><li>Educating, leading, and supervising the engineering team.
+</li></ol>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <!-- END PANEL -->
+                        </div>
+                        <!-- END COLUMN -->
+                    </div>
+                    <!-- END ROW -->
+<div class="pagebreak"></div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <!-- PANEL -->
+                            <div class="panel panel-primary _panel-toggled">
+
+                                <div class="panel-heading ui-draggable-handle">
+                                    <h3 class="panel-title panel-collapse" title="Click to view/hide content"><span class="fa fa-timeline" aria-hidden="true"></span> Project History 4 - Bulk SMS System</h3>
+                                    <ul class="panel-controls" style="margin-top: 2px;">
+                                        <li><a href="#" class="panel-collapse"><span class="fa fa-angle-up" aria-hidden="true"></span></a></li>
+                                    </ul>
+                                </div>
+
+                                <div class="panel-body">
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Overview</label>
+                                        <div class="col-md-6 col-xs-12">
+                    Development of mass SMS sending system for EXLINK CO., LTD.
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Period</label>
+                                        <div class="col-md-6 col-xs-12">
+                    2010-2022
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Hardware</label>
+                                        <div class="col-md-6 col-xs-12">
+                    AWS
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">OS</label>
+                                        <div class="col-md-6 col-xs-12">
+                    Linux (Amazon Linux, Amazon Linux 2)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Middleware</label>
+                                        <div class="col-md-6 col-xs-12">
+                    Apache, RDS (PostgreSQL), Aurora (PostgreSQL)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Languages, Libraries, and Frameworks</label>
+                                        <div class="col-md-6 col-xs-12">
+                    C++ (gcc), HTML, css, javascript, jquery, bootstrap, PHP, bash, Java
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Details</label>
+                                        <div class="col-md-6 col-xs-12">
+                    From 2010 to 2014, I worked on several projects at the company, such as a video distribution service, a speech synthesis Web API server, and a campaign site that combines videos and audio, but I will omit the details as these were small contracted development projects.<br><br>
+                    EXLINK originally had a mass SMS sending system, but it had the following problems:<br>
+                    <ol>
+                    <li>The transmission module depended entirely on jsmpp (Java's SMPP library), making it impossible to speed up. Java ORM Hibernate locked all DB tables, preventing multiprocessing, which:
+                        <ol>
+                            <li>Acted as a bottleneck, limiting the throughput, and
+                            </li><li>Also served as a single point of failure, often causing system failures.
+                        </li></ol>
+                    </li><li>An old-fashioned management GUI that dynamically generated HTML on the server side (php).
+                    </li><li>The public API was implemented in PHP, requiring a DB search for each request, resulting in low throughput.
+                    </li><li>No system or tools for continuous development and operation, leading to frequent failures as everything depended on the programmer's manual work and attention.
+                    </li><li>Periodic significant drops in throughput due to Java's inevitable GC.
+                    </li><li>As the number of DB transmission log records increased, throughput decreased.
+                    </li></ol>
+                    <br>
+                    To solve these problems, I started from conceptual design and re-implemented everything:<br>
+                    <ol>
+                    <li>Speeded up the transmission module:
+                        <ol>
+                            <li>Implemented the raw SMPP communication protocol in C++, multiprocessed by one SMPP account per process, and parallelized the send/receive process of submit_sm and deliver_sm.
+                            </li><li>Moved processed DB records to a different table.
+                        </li></ol>
+                        As a result, the throughput became 10 times that of the old system, and periodic drops in throughput were eliminated. With this architecture, the throughput can be increased almost proportionally by increasing the number of SMPP contracts, processes, and if necessary, the number of virtual machines. The only bottleneck is the DB, for which I have a plan to eliminate without having to increase the specs of the database server.
+                    </li><li>Completely renewed the Admin Console with the ajax model:
+                        <ol>
+                            <li>The server script (php) does not dynamically generate HTML, but only returns static HTML and javascript. However, #include is used for screen element components.
+                            </li><li>The server processes API commands, which mostly consist of communication with the DBMS, processing results, and converting to JSON. This was implemented in raw php (no framework).
+                            </li><li>The client was implemented with raw javascript, jquery, bootstrap, and a modern template.
+                            </li><li>I created components such as draggable dialogs, tables that allow changing the order of columns with D&amp;D, spike-tipped noty-like tooltips that are displayed at problem points, and modern drop-down lists where the behavior of existing components was not satisfactory.
+                        </li></ol>
+                    </li><li>Implemented the public API in C++, caching DB data in memory to improve throughput by several tens of times.
+                    </li><li>Created three systems for the Admin Console and transmission module: "Development", "Commercial Beta", and "Commercial".
+                    </li><li>Created bash scripts to display differences between them, confirm update files in dry run mode, and actually update them. Now this system is called CI/CD (Continuous Integration and Continuous Delivery), but at that time, it was not a well-recognized concept, at least in Japan.
+                    </li><li>Redesigned all DB table definitions to achieve the above, and created scripts to convert from the old system to the new system DB in bulk. In other words, the only data I brought from the old system were customer data.
+                    </li></ol>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Role</label>
+                                        <div class="col-md-6 col-xs-12">
+                    I did all the work for the DB, transmission module, and public API, from design to implementation and testing by myself.<br>
+                    For the GUI and internal API, I created the overall framework and developed generic.html and the php function Generic($args) for other programmers to use.<br>
+                    I asked others to help debug and enhance the content of the framework and add new features.
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- END PANEL -->
+                        </div>
+                        <!-- END COLUMN -->
+                    </div>
+                    <!-- END ROW -->
+<div class="pagebreak"></div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <!-- PANEL -->
+                            <div class="panel panel-primary _panel-toggled">
+
+                                <div class="panel-heading ui-draggable-handle">
+                                    <h3 class="panel-title panel-collapse" title="View/Hide Article"><span class="fa fa-timeline" aria-hidden="true"></span> Project History 5 - Linux IDS (Intrusion Detection System)</h3>
+                                    <ul class="panel-controls" style="margin-top: 2px;">
+                                        <li><a href="#" class="panel-collapse"><span class="fa fa-angle-up" aria-hidden="true"></span></a></li>
+                                    </ul>
+                                </div>
+
+                                <div class="panel-body">
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Overview</label>
+                                        <div class="col-md-6 col-xs-12">
+                                            Developed TCPDetective (a Linux Intrusion Detection System) individually.
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Period</label>
+                                        <div class="col-md-6 col-xs-12">
+                                            2022 - Present
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Hardware</label>
+                                        <div class="col-md-6 col-xs-12">
+                                            AWS
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">OS</label>
+                                        <div class="col-md-6 col-xs-12">
+                                            Amazon Linux 2
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Middleware</label>
+                                        <div class="col-md-6 col-xs-12">
+                                            Apache, RDS (PostgreSQL)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Languages, Libraries, and Frameworks</label>
+                                        <div class="col-md-6 col-xs-12">
+                                            SystemTap, C++ (gcc), PHP, bash
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Details</label>
+                                        <div class="col-md-6 col-xs-12">
+                                            <ol>
+                                                <li>Developed TCPDetective, a program that captures IP packets in Linux kernel mode, and simultaneously identifies and records the process and its command line related to the packet.<br>
+                                                    More details here → <a href="https://www.tcpdetective.com/">https://www.tcpdetective.com/</a>
+                                                </li>
+                                            </ol>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Role</label>
+                                        <div class="col-md-6 col-xs-12">
+                                            Everything from planning, designing, implementing, testing, to operating
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <!-- END PANEL -->
+
+                        </div>
+                        <!-- END COLUMN -->
+                    </div>
+                    <!-- END ROW -->
+<div class="pagebreak"></div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <!-- PANEL -->
+                            <div class="panel panel-primary _panel-toggled">
+
+                                <div class="panel-heading ui-draggable-handle">
+                                    <h3 class="panel-title panel-collapse" title="View/Hide article"><span class="fa fa-timeline" aria-hidden="true"></span> Project History 6 - E-commerce site for subscription model</h3>
+                                    <ul class="panel-controls" style="margin-top: 2px;">
+                                        <li><a href="#" class="panel-collapse"><span class="fa fa-angle-up" aria-hidden="true"></span></a></li>
+                                    </ul>
+                                </div>
+
+                                <div class="panel-body">
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Overview</label>
+                                        <div class="col-md-6 col-xs-12">
+Developed an e-commerce site to sell the previously mentioned IDS (Intrusion Detection System) TCPDetective through PayPal's "subscription" model.
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Period</label>
+                                        <div class="col-md-6 col-xs-12">
+2022 to present
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Hardware</label>
+                                        <div class="col-md-6 col-xs-12">
+AWS
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">OS</label>
+                                        <div class="col-md-6 col-xs-12">
+Amazon Linux 2
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Middleware</label>
+                                        <div class="col-md-6 col-xs-12">
+Apache, RDS (PostgreSQL)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Languages, Libraries, and Frameworks</label>
+                                        <div class="col-md-6 col-xs-12">
+C++ (gcc), HTML, CSS, JavaScript, jQuery, Bootstrap, PHP, Bash, Node.js
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Details</label>
+                                        <div class="col-md-6 col-xs-12">
+
+<strong>Structure and functions of this website</strong>
+<ol>
+    <li>Client (Admin Console)
+        <ol>
+            <li>For system administrators
+                <ol>
+                    <li>Login, logout, preferences (e.g., language) management</li>
+                    <li>Dashboard (PayPal API operations)
+                        <ol>
+                            <li>Product management (list, create, edit)
+                            </li><li>Plan management (list, create, edit)
+                        </li></ol>
+                    </li>
+                    <li class="li_closable"><span>Support Center functionality</span>
+                        <ol class="hidden">
+                            <li>User list
+                            </li><li>Support_case list per user
+                            </li><li>Support_case status operations
+                            </li><li>Message list per support_case
+                            </li><li>Create messages (response to messages from users)
+                            </li><li>Operation of attached files per message
+                            </li><li>Notification via LINE when a user creates a support case
+                        </li></ol>
+                    </li>                            
+                </ol>
+            </li>
+            <li>For general users
+                <ol>
+                    <li>User registration, login, logout, preferences (e.g., language) management</li>
+                    <li>Dashboard (Subscription management)
+                        <ol>
+                            <li>Subscription list
+                            </li><li class="li_closable"><span>Subscription operations</span> (calls to PayPal API via internal API server)
+                                <ol class="hidden">
+                                    <li>Purchase (PayPal account or credit/debit card)
+                                    </li><li>Suspend (stop billing, TCPDetective daemon automatically stops and cannot be restarted)
+                                    </li><li>Activate (resume billing, TCPDetective can be started, but must be started manually by user)
+                                    </li><li>Cancel (delete subscription)
+                                    </li><li>Download TCPDetective.tgz<br>
+                                        A PHP script of the internal API and a resident tarball build daemon communicate via a Unix domain socket to create a tarball with a unique identifier for the Linux host where TCPDetective is installed. This tarball is made available for download by a PHP script of the internal API.
+                                </li></ol>
+                            </li>
+                        </ol>
+                    </li>
+                    <li>User Guide</li>
+                    <li class="li_closable"><span>Support Center functionality</span>
+                        <ol class="hidden">
+                            <li>Support_case list
+                            </li><li>Create support_case
+                            </li><li>Create messages for support_case
+                            </li><li>Operation of attached files per message
+                            </li><li>Support_case status operations
+                            </li><li>Message list per support_case
+                        </li></ol>
+                    </li>                            
+                </ol>
+            </li>
+            <li>For guest users
+                <ol>
+                    <li>User registration, login, logout, preferences (e.g., language) management</li>
+                    <li>User Guide</li>
+                </ol>
+            </li>
+        </ol>
+
+    </li><li>Server (Internal API)
+        <ol>
+            <li>All functionalities provided by the client (Admin Console), except for "Preference Management", are implemented by calling the internal API.
+            </li><li>Access to certain paths on the Admin Console site is redirected to the internal API site by ProxyPassReverse defined within Apache's Admin Console VirtualHost.
+            </li><li>The actual internal API is a REST API layer written in raw PHP.
+                <ol>
+                    <li>It accepts requests in x-www-form-urlencoded format, often issues DB queries, and returns the results in JSON format.<br>
+                    </li><li>All calls to the PayPal API are also made via the internal API (it's dangerous to write PayPal API information in JavaScript because it can't hide data).<br>
+                    </li><li>Key component classes such as DB, Curl, Mail, LINE, etc. are self-developed.
+                </li></ol>
+            </li>
+        </ol>
+    </li>
+    <li>Server (Public API)
+        <ol>
+            <li>It manages the state of the TCPDetective daemon installed on the user's host.
+            </li><li>The actual public API is a REST API layer written in raw PHP.
+                <ol>
+                    <li>It receives requests from TCPDetective in x-www-form-urlencoded format, writes logs to the DB, and returns the results in JSON format.
+                    </li><li>The operations (auto-stop, disable start, enable start) of the TCPDetective daemon on the user's host described in the general user Admin Console above are implemented through this public API.
+                </li></ol>
+            </li>
+        </ol>
+    </li>
+</ol>
+<br>
+
+<strong>Features of this website</strong>
+<ol>
+    <li>It doesn't use cookies at all. Therefore, naturally, it doesn't use the 'pseudo-session' mechanism, so no special considerations are required for load balancing, and there's no session timeout.
+    </li><li>User authentication is performed every time an API call is made.
+    </li><li>It uses a custom SPA (Single Page Application) framework that doesn't do any page transitions at all.
+        <ol>
+            <li>Thanks to this, 'state transitions' can be performed in client memory.<br>
+                In other words, despite being a web application, it is built like traditional PC or smartphone applications.<br>
+                Therefore, no matter how much the appearance of the page changes, user information and intermediate data being processed can be used on that page.<br>
+                This eliminates the peculiarities of web applications, making programming much easier.
+            </li><li>Because it doesn't do any dynamic HTML generation on the server-side, there's no need for server-side frameworks or scripts. Naturally, there are no 'templates'.<br>
+                The server-side just has static HTML files and JavaScript.
+            </li><li>With regard to the internal structure of the HTML of the pages that make up the site, the client doesn't make any assumptions at all. It can display HTML of any structure.<br>
+                Therefore, you can use 'just HTML that doesn't anticipate server-side scripts', created by a designer, as it is.
+            </li><li>This framework is realized by /index.html, /js/common.js, and /js/website.js. The library used is jQuery.<br>
+                It gets the HTML of the requested page with $.ajax(), and if there's a 'slot' like<br>
+                &lt;!-- __INCLUDE__ /foobar.html --&gt;<br>
+                in the obtained HTML, it recursively gets that HTML and replaces the slot with the string of the obtained HTML.<br>
+                There's no need for special syntax or knowledge of libraries other than jQuery.
+        </li></ol>
+    </li>
+    <li>Sets of the client (Admin Console), internal API, database, public API, TCPDetective build environment, tarball build daemon have been created for 'development', 'commercial beta', and 'commercial' (although the 'commercial beta' and 'commercial' share the same database).<br>
+        There's a bash script to display differences between them, list update files in --dry-run mode, and perform actual updates.
+</li></ol>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <label class="col-md-3 col-xs-12 control-label">Role</label>
+                                        <div class="col-md-6 col-xs-12">
+All of planning, designing, implementing, testing, and operating.
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <!-- END PANEL -->
+                        </div>
+                        <!-- END COLUMN -->
+                    </div>
+                    <!-- END ROW -->
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <!-- PANEL -->
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+During the period of working on the above projects, both my affiliation and contract type have changed many times (temporary staff, regular employee, contract developer, etc.), but I have omitted those details as it might complicate the understanding. All of these contract forms are conveniences for the side delegating the work, and the reality was always 'have Ishioka create something'.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+<div class="pagebreak"></div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+<!-- PANEL -->
+<div class="panel panel-success">
+
+    <div class="panel-heading ui-draggable-handle">
+        <h3 class="panel-title panel-collapse" title="Click to view/hide"><span class="fa fa-lightbulb" aria-hidden="true"></span> Skills and Abilities</h3>
+        <ul class="panel-controls" style="margin-top: 2px;">
+            <li><a href="#" class="panel-collapse"><span class="fa fa-angle-up" aria-hidden="true"></span></a></li>
+        </ul>
+    </div>
+
+    <div class="panel-body">
+        <div class="col-md-12 col-xs-12">
+
+<ol>
+    <li>
+        I have deep insights into <strong>what systems are</strong> and the ability to make deductive reasoning based on that foundation.<br>
+        In other words, instead of doing what can be done by combining the tools at hand, I <strong>first set a goal</strong> and <strong>think about what is needed</strong> to achieve it, and then, if something doesn't exist, <strong>I create it.</strong>
+    </li>
+    <li>
+        Not only do I possess the skills for conceptual design, but also for implementation, which allows me to verify whether a certain idea is feasible not just theoretically, but also through prototyping.
+    </li>
+    <li>
+        I have learned all the necessary technologies as I felt the need, so I am confident that I can master unfamiliar technologies, such as GCP, TypeScript, Python, machine learning, etc., in a short period of time.<br>
+        Example: I'm currently trying to use TensorFlow2 on GCP (and I believe I've already understood it).<br>
+        Example: I started a TypeScript course on Codecademy recently (and I believe I've already understood it).<br>
+        Example: ChatGPT has already become an indispensable everyday tool for me. I wrote this portfolio while consulting with ChatGPT.<br>
+    </li>
+    <li>
+        I can create medium to small scale libraries or frameworks as needed.<br>
+        Additionally, I have a collection of custom libraries that I've built and verified over a long period of time.<br>
+        Example: A C++ memory management class library to prevent memory fragmentation or memory leak. This was used in the bulk SMS system's transmission module and external API, and in TCPDetective.<br>
+        Example: <a href="https://www.tcpdetective.com/">https://www.tcpdetective.com/</a> was built using my custom SPA (Single Page Application) framework.<br>
+        Example: The site you are currently viewing (<a href="https://www.starship.jp/?lang=en">https://www.starship.jp/?lang=en</a>) was also created using the SPA (Single Page Application) framework that I developed.
+    </li>
+    <li>
+        While reading the above, you might imagine me as a 'hard-nosed and difficult character', but I actually believe I'm proficient in both formal and informal communication.<br>
+        My personality is almost fully exposed on my Twitter: <a href="https://twitter.com/kisaburo_y">https://twitter.com/kisaburo_y</a>.
+    </li>
+    <li>
+        I won an award in the '5th Free Software Grand Prize' with my email software for Windows, '電信八号 (Denshin Hachigou)'.<br>
+        https://ja.wikipedia.org/wiki/電信八号<br>
+        https://www.iajapan.org/osp/menu04.html
+    </li>
+</ol>
+
+        </div>
+    </div>
+
+</div>
+<!-- END PANEL -->
+                        </div>
+                    </div>
+<div class="pagebreak"></div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <!-- PANEL -->
+                            <div class="panel panel-danger">
+
+                                <div class="panel-heading ui-draggable-handle">
+                                    <h3 class="panel-title panel-collapse" title="View/Hide article"><span class="fa fa-file-signature" aria-hidden="true"></span> Desired Contract Conditions</h3>
+                                    <ul class="panel-controls" style="margin-top: 2px;">
+                                        <li><a href="#" class="panel-collapse"><span class="fa fa-angle-up" aria-hidden="true"></span></a></li>
+                                    </ul>
+                                </div>
+
+                                <div class="panel-body">
+                                    <div class="col-md-12 col-xs-12">
+<ol>
+    <li>Fully remote work (however, I welcome office visits for team building)
+    </li><li>
+    Preferably, work communications should primarily be conducted in written form.<br>
+    I've long believed that oral communication:<br>
+    (1) leaves no record,<br>
+    (2) is not searchable,<br>
+    (3) interrupts the other person's work,<br>
+    (4) often leads to mutual misunderstanding, and<br>
+    (5) is therefore extremely inefficient.<br>
+    It should not be used except for brainstorming or emergencies.
+    </li><li>Preferably, a discretionary work system (I want to sell results, not time)
+</li></ol>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <style type="text/css">
+                    @media print {
+                        .panel .panel-body label.control-label {
+                            text-align: left;
+                            margin-top: 1rem;
+                            font-size: 120%;
+                            font-style: italic;
+                        }
+                    }
+                    @media not print {
+                        .panel .panel-body label.control-label {
+                            text-align: right;
+                        }
+                    }
+                    li.li_closable>span {
+                        color: blue;
+                        text-decoration: underline;
+                        cursor: pointer;
+                    }
+                    .panel .panel-body h3,
+                    .panel .panel-body h4 {
+                        color: orange;
+                    }
+                    /* 作業用
+                    .panel .panel-body {
+                        background-color: black;
+                        color: orange;
+                    }
+                    */
+                    </style>
+
+                    <script>
+                    $('li.li_closable>span').click((e) => {
+                        let li = $(e.currentTarget).parent();
+                        li.find('>ol').toggleClass('hidden');
+                    });
+                    </script>
+
+                    <!-- END EN USER GUIDE -->
+
+                </div>
+                <!-- END PAGE CONTENT WRAPPER -->
+            </div>
+            <!-- END PAGE CONTENT -->
+        </div>
+        <!-- END PAGE CONTAINER -->
+
+        <!-- START PRELOADS -->
+        <audio id="audio-alert" src="/audio/alert.mp3" preload="auto"></audio>
+        <audio id="audio-fail" src="/audio/fail.mp3" preload="auto"></audio>
+        <!-- END PRELOADS -->
+
+    <!-- START SCRIPTS -->
+        <!-- START PLUGINS -->
+        <script type="text/javascript" src="/js/plugins/jquery/jquery.min.js"></script>
+        <script type="text/javascript" src="/js/plugins/jquery/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="/js/plugins/bootstrap/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/js/plugins/noty/jquery.noty.js"></script>
+        <script type="text/javascript" src="/js/plugins/noty/layouts/topCenter.js"></script>
+        <script type="text/javascript" src="/js/plugins/noty/layouts/topLeft.js"></script>
+        <script type="text/javascript" src="/js/plugins/noty/layouts/topRight.js"></script>
+        <script type="text/javascript" src="/js/plugins/noty/layouts/bottomCenter.js"></script>
+        <script type="text/javascript" src="/js/plugins/noty/themes/default.js"></script>
+<!--         <script src="/js/common.js"></script> -->
+        <!-- END PLUGINS -->
+        <!-- LOADING -->
+<div class="message-box" id="mb-loading">
+    <div class="mb-container">
+        <div class="mb-middle">
+            <div class="mb-title" style="position: relative; left: 1rem;">Loading...</div>
+            <div class="mb-content">
+                <img src="/assets/images/loading.png" style="position: relative; left: 2rem; width: 8rem;">
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+function ShowLoading(message) {
+    var loading = $('#mb-loading');
+    if (0 < loading.length) {
+        if (message == undefined) {
+            message = 'Loading...';
+        }
+        loading.find('.mb-title').html(message);
+        $(_noty_container_id).remove();
+        loading.toggleClass('open');
+    }
+}
+function HideLoading() {
+    var loading = $('#mb-loading');
+    if (0 < loading.length) {
+        loading.removeClass('open');
+    }
+}
+</script>
+<!-- END LOADING -->
+
+        <!-- メッセージボックス・ダイアログ -->
+<style type="text/css">
+.message_box_dialog .message_box_dialog_message {
+    font-size: 1.4rem;
+    line-height: 1.5;
+    padding: 0 1.2rem 0 1.2rem;
+}
+</style>
+<div class="modal fade message_box_dialog" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close command-cancel" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title"><span class="icon"><span class="fa-solid fa-xl fa-user-secret"></span></span>&nbsp;&nbsp;<span class="text">Starship.jp</span></h4>
+            </div>
+            <!-- START MODAL BODY -->
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="message_box_dialog_message" style="padding: 0px; line-height: 1.2; white-space: pre-wrap;">Now you have logged in as ishioka@starship.jp.</div>
+                </div>
+
+            </div>
+            <!-- END MODAL BODY -->
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default command-cancel pull-left hidden" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success copy_to_clipboard hidden" data-toggle="tooltip" data-placement="bottom" title="Copy the message to Clipboard"><span class="fa fa-copy" aria-hidden="true"></span>&nbsp;Copy</button>
+                <button type="button" class="btn btn-primary command-ok" data-dismiss="modal">OK</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+function ShowMessageBox(argv) {
+
+    // 部品へのポインターを取得
+    let dialog = $('.message_box_dialog');
+    let title_icon = dialog.find('.modal-content>.modal-header>.modal-title>.icon');
+    let title_text = dialog.find('.modal-content>.modal-header>.modal-title>.text');
+    let btn_cancel = dialog.find('button.btn.command-cancel');
+    let copy_to_clipboard = dialog.find('button.copy_to_clipboard');
+
+    // 引数解釈
+    const icon_user = '<span class="fa-solid fa-xl fa-user-secret"></span>';
+    const icon_question = '<span class="fa-solid fa-xl fa-circle-question"></span>';
+    const icon_exclamation = '<i class="fa-solid fa-xl fa-triangle-exclamation text-danger bold"></i>';
+    const text_default = 'Starship.jp';
+    const text_error = '<span class="text-danger bold">ERROR</span>';
+    let message;
+    let on_close;
+    if (typeof argv == 'string') {
+        message = argv;
+        title_icon.html(icon_user);
+        btn_cancel.addClass('hidden');
+    } else {
+        message = argv.message;
+        if (typeof argv.on_close == 'function') {
+            on_close = argv.on_close;
+        }
+        if (argv.mode == undefined || argv.mode == 'info') {
+            title_icon.html(icon_user);
+            title_text.html(text_default);
+            btn_cancel.addClass('hidden');
+        } else if (argv.mode == 'confirm') {
+            title_icon.html(icon_question);
+            title_text.html(text_default);
+            btn_cancel.removeClass('hidden');
+        } else if (argv.mode == 'error') {
+            title_icon.html(icon_exclamation);
+            title_text.html(text_error);
+            btn_cancel.addClass('hidden');
+        } else {
+            throw 'ShowMessageBox(): unknown mode "' + argv.mode + '"';
+        }
+    }
+
+    // メッセージ
+    let message_div = dialog.find('.message_box_dialog_message');
+    message_div.html(message);
+    if (argv.isHTML) {
+        message_div.css({
+            'white-space': 'normal',
+        });
+    } else {
+        message_div.css({
+            'white-space': 'pre-wrap',
+        });
+        MessageBoxAdjustGeometry(dialog);
+    }
+
+    // Copy ボタン
+    if (argv.enableCopy) {
+        copy_to_clipboard.removeClass('hidden');
+        copy_to_clipboard.off('click').click((e) => {
+            let current_top_offset_x = Notice.setTopOffsetX(-8);
+            // コピー成功
+            if (Clipboard.copy(message.replace(/<br>/g, ''))) {
+                Notice({
+                    message: 'This message has been copied to Clipboard.<br>\nGo to "Support" and push "Create Case".',
+                    type: 'info',
+                    target: message_div,
+                    top_offset_x: 8,
+                    container: dialog.find('.modal-dialog'),
+                });
+            // コピー失敗
+            } else {
+                Notice({
+                    message: 'Can\'t copy this message.',
+                    type: 'danger',
+                    target: message_div,
+                    top_offset_x: 8,
+                    container: dialog.find('.modal-dialog'),
+                });
+            }
+            Notice.setTopOffsetX(current_top_offset_x);
+            return false;
+        });
+    } else {
+        copy_to_clipboard.addClass('hidden');
+    }
+
+    // 表示
+    dialog.modal({
+        show: true,
+        keyboard: true,
+        backdrop: 'static',
+    });
+
+    // コールバック
+    if (on_close != undefined) {
+        dialog.find('.command-ok, .command-cancel').off('click').click(function(e1) {
+            dialog.on('hidden.bs.modal', function (e2) {
+                if (on_close != undefined) {
+                    on_close($(e1.currentTarget).hasClass('command-cancel'));
+                    on_close = undefined;
+                }
+            })
+        });
+    }
+}
+
+const _message_box_textarea_rows = 16;
+function MessageBoxAdjustGeometry(dialog) {
+    let message_div = dialog.find('.message_box_dialog_message');
+    let text = message_div.html();
+    let line_count = (text.match(/\n/g) || []).length;
+    if (0 < text.length && text.charAt(text.length - 1) != '\n') {
+        line_count++;
+    }
+    if (_message_box_textarea_rows < line_count) {
+        let textarea = $('<textarea rows="' + _message_box_textarea_rows + '" readonly style="width: 100%; border: none; resize: none;">');
+        textarea.html(text);
+        message_div.html(textarea);
+    }
+}
+
+// ENTER を .command-ok と解釈
+$('.message_box_dialog').keyup(function(e) {
+    if (e.which == 13) {
+        $(e.currentTarget).find('.command-ok').trigger('click');
+    }
+});
+
+</script>
+<!-- END メッセージボックス・ダイアログ -->
+
+        <!-- プリファレンス・ダイアログ -->
+<div class="modal fade preferences_dialog" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close command-cancel" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title"><span class="fa fa-lg fa-address-card" aria-hidden="true"></span>&nbsp;&nbsp;Profile</h4>
+            </div>
+            <div class="modal-body">
+
+                <div class="form-group row account">
+                    <label class="col-md-3 col-xs-12 control-label">Account Name</label>
+                    <div class="col-md-9 col-xs-12">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span class="fa fa-at" aria-hidden="true"></span></span>
+                            <input type="text" class="form-control account" readonly="">
+                        </div>
+                        <span class="help-block">Your account name</span>
+                    </div>
+                </div>
+
+                <div class="form-group row hidden">
+                    <label class="col-md-3 col-xs-12 control-label">Password</label>
+                    <div class="col-md-9 col-xs-12">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span class="fa fa-unlock-alt" aria-hidden="true"></span></span>
+                            <input type="password" class="form-control">
+                        </div>
+                        <span class="help-block">Password field sample</span>
+                    </div>
+                </div>
+
+                <div class="form-group row hidden">
+                    <label class="col-md-3 col-xs-12 control-label">Datepicker</label>
+                    <div class="col-md-9 col-xs-12">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span class="fa fa-calendar" aria-hidden="true"></span></span>
+                            <input type="text" class="form-control datepicker" value="2014-11-01">
+                        </div>
+                        <span class="help-block">Click on input field to get datepicker</span>
+                    </div>
+                </div>
+
+                <div class="form-group row hidden">
+                    <label class="col-md-3 col-xs-12 control-label">Textarea</label>
+                    <div class="col-md-9 col-xs-12">
+                        <textarea class="form-control" rows="5"></textarea>
+                        <span class="help-block">Default textarea field</span>
+                    </div>
+                </div>
+
+                <div class="form-group row hidden">
+                    <label class="col-md-3 col-xs-12 control-label">Tags</label>
+                    <div class="col-md-9 col-xs-12">
+                        <input type="text" class="tagsinput" value="First,Second,Third" id="tags1690102762314" style="display: none;"><div id="tags1690102762314_tagsinput" class="tagsinput" style="width: 100%; height: auto;"><span class="tag"><span>First&nbsp;&nbsp;</span><a href="#" title="Removing tag"></a></span><span class="tag"><span>Second&nbsp;&nbsp;</span><a href="#" title="Removing tag"></a></span><span class="tag"><span>Third&nbsp;&nbsp;</span><a href="#" title="Removing tag"></a></span><div id="tags1690102762314_addTag"><input id="tags1690102762314_tag" value="" data-default="add a tag" style="color: rgb(102, 102, 102); width: 76px;" class=""></div><div class="tags_clear"></div></div>
+                        <span class="help-block">Default textarea field</span>
+                    </div>
+                </div>
+
+                <div class="form-group row language">
+                    <label class="col-md-3 col-xs-12 control-label">Language</label>
+                    <div class="col-md-9 col-xs-12">
+                        <select class="form-control select language_select" style="display: none;">
+                            <option value="none">none</option>
+                            <option value="en">English</option>
+                            <option value="ja">日本語</option>
+                        </select><div class="btn-group bootstrap-select form-control select language_select"><button type="button" class="btn dropdown-toggle selectpicker btn-default" data-toggle="dropdown" title="none"><span class="filter-option pull-left">none</span>&nbsp;<span class="caret"></span></button><div class="dropdown-menu open"><ul class="dropdown-menu inner selectpicker" role="menu"><li rel="0" class="selected"><a tabindex="0" class="" style=""><span class="text">none</span><i class="glyphicon glyphicon-ok icon-ok check-mark"></i></a></li><li rel="1"><a tabindex="0" class="" style=""><span class="text">English</span><i class="glyphicon glyphicon-ok icon-ok check-mark"></i></a></li><li rel="2"><a tabindex="0" class="" style=""><span class="text">日本語</span><i class="glyphicon glyphicon-ok icon-ok check-mark"></i></a></li></ul></div></div>
+                        <span class="help-block">Select a language.</span>
+                    </div>
+                </div>
+
+                <div class="form-group row hidden">
+                    <label class="col-md-3 col-xs-12 control-label">File</label>
+                    <div class="col-md-9 col-xs-12">
+                        <a class="file-input-wrapper btn btn-default  fileinput btn-primary"><span>Browse file</span><input type="file" class="fileinput btn-primary" name="filename" id="filename" title="Browse file"></a>
+                        <span class="help-block">Input type file</span>
+                    </div>
+                </div>
+
+                <div class="form-group row hidden">
+                    <label class="col-md-3 col-xs-12 control-label">Checkbox</label>
+                    <div class="col-md-9 col-xs-12">
+                        <label class="check"><div class="icheckbox_minimal-grey checked" style="position: relative;"><input type="checkbox" class="icheckbox" checked="checked" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div> Checkbox title</label>
+                        <span class="help-block">Checkbox sample, easy to use</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left command-cancel" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary command-ok" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/js/plugins/bootstrap/bootstrap-datepicker.js"></script>
+<script type="text/javascript" src="/js/plugins/bootstrap/bootstrap-file-input.js"></script>
+<script type="text/javascript" src="/js/plugins/bootstrap/bootstrap-select.js"></script>
+<script type="text/javascript" src="/js/plugins/tagsinput/jquery.tagsinput.min.js"></script>
+<script>
+function ShowPreferencesDialog(argv) {
+
+    var dialog = $('.preferences_dialog');
+
+    dialog.modal({
+        show: true,
+        keyboard: true,
+        backdrop: 'static',
+    });
+
+    dialog.find('.row.account input[type=text].account').val(User.getCurrent().account);
+
+    let language_select = dialog.find('.row.language select.language_select');
+    let language = Preferences.get('language', true/*global*/);
+    //Console.debug(language, '>>>>>>> Preferences:');
+    if (language == undefined) {
+        language = User.getCurrent().getLanguage();
+        //Console.debug(language, '>>>>>>> User.getLanguage():');
+    }
+    if (language != undefined) {
+        let option = language_select.find('option[value=' + language + ']');
+        if (option.length == 1) {
+            language_select.selectpicker('val', language);
+        }
+    }
+
+    dialog.find('.command-ok').off('click').click(function(e) {
+        let language_new = language_select.selectpicker('val');
+        if (language_new != language) {
+            if (language_new == 'none') {
+                Preferences.set('language', undefined, true);
+            } else {
+                Preferences.set('language', language_new, true);
+            }
+        }
+        Preferences.save();
+        if (argv.onOK) {
+            argv.onOK();
+        }
+    });
+
+    dialog.find('.command-cancel').off('click').click(function(e) {
+        if (argv.onCancel) {
+            argv.onCancel();
+        }
+    });
+}
+</script>
+<!-- END プリファレンス・ダイアログ -->
+
+        <!-- ログイン・ダイアログ -->
+<div class="modal fade login_dialog" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close command-cancel" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Login or create an account.</h4>
+            </div>
+            <!-- START MODAL BODY -->
+            <form>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label class="col-md-3 col-xs-12 control-label">Account</label>
+                    <div class="col-md-9 col-xs-12">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span class="fa fa-at" aria-hidden="true"></span></span>
+                            <input type="text" class="form-control login_text_account" autocomplete="username" required="">
+                        </div>
+                        <span class="help-block">Your mail address</span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-md-3 col-xs-12 control-label">Password</label>
+                    <div class="col-md-9 col-xs-12">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span class="fa fa-unlock-alt" aria-hidden="true"></span></span>
+                            <input type="password" class="form-control login_password" autocomplete="new-password" required="">
+                        </div>
+                        <span class="pull-right" style="margin-left: 1rem;"><label id="login_checkbox_show_password" class="check"><div class="icheckbox_minimal-grey" style="position: relative;"><input type="checkbox" class="icheckbox" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div> Show password.</label></span>
+                        <span class="help-block">8 or more characters including at least 1 alphabet and 1 number.</span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-md-3 col-xs-12 control-label">Create?</label>
+                    <div class="col-md-9 col-xs-12">
+                        <label id="login_checkbox_create_account" class="check"><div class="icheckbox_minimal-grey" style="position: relative;"><input type="checkbox" class="icheckbox" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div> Yes, I want to create an account.</label>
+                        <span class="help-block">Check the box to create a new account.</span>
+                    </div>
+                </div>
+
+            </div>
+            <!-- END MODAL BODY -->
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left command-cancel" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary command-ok" data-dismiss="modal">Login</button>
+            </div>
+            <input type="submit" value="Submit" class="hidden">    <!-- これはブラウザに「安全なパスワードを生成」させるのに必要らしい。 -->
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/js/plugins/bootstrap/bootstrap-datepicker.js"></script>
+<script type="text/javascript" src="/js/plugins/bootstrap/bootstrap-file-input.js"></script>
+<script type="text/javascript" src="/js/plugins/bootstrap/bootstrap-select.js"></script>
+<script type="text/javascript" src="/js/plugins/tagsinput/jquery.tagsinput.min.js"></script>
+<script>
+/*
+jquery のレベルで id="login_checkbox_show_password" に click イベントハンドラーをセットしても呼ばれない。
+次のように DOM レベルでイベントハンドラーをセットすると呼ばれる。
+ただし第三引数が true でなければならない。
+これを見つけるのに何時間かかったやら。やはり GUI プログラムは消耗する。
+*/
+document.getElementById('login_checkbox_show_password').addEventListener('click', function(e) {
+    if (e.isTrusted) {
+        var checkbox = $('.login_dialog label#login_checkbox_show_password input[type=checkbox]');
+        var password = $('.login_dialog input.login_password');
+        if (checkbox.prop('checked')) {
+            password.prop('type', 'password');
+        } else {
+            password.prop('type', 'text');
+        }
+    }
+}, true/*このtrueが肝*/);
+
+document.getElementById('login_checkbox_create_account').addEventListener('click', function(e) {
+    if (e.isTrusted) {
+        var checkbox = $('.login_dialog label#login_checkbox_create_account input[type=checkbox]');
+        var button = $('.login_dialog button.command-ok');
+        //console.log('checkbox>', checkbox);
+        //console.log('button>', button);
+        if (checkbox.prop('checked')) {
+            button.html('Login');
+        } else {
+            button.html('Create Account');
+        }
+    }
+}, true/*このtrueが肝*/);
+
+// Cancel をクリック
+$('.login_dialog .command-cancel').click(function(e) {
+    ShowLoginNoty();
+});
+
+// Login をクリック
+$('.login_dialog .command-ok').click(function(e) {
+    /*
+    e.stopPropagation();
+    Notice({message: 'Login not implemented yet.', target: $('.login_dialog .modal-title')});
+    return;
+    */
+    return Login($('.login_dialog'));
+});
+
+/*
+ENTER を .command-ok と解釈
+このハンドラーは最初
+①keyupに対するものであり、また
+②e.preventDefault()を呼んでいなかったが、
+問題なく動作していた。
+ところが後に Chrome に「安全なパスワード生成」させるために <form> と <input type="submit"> を挿入したところ、ENTER が submit を実行してしまうようになった。
+それを防ぐためにe.preventDefault()を入れ、keyup から keydown のハンドラーに変えた（そうしないと手遅れなので）。
+*/
+$('.login_dialog').keydown(function(e) {
+    if (e.which == 13) {
+        e.preventDefault();
+        $(e.currentTarget).find('.command-ok').trigger('click');
+    }
+});
+
+</script>
+<!-- END ログイン・ダイアログ -->
+
+        <!-- MESSAGE BOX -->
+<div class="message-box animated fadeIn" data-sound="alert" id="mb-signout">
+    <div class="mb-container">
+        <div class="mb-middle">
+            <div class="mb-title"><span class="fa fa-sign-out" aria-hidden="true"></span> Log <strong>Out</strong> ?</div>
+            <div class="mb-content">
+                <p>Are you sure you want to log out?</p>
+                <p>Press No if you want to continue work. Press Yes to logout current user.</p>
+            </div>
+            <div class="mb-footer">
+                <div class="pull-right">
+                    <!-- <a href="pages-login.html" class="btn btn-success btn-lg">Yes</a> -->
+                    <a href="javascript:Logout($('#mb-signout'))" class="btn btn-success btn-lg">Yes</a>
+                    <button class="btn btn-default btn-lg mb-control-close">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END MESSAGE BOX -->
+
+
+        <!-- START THIS PAGE PLUGINS-->
+        <script type="text/javascript" src="/js/plugins/icheck/icheck.min.js"></script>
+        <script type="text/javascript" src="/js/plugins/mcustomscrollbar/jquery.mCustomScrollbar.min.js"></script>
+        <script type="text/javascript" src="/js/plugins/scrolltotop/scrolltopcontrol.js"></script>
+
+        <!-- TODO: tocify は 2 回ロードすると動作がおかしくなる。そして 1 回だけだと 2 回目に jquery でエラーが発生する。原因を調べたいが時間が無いのでとりあえず tocify の使用をヤメておく。 -->
+        <script type="text/javascript" src="/js/plugins/tocify/jquery.tocify.min.js"></script>
+        <!-- END THIS PAGE PLUGINS-->
+
+        <!-- START TEMPLATE -->
+        <script type="text/javascript" src="/js/settings.js"></script>
+
+        <script type="text/javascript" src="/js/plugins.js"></script>
+        <script type="text/javascript" src="/js/actions.js"></script>
+        <!-- END TEMPLATE -->
+
+        <!--
+        <script>
+            $(function() {
+                var toc = $("#tocify").tocify({context: ".tocify-content", showEffect: "fadeIn",extendPage:false,selectors: "h2, h3, h4" });
+            });
+        </script>
+        -->
+
+    <!-- START tail.html -->
+<script>
+
+$(document).ready(function(e) {
+    TailInitializePage();
+});
+
+</script>
+<!-- END tail.html -->
+
+    <!-- END SCRIPTS -->
+    <div class="theme-settings"><div class="ts-button"><span class="fa fa-cogs fa-spin" aria-hidden="true"></span></div><div class="ts-body"><div class="ts-title">Themes</div><div class="ts-themes"><a href="#" class="active" data-theme="css/theme-default.css"><img src="/img/themes/default.jpg"></a><a href="#" data-theme="css/theme-brown.css"><img src="/img/themes/brown.jpg"></a><a href="#" data-theme="css/theme-blue.css"><img src="/img/themes/blue.jpg"></a><a href="#" data-theme="css/theme-white.css"><img src="/img/themes/light.jpg"></a><a href="#" data-theme="css/theme-black.css"><img src="/img/themes/black.jpg"></a></div><div class="ts-title">Layout</div><div class="ts-row"><label class="check"><div class="iradio_minimal-grey checked" style="position: relative;"><input type="radio" class="iradio" name="st_layout_boxed" value="0" checked="" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div> Full Width</label></div><div class="ts-row"><label class="check"><div class="iradio_minimal-grey" style="position: relative;"><input type="radio" class="iradio" name="st_layout_boxed" value="1" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div> Boxed</label></div><div class="ts-title">Options</div><div class="ts-row"><label class="check"><div class="icheckbox_minimal-grey" style="position: relative;"><input type="checkbox" class="icheckbox" name="st_head_fixed" value="1" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div> Fixed Header</label></div><div class="ts-row"><label class="check"><div class="icheckbox_minimal-grey checked" style="position: relative;"><input type="checkbox" class="icheckbox" name="st_sb_fixed" value="1" checked="" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div> Fixed Sidebar</label></div><div class="ts-row"><label class="check"><div class="icheckbox_minimal-grey checked" style="position: relative;"><input type="checkbox" class="icheckbox" name="st_sb_scroll" value="1" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div> Scroll Sidebar</label></div><div class="ts-row"><label class="check"><div class="icheckbox_minimal-grey" style="position: relative;"><input type="checkbox" class="icheckbox" name="st_sb_right" value="1" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div> Right Sidebar</label></div><div class="ts-row"><label class="check"><div class="icheckbox_minimal-grey" style="position: relative;"><input type="checkbox" class="icheckbox" name="st_sb_custom" value="1" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div> Custom Navigation</label></div><div class="ts-row"><label class="check"><div class="icheckbox_minimal-grey" style="position: relative;"><input type="checkbox" class="icheckbox" name="st_sb_toggled" value="1" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div> Toggled Navigation</label></div></div></div><div id="topcontrol" title="Scroll Back to Top" style="position: fixed; bottom: 10px; right: 10px; opacity: 0; cursor: pointer;"><!-- TO TOP --><div class="to-top"><span class="fa fa-angle-up" aria-hidden="true"></span></div><!-- END TO TOP --></div><tester id="tags1690102762314_tag_autosize_tester" style="position: absolute; top: -9999px; left: -9999px; width: auto; font-size: 12px; font-family: &quot;Open Sans&quot;, sans-serif; font-weight: 400; letter-spacing: 0px; white-space: nowrap;"></tester><div class="notice_inline info" id="notice_5422423301" style="top: 167px; left: 61px; width: auto; opacity: 1;"><div class="message_box">Click/Tap here to change the language.</div></div>
+</body>
+</html>

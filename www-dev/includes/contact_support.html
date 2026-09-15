@@ -1,0 +1,314 @@
+<!-- CONTACT SUPPORT DIALOG -->
+<style type="text/css">
+@media only screen and (min-width: 1024px) {
+    .contact_support_dialog>.modal-dialog {
+        width: 60%;
+    }
+}
+</style>
+<div class="modal fade contact_support_dialog" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close command-cancel" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title"><strong><span class="fa fa-file"></span>&nbsp;&nbsp;<span class="dialog_title">Some Title</span></strong></h4>
+            </div>
+            <div class="modal-body">
+
+                <input type="hidden" name="in_response_to" value="0"/>
+
+                <div class="form-group row">
+                    <label class="col-md-2 col-xs-12 control-label">Subject</label>
+                    <div class="col-md-10 col-xs-12">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                            <input type="text" class="form-control subject"/>
+                        </div>
+                        <span class="help-block">Write your subject here.</span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-md-2 col-xs-12 control-label">Message</label>
+                    <div class="col-md-10 col-xs-12">
+                        <div class="input-group">
+                            <span class="input-group-addon" style="vertical-align: middle;"><span class="fa fa-pencil"></span></span>
+                            <textarea class="form-control message" rows="5" style="resize: vertical;"></textarea>
+                        </div>
+                        <span class="help-block">Write your message here.</span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-md-2 col-xs-12 control-label">Attach File</label>
+                    <div class="col-md-10 col-xs-12">
+                        <div class="input-group">
+                            <input type="file" class="hidden" name="filename" multiple/>
+                            <button class="fileinput btn-primary"><span class="fa fa-paperclip"></span>&nbsp;&nbsp;Attach File</button>
+                        </div>
+                        <span class="help-block">Choose files to attach. You can attach files with a total maximum size of 1 MB.</span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-md-2 col-xs-12 control-label">Files Attached</label>
+                    <div class="col-md-10 col-xs-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-actions table-striped table_attached_files" style="margin: 0;">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Size</th>
+                                        <th class="action">Delete</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <!--
+                                    <tr>
+                                        <td>fooo.png</td>
+                                        <td>256 KB</td>
+                                    </tr>
+                                    <tr>
+                                        <td>baar.txt</td>
+                                        <td>2 KB</td>
+                                    </tr>
+                                -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <span class="help-block help_attached_files"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-md-2 col-xs-12 control-label">Upload Progress</label>
+                    <div class="col-md-10 col-xs-12">
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                0%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left command-cancel" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary command-ok" data-dismiss="modal"><span class="fa fa-paper-plane"></span> Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+var _files_contact_support_dialog = [];
+function ContactSupportDialogUpdateAttachedFileTable(dialog) {
+    let table = dialog.find('table.table_attached_files');
+    let tbody = table.find('tbody');
+    tbody.empty();
+    let total_size = 0;
+    for (let index = 0; index < _files_contact_support_dialog.length; index++) {
+        let file = _files_contact_support_dialog[index];
+        let tr = $(
+            '<tr index="' + index + '">\n' +
+                '<td>' + file.name + '</td>\n' +
+                '<td>' + FileSizeBytesToString(file.size) + '</td>\n' +
+                '<td class="action delete"><button class="btn btn-danger btn-rounded btn-sm" data-toggle="tooltip" data-placement="left" title="Delete attachment."><span class="fa fa-xmark"></span></button></td>\n' +
+            '</tr>\n'
+        );
+        tbody.append(tr);
+        total_size += file.size;
+    }
+    dialog.find('.help_attached_files').html('Total: ' + FileSizeBytesToString(total_size, 1));
+    tbody.find('tr>td.action.delete>button').click((e) => {
+        let tr = $(e.currentTarget).parents('tr');
+        let index = tr.attr('index');
+        _files_contact_support_dialog.splice(index, 1);
+        ContactSupportDialogUpdateAttachedFileTable(dialog);
+        $('body .tooltip').remove();
+    });
+}
+function ContactSupportDialogOnOK(dialog) {
+    // 返信対象
+    let in_response_to = dialog.find('input[type=hidden][name=in_response_to]');
+
+    // 件名
+    let subject = dialog.find('input[type=text].subject');
+    if (subject.val().match(/^[　 \t]*$/)) {
+        Notice({
+            message: 'Write your subject here.',
+            type: 'danger',
+            target: subject,
+            container: dialog,
+        });
+        return;
+    }
+    if (subject.val().length < 4) {
+        Notice({
+            message: 'Subject too short.',
+            type: 'danger',
+            target: subject,
+            container: dialog,
+        });
+        return;
+    }
+    if (128 < subject.val().length) {
+        Notice({
+            message: 'Subject too long.',
+            type: 'danger',
+            target: subject,
+            container: dialog,
+        });
+        return;
+    }
+
+    // 本文
+    let message = dialog.find('textarea.message');
+    if (message.val().match(/^[　 \t]*$/)) {
+        Notice({
+            message: 'Write your message here.',
+            type: 'danger',
+            target: message,
+            container: dialog,
+        });
+        return;
+    }
+    if (message.val().length < 4) {
+        Notice({
+            message: 'Message too short.',
+            type: 'danger',
+            target: message,
+            container: dialog,
+        });
+        return;
+    }
+
+    // 添付ファイルのサイズをチェック
+    let total_size = 0;
+    for (let index = 0; index < _files_contact_support_dialog.length; index++) {
+        let file = _files_contact_support_dialog[index];
+        total_size += file.size;
+    }
+    if (1024 * 1024 < total_size) {
+        let table = dialog.find('table.table_attached_files');
+        Notice({
+            message: 'The total size of files exceeds 1 MB.',
+            type: 'danger',
+            target: table,
+            container: dialog,
+        });
+        return;
+    }
+
+    // form データを作成
+    let fd = new FormData();
+    fd.set('direction', User.getCurrent().isAdmin() ? '1' : '0');
+    fd.set('in_response_to', in_response_to.val());
+    fd.set('subject', subject.val());
+    fd.set('message', message.val());
+    for (let index = 0; index < _files_contact_support_dialog.length; index++) {
+        let param_name = 'file_' + pad0(index, 3);  // file_000, file_001, file_002, ... 
+        fd.append(param_name, _files_contact_support_dialog[index]);
+    }
+    //console.log('>>>>>>>fd.get()', fd.get('in_response_to));
+
+    // コマンドを選択
+    let command;
+    if (User.getCurrent().isAdmin()) {
+        command = 'admin_create_support_case_message';
+    } else {
+        command = 'create_support_case_message';
+    }
+
+    // リクエストを送信
+    CallTCPDetectiveAPI('/api/', 'POST', 21013, command, {
+        data: fd,
+        progressBar: dialog.find('.progress-bar'),
+        success: function(response) {
+            if (User.getCurrent().isAdmin()) {
+                SetSupportCases(response.support_cases);
+                AdminUpdateSupportCases();
+            } else {
+                UpdateSupportCases(response.support_cases);
+            }
+            setTimeout(() => {
+                dialog.find('button.close').trigger('click');
+            }, 1000);
+        },
+        error: function(response) {
+            alert('>>>>>>>code: ' + response.code + '\n' + 'message: ' + response.message);
+        },
+        fatal: function(xhr) {
+            var log = {
+                status: xhr.status,
+                headers: xhr.getAllResponseHeaders().split(/\r\n/),
+                response: xhr.responseJSON ? xhr.responseJSON : null,
+            };
+            var strLog = JSON.stringify(log, null, '    ');
+            alert(strLog);
+        },
+        complete: function(xhr) {
+        },
+    });
+}
+$('.contact_support_dialog button.fileinput').click(function(e) {
+    $('.contact_support_dialog input[type=file][name=filename]').trigger('click');
+});
+$('.contact_support_dialog input[type=file][name=filename]').change(function(e) {
+    let file_input = $(e.currentTarget);
+    for (let i = 0; i < file_input.get(0).files.length; i++) {
+        let file = file_input.get(0).files[i];
+        _files_contact_support_dialog.push(file);
+    }
+    let dialog = file_input.parents('.contact_support_dialog');
+    ContactSupportDialogUpdateAttachedFileTable(dialog);
+});
+$('.contact_support_dialog .command-cancel').click(function(e) {
+    // 何かするか何もしない。
+});
+$('.contact_support_dialog .command-ok').click(function(e) {
+    ContactSupportDialogOnOK($('.contact_support_dialog'));
+    return false;
+});
+function ShowContactSupportDialog(support_case, support_case_message) {
+    _files_contact_support_dialog = [];
+    let dialog = $('.contact_support_dialog');
+    let title = dialog.find('.dialog_title');
+    let in_response_to = dialog.find('input[type=hidden][name=in_response_to]');
+    let subject = dialog.find('input[type=text].subject');
+    in_response_to.val(support_case_message ? support_case_message.id : '0');
+    //console.log('>>>>>>>in_response_to.val()', in_response_to.val());
+    if (support_case == undefined) {
+        title.html('Create Case');
+        subject.val('');
+        subject.prop('readonly', false);
+    } else {
+        title.html('Create Reply');
+        subject.val(support_case.subject);
+        subject.prop('readonly', true);
+    }
+    dialog.find('textarea.message').val('');
+    UpdateProgressBar(dialog.find('.progress-bar'), 0);
+    ContactSupportDialogUpdateAttachedFileTable(dialog);
+    dialog.off('keydown').keydown((e) => {
+        if (e.which == '\r'.charCodeAt(0)) {
+            if ($(e.currentTarget).hasClass('message')) {
+                dialog.find('.command-ok').click();
+            }
+        }
+    });
+    dialog.modal({
+        show: true,
+        keyboard: true,
+        backdrop: 'static',
+    });
+    Clipboard.paste({
+        onSuccess: (text) => {
+            dialog.find('textarea.message').val(text);
+        },
+        onFailure: (err) => {
+            dialog.find('textarea.message').val(err);
+        },
+    });
+}
+</script>
+<!-- END CONTACT SUPPORT DIALOG -->

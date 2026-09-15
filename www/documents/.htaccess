@@ -1,0 +1,40 @@
+########################################################################
+# リバースプロクシー経由なら環境変数をセット
+
+# www1.bad-design.jp
+#SetEnvIf X-Forwarded-For "172\.31\.15\.108"     allowed_ip
+# Starship office
+#SetEnvIf X-Forwarded-For "121\.1\.142\.207"     allowed_ip
+# www.starship.jp
+#SetEnvIf X-Forwarded-For "172\.31\.14\.151"     allowed_ip
+
+########################################################################
+# アクセス元 IP アドレスによるアクセス制限
+
+#Order Deny,Allow
+#Deny from all
+# リバースプロクシー経由
+#Allow from env=allowed_ip
+# www1.bad-design.jp
+#Allow from 172.31.15.108
+# Starship office
+#Allow from 121.1.142.207
+# www.starship.jp
+#Allow from 172.31.14.151
+
+########################################################################
+# ファイル名によるアクセス制限
+
+<Files ~ "^_">
+    Deny from all
+</Files>
+
+########################################################################
+# 拡張子の隠蔽
+
+#RewriteEngine on
+#RewriteCond %{REQUEST_FILENAME} !-d
+#RewriteCond %{REQUEST_FILENAME} !-f
+#RewriteCond %{REQUEST_FILENAME} ![0-9A-Za-z_]+\.[0-9a-z]+$
+#RewriteCond %{REQUEST_URI} !index
+#RewriteRule ^(.+)$ $1.php [L]

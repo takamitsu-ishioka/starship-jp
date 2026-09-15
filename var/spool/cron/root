@@ -1,0 +1,3 @@
+# 証明書自動更新
+#39 1,13 * * * certbot --no-redirect
+17 2 * * * certbot renew --no-self-upgrade

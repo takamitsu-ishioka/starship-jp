@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Confirm Your Registration</title>
+<!--
+アカウントの有効性確認兼ユーザー登録の意思の最終確認のメールの本文および確認の結果を表示する HTML
+以下の文字列を適当な文字列に置換する。
+TIMEOUT_HOURS   期限（時間）
+CONFIRM_URI     確認用 URI。
+DENY_URI        拒否用 URI。
+RESULT          結果の文字列。
+COLOR           結果の文字列の色。6桁の16進数。
+ACCOUNT         アカウント名のメールアドレス。
+-->
+<style>
+body {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    padding: 0 1rem 0.5rem 1rem;
+}
+.confirmation {
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+    padding: 0.5rem 1rem 1rem 1rem;
+    font-size: 120%;
+}
+p {
+    margin: 0.5rem 0rem 0.5rem 0rem;
+}
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 1rem;
+    margin-top: 1rem;
+}
+a {
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    color: white;
+}
+.yes {
+    color: white;
+    background-color: #95b75d;
+}
+.no {
+    color: white;
+    background-color: #E04B4A;
+    margin-left: 0.5rem;
+}
+.result {
+    font-weight: bold;
+    color: #__COLOR__;
+}
+</style>
+</head>
+<body>
+<h2>Thank You for Registering at tcpdetective.com</h2>
+<div class="confirmation">
+    <p>If you wish to register with the email address <strong>__ACCOUNT__</strong>, please click "Yes". If not, click "No".</p>
+    <p>If "No" is clicked or if "Yes" is not clicked within __TIMEOUT_HOURS__ hours, the user account <strong>__ACCOUNT__</strong> will be automatically deleted.</p>
+    <div class="buttons">
+        <a href="__CONFIRM_URI__" class="yes">Yes</a>
+        <a href="__DENY_URI__" class="no">No</a>
+    </div>
+    <p class="result">__RESULT__</p>
+</div>
+</body>
+</html>

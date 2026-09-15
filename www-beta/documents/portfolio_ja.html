@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>経歴書</title>
+<style type="text/css">
+body {
+    background: black;
+    color: orange;
+}
+a {
+    color: cyan;
+    text-decoration: none;
+}
+@media print {
+    body {
+        background: white;
+        color: black;
+    }
+    a {
+        color: blue;
+    }
+}
+
+.right {
+    text-align: right;
+}
+    
+.money {
+    white-space: nowrap;
+    text-align: right;
+    vertical-align: bottom;
+}
+
+p {
+    font-size: 1rem;
+}
+.terminology {
+    text-decoration: underline;
+    font-weight: bold;
+}
+table th {
+    white-space: nowrap;
+}
+table th,
+table td {
+    padding: 0 0.5rem 0 0.5rem;
+    text-align: left;
+    vertical-align: top;
+    font-size: 120%;
+}
+table.jobs {
+    border: solid 1px gray;
+    border-collapse: collapse;
+}
+table.jobs th,
+table.jobs td {
+    border: solid 1px gray;
+}
+h2 {
+    margin-top: 3rem;
+}
+
+.pagebreak {
+    page-break-before: always;
+}
+
+</style>
+</head>
+<body>
+<h1>経歴書</h1>
+<h4 class="right">2023-07-13 石岡隆光</h4>
+
+<h2>プロフィール</h2>
+<table class="profile">
+    <tr>
+        <td>氏名</td>
+        <td>石岡隆光</td>
+    </tr>
+    <tr>
+        <td>メール</td>
+        <td>
+            ishioka@starship.jp
+        </td>
+    </tr>
+    <tr>
+        <td>電話</td>
+        <td>
+            09045970109
+        </td>
+    </tr>
+    <tr>
+        <td>住所</td>
+        <td>〒3330852 埼玉県川口市芝樋ノ爪 2-12-16 スターフィールド B102</td>
+    </tr>
+    <tr>
+        <td>最終学歴</td>
+        <td>
+            国立東京外国語大学 英米語学科卒業（国際関係論、言語学、翻訳、法学、経済学）
+        </td>
+    </tr>
+</table>
+<style type="text/css">
+table.profile tr>td:first-child {
+    white-space: nowrap;
+}
+</style>
+
+<h2>職務経歴</h2>
+<table class="jobs">
+    <tr>
+        <th colspan="2">通産省の機械翻訳プロジェクト（通称 Mu プロジェクト。場所は京大の長尾研）</th>
+    </tr>
+    <tr>
+        <th>期間</th>
+        <td>
+            1982～1984
+        </td>
+    </tr>
+    <tr>
+        <th>ハードウェア</th>
+        <td>
+            富士通のメインフレーム（京大計算機センター）<br>
+            Symbolics 社のリスプマシン
+        </td>
+    </tr>
+    <tr>
+        <th>OS</th>
+        <td>
+            不明（当時の OS はハードウェアと一体になっていました）
+        </td>
+    </tr>
+    <tr>
+        <th>言語</th>
+        <td>
+            UTI-LISP（東京大学が開発した LISP の方言）
+        </td>
+    </tr>
+    <tr>
+        <th>業務内容</th>
+        <td>
+            <ol>
+                <li>英日・日英翻訳アルゴリズムの開発
+            </ol>
+        </td>
+    </tr>
+    <tr>
+        <th>役割</th>
+        <td>
+            <ol>
+                <li>英語解析部の設計、実装、テスト
+                <li>日英トランスファー部の設計、実装、テスト
+            </ol>
+        </td>
+    </tr>
+</table>
+<br>
+
+<div class="pagebreak"></div>
+
+<table class="jobs">
+    <tr>
+        <th colspan="2">NEC の機械翻訳プロジェクト（最初の 2 年は中央研究所。その後は三田の事業部）</th>
+    </tr>
+    <tr>
+        <th>期間</th>
+        <td>
+            1984～2000
+        </td>
+    </tr>
+    <tr>
+        <th>ハードウェア</th>
+        <td>
+            VAX<br>
+            NEC 製 UNIX ワークステーション<br>
+            NEC PC-9801 シリーズ（当時の普通の MS-DOS パソコンです）
+        </td>
+    </tr>
+    <tr>
+        <th>OS</th>
+        <td>
+            BSD UNIX (VAX)<br>
+            System V UNIX（ワークステーション）<br>
+            Windows NT, Windows 95（パソコン）
+        </td>
+    </tr>
+    <tr>
+        <th>言語</th>
+        <td>
+            C, Visual C/C++, Visual Basic, Franz Lisp, UTI-LISP, csh, awk, perl
+        </td>
+    </tr>
+    <tr>
+        <th>業務内容</th>
+        <td>
+            <ol>
+                <li>英日・日英翻訳アルゴリズムの開発
+                <li>英日・日英翻訳辞書の開発
+                <li>開発ツールの開発<br>
+                    ソースコードバージョン管理、一括大量翻訳テスト自動化、品質評価半自動化、コミュニケーションツール。<br>
+                    今なら Project Management Software と呼ばれるシステムです。
+            </ol>
+        </td>
+    </tr>
+    <tr>
+        <th>役割</th>
+        <td>
+            <ol>
+                <li>英語解析部の基本設計から実装、テストまで。
+                <li>辞書開発チームのリーダー
+                <li>開発ツールの企画、基本設計から実装、テストまで。
+            </ol>
+        </td>
+    </tr>
+</table>
+<br>
+
+<div class="pagebreak"></div>
+
+<table class="jobs">
+    <tr>
+        <th colspan="2">東京ソフト株式会社の日本語構文解析システムの開発</th>
+    </tr>
+    <tr>
+        <th>期間</th>
+        <td>
+            2000～2009
+        </td>
+    </tr>
+    <tr>
+        <th>ハードウェア</th>
+        <td>
+            IBM PC-AT 互換機（今の普通のパソコンです）
+        </td>
+    </tr>
+    <tr>
+        <th>OS</th>
+        <td>
+            FreeBSD, Linux (Fedora), Windows, Windows Server
+        </td>
+    </tr>
+    <tr>
+        <th>ミドルウェア</th>
+        <td>
+            httpd (apache)
+        </td>
+    </tr>
+    <tr>
+        <th>言語</th>
+        <td>
+            Visual C/C++, Visual C#, Java, HTML
+        </td>
+    </tr>
+    <tr>
+        <th>業務内容</th>
+        <td>
+            <ol>
+                <li>日本語形態素・構文解析ライブラリの開発</li>
+                <li>
+                    構文解析結果をグラフィカルな木構造で表示するウェブデモシステムの開発<br>
+                    それを見た野村総研さんから引き合いがあり、同社の CRM 製品 TRUE TELLER に採用されました（今は別のものに置き換えられています）。<br>
+                    その後、それがシステム部門の収益の柱になり、後にシステム部門が独立して別の会社になりました。
+                </li>
+                <li>
+                    同システムを Linux に移植。<br>
+                    apache + CGI + REST API でウェブサービス化
+                </li>
+                <li>
+                    OCR 結果修正支援ツールの開発<br>
+                    同社の本業であるレセプト入力を支援するツール。「システム部が作ったツールで役に立つものを初めて見た」と入力業務の責任者からほめられました。
+                </li>
+            </ol>
+        </td>
+    </tr>
+    <tr>
+        <th>役割</th>
+        <td>
+            <ol>
+                <li>製品の企画、設計、実装、テスト、運用
+                <li>ウェブデモサイトの設計、実装、テスト、運用
+                <li>ネットワークの設計と構築
+                <li>Linux のインストールと設定（当時は仮想マシンではなく実機でした）
+                <li>エンジニアチームの教育、指揮、監督
+            </ol>
+        </td>
+    </tr>
+</table>
+<br>
+
+<div class="pagebreak"></div>
+
+<table class="jobs">
+    <tr>
+        <th colspan="2">株式会社エクスリンクのショートメッセージ一括送信システムの開発</th>
+    </tr>
+    <tr>
+        <th>期間</th>
+        <td>
+            2010～2019
+        </td>
+    </tr>
+    <tr>
+        <th>ハードウェア</th>
+        <td>
+            AWS
+        </td>
+    </tr>
+    <tr>
+        <th>OS</th>
+        <td>
+            Linux (Amazon Linux, Amazon Linux 2)
+        </td>
+    </tr>
+    <tr>
+        <th>ミドルウェア</th>
+        <td>
+            apache, Aurora (PostgreSQL)
+        </td>
+    </tr>
+    <tr>
+        <th>言語</th>
+        <td>
+            C++ (gcc), HTML, css, javascript, jquery, bootstrap, PHP, bash, Java
+        </td>
+    </tr>
+    <tr>
+        <th>業務内容</th>
+        <td>
+            （2010～2014 は同社で動画配信サービスや音声合成 Web API サーバーや動画・音声を合成するキャンペーンサイト構築等の作業をいくつかしましたが、細かい受託開発なので割愛します）<br>
+            <br>
+            エクスリンクさんは元々ショートメッセージ一括送信システムを持っていましたが、そのシステムには次のような問題がありました。
+            <ol>
+                <li>jsmpp（Java の SMPP ライブラリ）に頼り切った高速化不能の送信モジュール
+                    <ol>
+                        <li>Java 製 ORマッパー Hibernate がすべての DB テーブルをロックしてしまうためマルチプロセス化不能、そのため、
+                            <ol>
+                                <li>それがボトルネックとなってスループットが低いところで頭打ちになり
+                                <li>また、単一障害点となってしばしばシステム障害を引き起こしていた。
+                            </ol>
+                        </li>
+                    </ol>
+                </li>
+                <li>PHP で HTML を生成するタイプの、アーキテクチャも見た目も古い管理画面 GUI。
+                <li>公開 API が php で実装されていたため、リクエストのたびに DB を検索せざるを得ず、スループットが低い。
+                <li>継続的な開発と運用の仕組みもツールも存在せず、すべてをプログラマーの手作業と注意力のみに依存していたため、しばしば障害が発生。
+                <li>Java の宿命である GC によるスループットの異常な低下が定期的に発生。そのたびにプログラマー（私ではありません）が手動で送信系プロセスを再起動。
+                <li>DB のログのレコード数が多くなるとスループットが低下。そのたびにプログラマーが手動で DB テーブルのレコードを削除
+            </ol>
+            私はそれらの問題を解決するために、全てを概念設計からやり直し、全く新しく実装しました。
+            <ol>
+                <li>送信モジュールを高速化
+                    <ol>
+                        <li>C++ で生の SMPP 通信プロトコルを実装。1 SMPP アカウント 1 プロセスでマルチプロセス化し、submit_sm, deliver_sm の送受信処理を並列化。<br>
+                            このアーキテクチャならば、SMPP の契約数とプロセス数（必要なら仮想マシン数）を増やせば、ほぼそれに比例してスループットが大きくなるので、今後もいくらでも拡張可能です（ボトルネックは DB のみ。これについては問題解消の腹案あり）。
+                        <li>処理済みの DB レコードは別のテーブルに移動するようにしました。
+                        <li>それらにより、スループットは旧システムの 10 倍になりました。
+                    </ol>
+                </li>
+                <li>管理画面を ajax モデルで一新。
+                    <ol>
+                        <li>サーバーは HTML の動的生成を行わず、スタティックな HTML と javascript を返すだけ。
+                        <li>サーバーは API コマンドを処理する。API コマンドの中身はほぼ DBMS との通信と結果の加工と JSON 化。生の php（フレームワーク無し）で実装。
+                        <li>クライアントは jquery, bootstrap と某モダンなテンプレートで実装。
+                        <li>ドラッグできるダイアログ、D&D で行の順序を変えられる表、問題の箇所に表示されるトゲ付き吹き出し風ツールチップ等、既成の部品の挙動がイマイチだったものは自作。
+                    </ol>
+                </li>
+                <li>公開 API を C++ で実装。DB のデータをメモリにキャッシュすることでスループットを数十倍にしました。
+                <li>管理画面と送信モジュールのシステムをそれぞれ「開発用」「商用β」「商用」の 3 系統作成。それらの間の差分表示、dry run モードでの更新、実際の更新を行う bash スクリプトを作成。<br>
+                    今はこの体制のことを CI/CD (Continuous Integration and Continuous Delivery) と呼ぶようですが、当時はあまり意識されない概念だったような気がします。
+                <li>以上を実現するために DB のテーブル定義を全て新たに設計。旧システムから新システムの DB に一括変換するスクリプトを作成。<br>
+                    つまり、旧システムから流用したのは顧客のデータだけです。
+            </ol>
+        </td>
+    </tr>
+    <tr>
+        <th>役割</th>
+        <td>
+            以上の作業を、送信モジュールと公開 API と DB については設計から実装、テストまで私一人で実行。<br>
+            GUI と内部 API も大枠は私が作り、generic.html および php の function Generic($args) を作成して他のプログラマーに使ってもらうようにしました。<br>
+            枠の中身をデバッグし充実させることと、新機能を加えることは他の人たちに手伝ってもらいました。
+        </td>
+    </tr>
+</table>
+<br>
+
+<div class="pagebreak"></div>
+
+<table class="jobs">
+    <tr>
+        <th colspan="2">
+            個人で Linux 用 IDS (Intrusion Detection System) を開発
+        </th>
+    </tr>
+    <tr>
+        <th>期間</th>
+        <td>
+            2022～現在
+        </td>
+    </tr>
+    <tr>
+        <th>ハードウェア</th>
+        <td>
+            AWS
+        </td>
+    </tr>
+    <tr>
+        <th>OS</th>
+        <td>
+            Amazon Linux 2
+        </td>
+    </tr>
+    <tr>
+        <th>ミドルウェア</th>
+        <td>
+            apache, RDS (PostgreSQL)
+        </td>
+    </tr>
+    <tr>
+        <th>言語</th>
+        <td>
+            C++ (gcc), HTML, css, javascript, jquery, bootstrap, PHP, bash
+        </td>
+    </tr>
+    <tr>
+        <th>業務内容</th>
+        <td>
+            <ol>
+                <li>Linux のカーネルモードで IP パケットをキャプチャし、同時にそのパケットに関連するプロセスとそのコマンドラインを特定・記録するプログラム TCPDetective を開発。
+                <li>それをサブスクリプション方式で販売するサイトを開発。<br>
+                    <a href="https://www.tcpdetective.com/">https://www.tcpdetective.com/</a>
+            </ol>
+        </td>
+    </tr>
+    <tr>
+        <th>役割</th>
+        <td>
+            企画、設計、実装、テスト、運用までのすべて。
+        </td>
+    </tr>
+</table>
+<br>
+
+<p>上記の各プロジェクトに従事していた間に、所属企業も契約形態も何回も変わっています（派遣、正社員、独立）が、それらを書くとむしろ分かりにくくなるので割愛しました。「派遣」も「正社員」も業務を委託する側の方便であり、実態はすべて「何かを石岡に作らせる」でした。</p>
+
+<div class="pagebreak"></div>
+
+<h2>自己PR</h2>
+
+<ol>
+    <li>「システムとは何か」に対する深い洞察と、それを基盤とした演繹的推論の能力。つまり、<br>
+        「手持ちの道具を組み合わせてできることをやる」<br>
+        のではなく<br>
+        「まず目的を定め、それを実現するために何が必要かを考える」<br>
+        そして<br>
+        『無いものは作る』
+    <li>必要な技術はすべて必要性を感じてから習得してきたので、GCP、TypeScript、Python、機械学習等、今後必要になる未経験の技術も短期間で使いこなす自信があります。<br>
+        例: 今、GCP で TensorFlow2 を使ってみています。<br>
+        例: 昨日、Codecademy で TypeScript のコースを始めました（既に理解したつもりになっています）。<br>
+        例: ChatGPT GPT-4 は既に手放せない日常のツールになっています。この経歴書も ChatGPT と相談しながら書きました。
+    <li>必要に応じて中～小規模のライブラリやフレームワークなら自分で作ることができます。<br>
+        また、長い間に作り溜め、動作検証済みの自作ライブラリを持っています。<br>
+        例: C++ のメモリ断片化を防ぐメモリ管理ライブラリ。これはショートメッセージ一括送信システムの送信モジュールと外部 API に使いました。<br>
+        例: https://www.tcpdetective.com/ は自作の SPA (Single Page Application) フレームワークで作りました。<br>
+    <li>ここまでの文章を読まれると「理屈屋で気難しい性格」を想像されるかもしれませんが、実は硬軟のコミュニケーションにも長けていると思います。<br>
+        https://twitter.com/kisaburo_y では人格をほぼ丸出しにしています。
+    <li>Windows用メールソフト『電信八号』で「第5回フリーソフトウェア大賞」に入賞しました。<br>
+        https://www.iajapan.org/osp/menu04.html
+</ol>
+
+<h2>契約条件に関する希望</h2>
+<ol>
+    <li>完全テレワーク（ただし親睦のための出社は歓迎）
+    <li>できれば仕事上のコミュニケーションは原則として文書で行う<br>
+        口頭のコミュニケーションは<br>
+        (1) 記録が残らず<br>
+        (2) 検索できず<br>
+        (3) 相手の作業を中断させ<br>
+        (4) 互いに「分かったつもり」になってしまい<br>
+        極めて非効率なので、ブレインストーミングと緊急時以外は使うべきではないと昔から考えています。
+    <li>できれば裁量労働制（時間ではなく成果を売りたいと思っています）
+</ol>
+
+</body>
+</html>

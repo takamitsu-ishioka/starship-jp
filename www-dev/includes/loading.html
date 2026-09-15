@@ -1,0 +1,31 @@
+<!-- LOADING -->
+<div class="message-box" id="mb-loading">
+    <div class="mb-container">
+        <div class="mb-middle">
+            <div class="mb-title" style="position: relative; left: 1rem;">Loading...</div>
+            <div class="mb-content">
+                <img src="/assets/images/loading.png" style="position: relative; left: 2rem; width: 8rem;"/>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+function ShowLoading(message) {
+    var loading = $('#mb-loading');
+    if (0 < loading.length) {
+        if (message == undefined) {
+            message = 'Loading...';
+        }
+        loading.find('.mb-title').html(message);
+        $(_noty_container_id).remove();
+        loading.toggleClass('open');
+    }
+}
+function HideLoading() {
+    var loading = $('#mb-loading');
+    if (0 < loading.length) {
+        loading.removeClass('open');
+    }
+}
+</script>
+<!-- END LOADING -->

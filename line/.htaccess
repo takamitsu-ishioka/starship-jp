@@ -1,0 +1,6 @@
+RewriteEngine on
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} ![0-9A-Za-z_]+\.[0-9a-z]+$
+RewriteCond %{REQUEST_URI} !index
+RewriteRule ^(.+)$ $1.php [L]

@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en" class="translated-ltr">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Interview</title>
+<style type="text/css">
+body {
+    background: black;
+    color: orange;
+}
+a {
+    color: cyan;
+    text-decoration: none;
+}
+@media print {
+    body {
+        background: white;
+        color: black;
+    }
+    a {
+        color: blue;
+    }
+}
+
+.right {
+    text-align: right;
+}
+    
+.money {
+    white-space: nowrap;
+    text-align: right;
+    vertical-align: bottom;
+}
+
+p {
+    font-size: 1rem;
+}
+.terminology {
+    text-decoration: underline;
+    font-weight: bold;
+}
+table th {
+    white-space: nowrap;
+}
+table th,
+table td {
+    padding: 0 0.5rem 0 0.5rem;
+    text-align: left;
+    vertical-align: top;
+    font-size: 120%;
+}
+table.jobs {
+    border: solid 1px gray;
+    border-collapse: collapse;
+}
+table.jobs th,
+table.jobs td {
+    border: solid 1px gray;
+}
+h2 {
+    margin-top: 3rem;
+}
+
+.pagebreak {
+    page-break-before: always;
+}
+</style>
+<body>
+
+<h1>Interview</h1>
+<h4 class="right">2023-08-13 (JST) Takamitsu Ishioka</h4>
+
+<div style="white-space: pre-wrap;">
+Hello, Bryan
+
+> Please note that AI generated responses cannot be accepted.
+
+I wrote this response in Japanese and had ChatGPT translate it into English.
+This doesn't count as "AI generated," does it?
+
+<h3>Engineering experience</h3>
+
+   - Describe your level of experience in Python, and how you have attained it.
+   
+    I am a beginner.
+    I read the "TensorFlow 2 quickstart for beginners" article at https://www.tensorflow.org/tutorials/quickstart/beginner and executed the sample problems. Furthermore, I created a virtual machine on GCP, set up a TensorFlow 2 execution environment there, and copied the tutorial code to run the training and tests.   
+
+   - Describe your experience with SQL and relational data modeling, and summarize your learning with large-scale database backed applications.
+
+    I redesigned the entire database (AWS RDS, PostgreSQL) from scratch for the scrap and build of EXLINK CO., LTD.'s bulk SMS sending system.
+    Although I haven't counted, I probably created definitions for over 100 types of tables and implemented them using SQL.
+    This database contains not only commonly abstracted content like "product tables" and "product sales quantities", but also complex structures like trees and directed graphs, similar to multiple structures linked with pointers in C/C++. Due to the need to select multiple SMS sending services under various conditions, it evolved into such a structure.
+
+    Additionally, I extracted user information (corporation names, account names, contract details, templates, phonebooks, sending logs, etc.) from the old system, converted it to the new system's format, and wrote it using SQL in a bash + php script.
+    I also regularly created and ran scripts (bash + SQL) to check the count and execution time of each query to identify and address bottlenecks.
+
+    The SQL mentioned above is raw SQL. I did not use any management tools, as they often either fell short or locked database tables causing development disruptions. I carried out these tasks almost daily for about three years.
+
+    I have never dealt with a database large enough to be called a "large-scale database".
+    However, I do have ideas on how to handle massive data while maintaining speed through parallel processing. Parallel processing is effective for challenges like bulk SMS sending, but in that case, the DBMS server becomes both a bottleneck and a single point of failure. Yet, the only time we truly need data centralized is during "aggregation". Moreover, "aggregation" does not need to be done frequently, and it doesn't demand high speed.
+    Thus, data can be divided and retained on a per-process basis. By placing numerous small databases behind a mechanism, similar to DNS, that's only used for "aggregation" and "search", it becomes possible to handle vast amounts of data while preserving speed.
+
+   - Describe a case where it was very difficult to test code you were writing, but you found a reliable way to do it.
+
+    I encountered problems that could only be reproduced in the commercial environment.
+    To reproduce the same phenomenon in the development environment, I created a new "development environment" and "commercial beta environment", each with the exact same configuration and content from the Load Balancer (LB) to the Database (DB) without sharing instances (only the commercial beta environment's DB was shared with the commercial environment).
+    This way, I could perform any test by directly modifying the source code in the development environment or the commercial beta environment.
+    In addition, I created a bash script for the three environments with the capabilities to:
+    (1) Display the differences of the environments
+    (2) View a list of updated files (--dry-run mode), and
+    (3) Actually update them.
+    This script sped up debugging and updating processes, and significantly reduced the occurrence of mishaps.
+
+   - What kinds of software projects have you worked on before? Which operating systems, development toolchains, languages, databases?
+
+    <h4>Project History 1 - Machine Translation</h4>
+    Overview: Machine Translation Project of MITI (Ministry of International Trade and Industry), commonly known as the Mu Project. Located at Nagao Laboratory, Kyoto University.
+    Period: 1983-1985
+    Hardware: Fujitsu mainframe (Kyoto University Computer Center), Symbolics lisp machine
+    OS: Unknown (at the time, the OS was integrated with the hardware)
+    Languages, Libraries, and Frameworks: UTI-LISP (LISP dialect developed by the University of Tokyo)
+
+    <h4>Project History 2 - Machine Translation</h4>
+    Overview: NEC's Machine Translation Project (Central Research Laboratories for the first two years, then Mita's Business Division)
+    Period: 1985-2000
+    Hardware: VAX, NEC's UNIX workstation, NEC PC-9801 series (personal computer)
+    OS: BSD UNIX (VAX), System V UNIX (workstation), Windows NT, Windows 95 (personal computer)
+    Languages, Libraries, and Frameworks: C (cc), Visual C/C++, Visual Basic, Franz Lisp, UTI-LISP, csh, awk, perl
+
+    <h4>Project History 3 - Japanese Morphological and Syntactic Analysis</h4>
+    Overview: Development of a Japanese syntactic analysis system (initially at Tokyo Soft Corporation, later the system department spun off)
+    Period: 2000-2009
+    Hardware:IBM PC-AT compatible machine (personal computer)
+    OS: FreeBSD, Linux (Fedora), Windows, Windows Server
+    Middleware: httpd (Apache)
+    Languages, Libraries, and Frameworks: Visual C/C++, C++ (gcc), C#, Java, HTML
+
+    <h4>Project History 4 - Bulk SMS System</h4>
+    Overview: Development of mass SMS sending system for EXLINK CO., LTD.
+    Period: 2010-2022
+    Hardware: AWS
+    OS: Linux (Amazon Linux, Amazon Linux 2), ELB, EFS, S3, CloudWatch, VPN
+    Middleware: Apache, RDS (PostgreSQL), Aurora (PostgreSQL)
+    Languages, Libraries, and Frameworks: C++ (gcc), HTML, css, javascript, jquery, bootstrap, PHP, bash, Java
+
+    <h4>Project History 5 - Linux IDS (Intrusion Detection System)</h4>
+    Overview: Developed TCPDetective (a Linux Intrusion Detection System) individually.
+    Period: 2022 - Present
+    Hardware: AWS
+    OS: Amazon Linux 2
+    Middleware: Apache, RDS (PostgreSQL)
+    Languages, Libraries, and Frameworks: SystemTap, C++ (gcc), PHP, bash
+
+    <h4>Project History 6 - E-commerce site for subscription model</h4>
+    Overview: Developed an e-commerce site to sell the previously mentioned IDS (Intrusion Detection System) TCPDetective through PayPal's "subscription" model.
+    Period: 2022 to present
+    Hardware: AWS
+    OS: Amazon Linux 2
+    Middleware: Apache, RDS (PostgreSQL)
+    Languages, Libraries, and Frameworks: C++ (gcc), HTML, CSS, javascript, jquery, bootstrap, PHP, bash, node.js
+
+    Please see https://www.starship.jp/ for details.
+
+   - Would you describe yourself as a high quality coder? Why?
+
+    Yes, I would describe myself as a high-quality coder for the following reasons:
+    - I have developed several systems that have proven to be useful and/or have generated profits.
+    - I've consistently chosen the optimal language (e.g., C++, PHP, javascript) and technology (libraries, frameworks, protocols) based on the problem at hand.
+    - I always write code with reusability in mind and rigorously test it.
+      Some of the notable components I've developed include:
+        - A custom memory management class to prevent fragmentation and memory leaks (C++)
+        - Semaphore class (C++)
+        - Mutex class (C++)
+        - Shared memory class (C++)
+        - HTTP server class (C++)
+        - SMPP class (C++)
+        - Mail class (C++, PHP)
+        - Curl class (C++, PHP)
+        - LINE class (PHP)
+        - PayPal class (javascript, PHP)
+        Among many others.
+
+   - Would you describe yourself as an architect of resilient software? If so, why, and in which sorts of applications?
+
+    I have some reservations regarding this matter.
+    I personally prefer systems that never produce errors, and if they do, they should fail in a way that's noticeably evident to the user.
+    Based on this philosophy, in the sales website for the Linux IDS I developed (https://www.tcpdetective.com), if an error occurs on the client or server side, a dialog box with a detailed description of the error is shown to the user. They can then create a support case for the error with a single click.
+    However, the multiprocess parallel distributed processing structure I often employ for high throughput does, as a result, enhance fault-tolerance, redundancy, and scalability.
+
+   - Outline your thoughts on open source software development. What is important to get right in open source projects? What open source projects have you worked on? Have you been an open source maintainer, on which projects, and what was your role?
+
+    Open Source Software (OSS) is an indispensable foundation for both me personally and modern society at large. I believe that even for-profit companies should make their software sources publicly available because it benefits humanity as a whole. I include a complete set of sources and documentation required for development in the distribution tarball for the Linux IDS I developed.
+    Although I haven't participated in any open source projects, I don't have particular insights into what's essential when engaging in OSS projects.
+
+   - Describe your experience building large systems with many services - web front ends, REST APIs, data stores, event processing, and other kinds of integration between components. What are the key things to think about in regard to architecture, maintainability, and reliability in these large systems?
+
+    For instance, I took on about 50% of the implementation and 100% of the interface design for a bulk SMS sending system for EXLINK CO., LTD.
+
+    This system comprises:
+    - Server-side Admin Console for both customers and system administrators (PHP)
+    - Client-side Admin Console for both customers and system administrators (Javascript + jQuery)
+    - An internal API that receives requests from the client side of the Admin Console and executes business logic (mostly communication with the DB server) (PHP)
+    - SMPP-based transmission (C++)
+    - HTTP-based transmission (C++)
+    - An external API to receive SMS send requests from customers' client systems (C++)
+    - A resident process that constantly searches the DB and makes new send requests to either the SMPP-based and/or the HTTP-based transmission modules (C++)
+    - API to append unique identifiers to URLs (PHP)
+    - API to shorten URLs (PHP)
+    - API that manages user information centrally (PHP)
+    - API that sends emails to customers via SendGrid API and update customer information based on the results (PHP)
+    Among many others.
+
+    The architecture of this system is characterized by:
+
+    1. Almost all the modules interacting using raw HTTP REST APIs (requests in x-www-form-urlencoded and responses in Content-Type: application/json).
+    2. Almost all the modules are written in raw C++ (without using template libraries like STL), raw PHP (without frameworks like Laravel), or Javascript (with jquery).
+    3. DB operations are executed using raw SQL without the use of abstracting techniques like ORM. Furthermore, no off-the-shelf management tools are used due to their constraints and potential disruptions in development.
+
+    The underlying philosophy for points 1-3 is to "use technologies as close to the foundation as possible". This ensures visibility, ease, and flexibility in development.
+
+    In addition, all the modules exist in three distinct environments: 'Development', 'Commercial Beta', and 'Commercial'.
+    This approach facilitates both continuous development and continuous operations safely and with ease.
+
+   - How comprehensive would you say your knowledge of a Linux distribution is, from the kernel up? How familiar are you with low-level system architecture, runtimes and Linux distro packaging? How have you gained this knowledge?
+
+    My journey in understanding computers, operating systems, and their intricacies started from foundational texts in information engineering. My initial inspiration came from the machine translation project at Kyoto University. At that time, Linux did not exist, and UNIX was the prevalent system. I delved deep into UNIX through a book titled "Constructing the UNIX Kernel" (though I couldn’t find the book on my shelf just now and I don’t recall the author’s name).
+
+    When it comes to Linux, I haven't engaged in structured studies via textbooks. Most of my knowledge accumulation has been organic, primarily driven by real-world challenges and seeking specific information for practical applications. My understanding of the Linux kernel's implementation isn't systematic. I haven't engaged in any kernel hacking activities. However, just last year, I got acquainted with Linux tracepoints and SystemTap, which led me to write a program that receives callbacks from the kernel for the first time (you can see it at https://www.tcpdetective.com/).
+
+    I have hands-on experience with various distributions like Fedora, CentOS, Ubuntu, Debian, and Amazon Linux. Specifically, I have installed Fedora and CentOS on actual hardware.
+
+   - Describe any experience you have with low-level embedded systems engineering, on Linux or other embedded operating systems
+
+    I have analyzed a program that implements SMPP with AT commands, but I've never written any actual embedded programs that run.
+
+   - Describe your experience with large-scale IT operations, SAAS, or other running services, in a devops or IS or system administration capacity
+
+    I was in charge of and directly responsible for the operations of the aforementioned SMS bulk transmission system.
+
+   - Describe your experience with public cloud based operations - how well do you understand large-scale public cloud estate management and developer experience?
+
+    The aforementioned SMS bulk transmission system was built on AWS.
+
+   - Describe your experience with enterprise infrastructure and application management, either as a user running enterprise operations, or as a vendor targeting the enterprise market
+
+    I have no experience in that regard.
+
+   - Outline your thoughts on quality in software development. What practices are most effective to drive improvements in quality?
+
+    Computers are tools that extend human information processing functions.
+    Therefore, in principle, programs should be written by users who "know what they want to do," in other words, users with a specific purpose.
+    This is crucial because it allows for a very fast feedback loop in development, progressing from defining the development purpose, to designing, coding, testing, evaluation, revising the development purpose, back to designing, and so on.
+    When "communication with stakeholders" is inserted into this loop, the cost of cycling through the loop increases exponentially as the number of stakeholders grows.
+    This is the reason why large projects fail.
+
+    In actual development, it's often difficult for users to write the software themselves. Hence, it's preferable to develop with a team of about 1-3 people who understand the purpose well, especially in the initial stages of development. By doing this, quality is automatically ensured.
+    Beyond the initial stages, the cost of cycling the loop inevitably increases.
+    Still, this can be mitigated through an "integration of authoritarianism and liberalism."
+
+    Specifically:
+
+    - Multiple groups of developers with the same functions proceed with the development as they see fit in a development environment (liberalism).
+    - A senior programmer, overseeing all these groups, will compare the outcomes from each group. If they find something good, they can unilaterally decide to promote it to the production environment (authoritarianism).
+    - This hierarchical structure of liberalism and authoritarianism can be nested.
+
+    Yes, this is essentially the development structure of Linux.
+
+   - Outline your thoughts on documentation in large software projects. What practices should teams follow? What are great examples of open source docs?
+
+    I once analyzed a data compression program. This program had very few comments, and even after reading the code, I couldn't understand its purpose. The types of arguments and return values were clear, but the purposes of the functions were utterly elusive. It wasn't until months, if not years later, that I realized they were "detecting recurring sequences in byte streams and registering them in a 'dictionary'".
+
+    For documentation, what's crucial is the comments within the source code. Not just explanations of signatures, but explanations of the 'purpose'.
+    This cannot be ensured merely by practices or tools. Perhaps the best way is to instruct, "Write comments for yourself a year from now."
+
+   - Outline your thoughts on user experience, usability and design in software. How do you lead teams to deliver outstanding user experience?
+
+    In UX, structure and functionality are more important than aesthetics.
+    When a user views the initial screen, they should immediately understand where to click to achieve what they want.
+    Once clicked, they should only need to answer questions, and the desired task should be completed automatically.
+    Having long explanations scattered throughout is the worst.
+    Moreover, due to the diverse nature of users, it's impossible to anticipate every user action in advance. Therefore, a link to create a support case is essential on every screen.
+    By strictly adhering to the above, I believe a good UX will naturally be achieved over time.
+
+   - Outline your thoughts on performance in software engineering. How do you ensure that your product is fast?
+
+        - Use of high-speed languages.
+        - Avoid abstraction layers that pamper programmers.
+        - Parallel processing through multiprocessing.
+        - Inter-process communication with minimal overhead.
+        - Memory management that prevents heap fragmentation.
+
+   - Outline your thoughts on security in software engineering. How do you lead your engineers to improve their security posture and awareness?
+
+        - Always properly quote the data received from users to ensure it doesn't create a pathway to be executed as program code.
+        - To prevent stack overflows, always operate on stack objects using dedicated classes equipped with overrun check functionalities.
+        - Record all events related to process behavior and inter-process communication in a consistent format. This enables post-event analysis and countermeasures.
+
+   - Outline your thoughts on devops and devsecops. Which practices are effective, and which are overrated?
+
+    Much like the issue with documentation, I believe it's impossible to guarantee certain outcomes solely with specific practices or tools.
+    Modifications in the program can have unforeseen consequences in areas beyond the programmer's imagination.
+    To conduct continuous development and operations safely, it's crucial to:
+    - Let as many people as possible use the program
+    - Under conditions as similar as possible to the production environment
+    - For as long a duration as possible.
+
+<h3>Industry leadership experience</h3>
+   - Describe your speaking experience at industry events and conferences
+
+    I have no speaking experience at industry events and conferences.
+    I'm not particularly fond of oral communications, whether in Japanese or English.
+
+    Because oral communications:
+        1. Don't leave a record.
+        2. Cannot be searched.
+        3. Interrupt the other party's work (though this isn't related to this question).
+        4. Often lead to mutual misunderstandings, giving the illusion that everything is clear.
+        5. Provide little time for contemplation, as immediate responses are expected, leading to potential awkwardness and impeding meaningful communication.
+
+   - Are you a thought leader in any particular area of technology?
+
+    No.
+
+   - Describe any experience working with startups. What did you draw from that experience that would be relevant for this application?
+
+    I've worked on several projects, such as the SMS bulk sending system and a syntax parsing system, both for startups. However, I don't believe that these experiences are particularly relevant to this application.
+
+   - Describe any experience working in a public company. What is important for your colleagues to know about being a public company?
+   
+   I have never been an employee of a public company.
+
+<h3>Education</h3>
+We consider academic results in high school and university for all roles,
+regardless of seniority or department. To enjoy a long and varied career at
+Canonical, one would need to tackle problems that cannot be defined today!
+From engineering to marketing to operations and sales, we intensely value
+colleagues who are able to puzzle through difficult problems and find the
+optimal path forward.
+
+   - How did you rank in your high school, in your final year in maths and hard sciences? Which was your strongest?
+
+    Math was relatively my stronger subject, but since I attended one of the top academic high schools in my region, I would say my rank in maths was around the middle.
+    My performance in physics and chemistry was disastrously poor.
+    When I mentioned in a career counseling session that I wanted to become a craftsman, the teacher in charge told me, "In that case, you need to work harder in math."
+    It seems I have a strength in grasping the essence of things, but I struggle with mechanically memorizing the procedures for mathematical formulas and graphs. I get too caught up in understanding the "meaning" that I can't engage in repetitive practice.
+
+   - How did you rank in your high school, in your final year in languages and the arts? Which was your strongest?
+
+    I excelled in English, History, and Modern Japanese.
+    Especially in English, I was at the top of my class, significantly outperforming the student in the second place.
+    In Japanese History, I was once praised by my teacher who said, "I've never seen such a high score before."
+
+   - Please state your high school graduation results or university entrance results, along with the system used, and how to understand those. For example, in the US, you might give your SAT or ACT scores. In Germany, you might give your scores 1-5.
+
+    I was directly admitted to the Department of English and American Studies at Tokyo University of Foreign Studies, which has a "deviation value" (a measure of relative ranking commonly used in Japan) second (in Japan's university humanities departments) only to the Literature Department of Tokyo University, Faculty of Letters, Division III.
+
+   - What sort of high school student were you? Outside of class, what were your interests and hobbies? What would your high school peers remember you for, if we asked them?
+
+    I was fond of science fiction novels in high school and was a member of the archery club. I was known for being academically proficient, especially knowledgeable in the fields of English and physics.
+    Although I was extremely shy and introverted at first, those who got to know me found that I also had a playful side. If you were to ask my high school peers, they might remember me as someone who was initially reserved, but showed a whimsical side once familiar.
+
+   - Which university and degree did you choose? What other universities did you consider, and why did you select that one?
+
+    Coming from a not-so-affluent background, national universities were my only options. My uncle, who was a dentist, persistently advised me to pursue medical studies at our local national university. However, I firmly believed that given my personality, I could neither be a doctor nor a teacher. I ended up applying to the Law Faculty of Tohoku University (one of the so-called "former imperial universities") and the Department of English and American Studies at Tokyo University of Foreign Studies. I was accepted into both but chose to enroll at Tokyo University of Foreign Studies, mainly because it was located in the capital city.
+
+   - At university, did you do particularly well at any area of your degree?
+
+    I excelled in a course taught by a renowned professor in English-Japanese translation. Out of the 90 or more students who took the exam for the course, I ranked 3rd and finished the course with a final rank of 5th.
+
+   - Overall, what was your degree result and how did that reflect on your ability?
+
+    A certain company was recruiting for participants in a machine translation project at Kyoto University. I believe that my degree from Tokyo University of Foreign Studies played a significant role in my passing that examination.
+
+   - In high school and university, what did you achieve that was exceptional?
+
+    In high school, I was admitted to a prestigious university with very little examination preparation.
+    In university, I became aware of machine translation, a concept that was hardly known at the time. I wondered if I could develop a system for it. Coincidentally, personal computers had just started being sold around that time, so I purchased one and began learning programming.
+
+   - What leadership roles did you take on during your education?
+
+    None.
+
+<h3>Context</h3>
+   - Outline your thoughts on the mission of Canonical. What is it about the company's purpose and goals which is most appealing to you? What do you see as risky or unappealing?
+
+    What stands out the most to me is Canonical's focus on the extremely innovative and practical technology of Metal-As-A-Service through Ubuntu. Your company's philosophy directly connects with everyday life, a trait not seen in other companies, and one that aligns with my personal beliefs.
+
+    However, while these aren't issues with the purpose but rather the means, I see two potential concerns:
+    - The company seems unaware of the significant language barriers that exist in Japan, as evidenced by the lack of a Japanese version of your website.
+    - Additionally, there is no mention of pricing on your website.
+    These make it difficult for the majority of Japanese businesses, which are small to medium-sized enterprises, to even consider using MAAS. In fact, most might not even be aware of your company because of this.
+
+   - Who are Canonical's key competitors, and how should Canonical set about winning?
+
+    The key competitors for Canonical are cloud service providers such as AWS, GCP, and Azure.
+    The paramount strategy for victory is undeniably cost-efficiency. In recent years, cloud services have become more abstracted, leading to higher costs. While I don't know the exact extent, I've heard that there are movements (likely among small to medium-sized enterprises) reverting back to on-premises solutions due to the shocking costs.
+    The primary allure of MaaS, I believe, is its ability to ensuring cost-effectiveness while maintaining the benefits of cloud solutions — like being able to quickly discard and recreate machines when an error occurs.
+
+   - Why do you most want to work for Canonical?
+
+    My long-standing contract job came to an end last July. Since then, for about a year, I developed an IDS system for Linux and a website to sell it, but I've been completely without income during this time and even now. I withdrew from web advertising early on due to the surprisingly high cost per click. My remaining funds for daily life are dwindling. So, I started looking for employment or contract work from this July. However, I realized there are two significant issues:
+
+    - In Japan, traditions like the "retirement age" linger long after they've lost their meaning due to changes in the environment. Consequently, most of my job applications get rejected (officially for other reasons, but actually) due to my age.
+    - When I try to demonstrate my value by sharing philosophical insights, very few people can actually understand what I'm saying. The people who can evaluate my capabilities aren't at the forefront of the hiring process.
+
+    Bryan, you are the first person with authority in a recruiting company to have overcome these two hurdles (the very first person to comprehend is an agent, not from a recruiting company. He's been actively looking for opportunities for me, but we haven't seen results yet).
+
+   - What would you most want to change about Canonical?
+
+    I'd like Canonical to gain a deeper understanding of the unique characteristics of Japan – the significant language barriers, irrational business practices, and the lack of human resources in small and medium-sized enterprises.
+
+   - What gets you most excited about this role?
+
+    To be honest, due to the circumstances mentioned earlier, I am applying for any job that seems feasible, and I do not have any particular attachment to a specific role.
+
+
+
+
+Finally, I have two questions for you.
+
+- I believe this Q&A session perfectly encapsulates my aspirations and capabilities as an engineer. May I add this to my portfolio website? Should I disclose or conceal your name and the name of your affiliated company?
+
+- As you already know, in verbal communication, especially in English, I can't express even 10% of my true abilities. Would it be possible to conduct future interviews in written form or in Japanese?
+
+
+
+Dear Bryan,
+Thank you very much for taking the time to discuss in detail. I hope I was able to convey my interest and enthusiasm for Canonical. I am looking forward to hearing feedback and the next steps. Thank you for your kind consideration.
+
+Best regards,
+Takamitsu Ishioka
+</div>
+
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!-- プリファレンス・ダイアログ -->
+<div class="modal fade preferences_dialog" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close command-cancel" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title"><span class="fa fa-lg fa-address-card"></span>&nbsp;&nbsp;Profile</h4>
+            </div>
+            <div class="modal-body">
+
+                <div class="form-group row account">
+                    <label class="col-md-3 col-xs-12 control-label">Account Name</label>
+                    <div class="col-md-9 col-xs-12">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span class="fa fa-at"></span></span>
+                            <input type="text" class="form-control account" readonly/>
+                        </div>
+                        <span class="help-block">Your account name</span>
+                    </div>
+                </div>
+
+                <div class="form-group row hidden">
+                    <label class="col-md-3 col-xs-12 control-label">Password</label>
+                    <div class="col-md-9 col-xs-12">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span class="fa fa-unlock-alt"></span></span>
+                            <input type="password" class="form-control"/>
+                        </div>
+                        <span class="help-block">Password field sample</span>
+                    </div>
+                </div>
+
+                <div class="form-group row hidden">
+                    <label class="col-md-3 col-xs-12 control-label">Datepicker</label>
+                    <div class="col-md-9 col-xs-12">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                            <input type="text" class="form-control datepicker" value="2014-11-01">
+                        </div>
+                        <span class="help-block">Click on input field to get datepicker</span>
+                    </div>
+                </div>
+
+                <div class="form-group row hidden">
+                    <label class="col-md-3 col-xs-12 control-label">Textarea</label>
+                    <div class="col-md-9 col-xs-12">
+                        <textarea class="form-control" rows="5"></textarea>
+                        <span class="help-block">Default textarea field</span>
+                    </div>
+                </div>
+
+                <div class="form-group row hidden">
+                    <label class="col-md-3 col-xs-12 control-label">Tags</label>
+                    <div class="col-md-9 col-xs-12">
+                        <input type="text" class="tagsinput" value="First,Second,Third"/>
+                        <span class="help-block">Default textarea field</span>
+                    </div>
+                </div>
+
+                <div class="form-group row language">
+                    <label class="col-md-3 col-xs-12 control-label">Language</label>
+                    <div class="col-md-9 col-xs-12">
+                        <select class="form-control select language_select">
+                            <option value="none">none</option>
+                            <option value="en">English</option>
+                            <option value="ja">日本語</option>
+                        </select>
+                        <span class="help-block">Select a language.</span>
+                    </div>
+                </div>
+
+                <div class="form-group row hidden">
+                    <label class="col-md-3 col-xs-12 control-label">File</label>
+                    <div class="col-md-9 col-xs-12">
+                        <input type="file" class="fileinput btn-primary" name="filename" id="filename" title="Browse file"/>
+                        <span class="help-block">Input type file</span>
+                    </div>
+                </div>
+
+                <div class="form-group row hidden">
+                    <label class="col-md-3 col-xs-12 control-label">Checkbox</label>
+                    <div class="col-md-9 col-xs-12">
+                        <label class="check"><input type="checkbox" class="icheckbox" checked="checked"/> Checkbox title</label>
+                        <span class="help-block">Checkbox sample, easy to use</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left command-cancel" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary command-ok" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/js/plugins/bootstrap/bootstrap-datepicker.js"></script>
+<script type="text/javascript" src="/js/plugins/bootstrap/bootstrap-file-input.js"></script>
+<script type="text/javascript" src="/js/plugins/bootstrap/bootstrap-select.js"></script>
+<script type="text/javascript" src="/js/plugins/tagsinput/jquery.tagsinput.min.js"></script>
+<script>
+function ShowPreferencesDialog(argv) {
+
+    var dialog = $('.preferences_dialog');
+
+    dialog.modal({
+        show: true,
+        keyboard: true,
+        backdrop: 'static',
+    });
+
+    dialog.find('.row.account input[type=text].account').val(User.getCurrent().account);
+
+    let language_select = dialog.find('.row.language select.language_select');
+    let language = Preferences.get('language', true/*global*/);
+    //Console.debug(language, '>>>>>>> Preferences:');
+    if (language == undefined) {
+        language = User.getCurrent().getLanguage();
+        //Console.debug(language, '>>>>>>> User.getLanguage():');
+    }
+    if (language != undefined) {
+        let option = language_select.find('option[value=' + language + ']');
+        if (option.length == 1) {
+            language_select.selectpicker('val', language);
+        }
+    }
+
+    dialog.find('.command-ok').off('click').click(function(e) {
+        let language_new = language_select.selectpicker('val');
+        if (language_new != language) {
+            if (language_new == 'none') {
+                Preferences.set('language', undefined, true);
+            } else {
+                Preferences.set('language', language_new, true);
+            }
+        }
+        Preferences.save();
+        if (argv.onOK) {
+            argv.onOK();
+        }
+    });
+
+    dialog.find('.command-cancel').off('click').click(function(e) {
+        if (argv.onCancel) {
+            argv.onCancel();
+        }
+    });
+}
+</script>
+<!-- END プリファレンス・ダイアログ -->

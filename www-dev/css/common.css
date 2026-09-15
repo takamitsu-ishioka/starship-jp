@@ -1,0 +1,417 @@
+/*
+modal を表示するとスクロールバーが出たり引っ込んだりしてみっともない。
+PC の広い画面ではスクロールバーを出さない。
+TODO: ?login=y でログインしたときしか効かない（後から否定されて？取り消し線が付く）
+TODO: ウィンドウの高さが固定されていると、やっぱりいろいろ面倒
+@media only screen and (min-width: 1024px) {
+    body {
+        height: 100vh;
+        overflow-y: hidden;
+    }
+    body.modal-open {
+        height: 100vh;
+        overflow-y: hidden;
+    }
+}
+*/
+/* ChatGPT さんが教えてくれたやつ */
+body {
+    overflow: hidden;   /* 恐らくこれで body がスクロールしなくなり、代わりに html がスクロールするようになった。*/
+    /*overflow-x: hidden;   恐らくこれで body がスクロールしなくなり、代わりに html がスクロールするようになった。*/
+}
+.modal-open {
+    padding-right: 0 !important;
+}
+/*
+230526 これ追加してみた。リロード直後？に「びよ～ん」とするのが直るか？
+→効かない。てか、逆効果？
+body.modal-open {
+    height: 100vh;
+    overflow-y: hidden;
+}
+*/
+
+/*
+bootstrap やテンプレートの css で気に入らないやつを上書き。
+*/
+a {
+    cursor: pointer;
+}
+
+.form_control {
+    height: auto;
+    min-height: 30px;
+    font-size: 100%;
+    line-height: 18px;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    -webkit-appearance: none;
+    border: 1px solid #D5D5D5;
+    background: #F9F9F9;
+    padding: 4px 8px 4px 8px;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.form-control[readonly],
+.form-control[readonly]:focus {
+    cursor: text;
+    background: #f9f9f9;
+    color: #555555;
+    border-color: #d5d5d5;
+}
+
+.panel.panel-warning {
+    border-top-color: #fe970a;
+}
+
+.panel table.table_radio_button>thead>tr>th.radio_button,
+.panel table.table_radio_button>tbody>tr>td.radio_button {
+    border-right: none;
+    padding: 0 0 0 1rem;
+    width: 1px;
+    text-align: right;
+    vertical-align: middle;
+    cursor: pointer;
+}
+.panel table.table_radio_button>thead>tr>th.radio_button input[type=radio],
+.panel table.table_radio_button>tbody>tr>td.radio_button input[type=radio] {
+    position: relative;
+    top: 2px;
+}
+.panel table.table_radio_button>thead>tr>th.radio_button+th,
+.panel table.table_radio_button>tbody>tr>td.radio_button+td {
+    border-left: none;
+    cursor: pointer;
+}
+.panel table.table_radio_button>thead>tr>th.radio_button+th>span.radio_button_label {
+    float: left;
+    display: inline-block;
+    position: relative;
+    left: -20px;
+}
+
+.panel-title.panel-collapse {
+    cursor: pointer;
+}
+
+/*
+入れ子の ol の li に枝番を付ける
+*/
+.panel-body>ol {
+    padding-left: 0;
+    list-style-type: none;
+    counter-reset: section; /* Set a counter named 'section' */
+}
+.panel-body>ol>li {
+    counter-increment: section; /* Increment the counter */
+    counter-reset: subsection;  /* Set a counter named 'subsection' */
+}
+.panel-body>ol>li::before {
+    content: counter(section) ". "; /* Display the counter */
+}
+.panel-body>ol>li>ol {
+    list-style-type: none;
+}
+.panel-body>ol>li>ol>li {
+    counter-increment: subsection;  /* Increment the inner counter */
+}
+.panel-body>ol>li>ol>li::before {
+    content: counter(section) "-" counter(subsection) ". "; /* Display the counter */
+}
+
+/* フォントを大きめにする（老眼に細かい字はつらい） */
+.panel .panel-heading .panel-title {
+    font-size: 1.6rem;
+    font-weight: bold;
+}
+.panel .panel-body {
+    font-size: 1.4rem;
+}
+.panel .panel-body h3 {
+    font-size: 130%;
+}
+.panel .panel-body p {
+    margin-top: 0.1rem;
+    margin-bottom: 0.1rem;
+}
+.panel .panel-body ol {
+    margin-top: 0.1rem;
+    margin-bottom: 0.1rem;
+}
+.panel .panel-body .br {
+    height: 0.5rem;
+}
+
+/*
+自作したクラス
+*/
+.noty_bar .noty_message .noty_text {
+    text-align: left;
+    /*font-size: 1.2rem;*/
+    line-height: 1.2rem;
+}
+.noty_bar .noty_message .noty_text .message_line+.message_line {
+    margin-top: 0.4rem;
+}
+.tooltip-inner {
+    text-align: left;
+}
+
+@media only screen and (min-width: 1024px) {
+    .form-group .control-label {
+        text-align: right;
+    }
+}
+
+table thead tr th.action,
+table tbody tr td.action {
+    text-align: center;
+    width: 1rem;    /* つまり、できるだけ横幅を小さく表示する */
+}
+table thead tr th.iso_8601,
+table tbody tr td.iso_8601,
+table thead tr th.created_at,
+table tbody tr td.created_at,
+table thead tr th.updated_at,
+table tbody tr td.updated_at {
+    width: 11rem;
+}
+.table thead tr th,
+.table tbody tr td {
+    white-space: nowrap;
+}
+table tbody tr td button {
+    padding-top: 0.4rem;
+    line-height: 1.4rem;
+}
+table tbody tr td button span.fa {
+    padding-left: 0.4rem;
+}
+
+/*
+時間のかかる処理を実行している間、カーソルを砂時計にする。
+*/
+.cursor_wait {
+    cursor: wait;
+}
+
+/*
+「ここが間違い」みたいに場所を指定してメッセージを表示する noty 風の小さな div。
+*/
+.notice_inline {
+    position: absolute;
+    height: auto;
+    color: white;
+    font-weight: bold;
+    /*padding: 8px 16px 8px 8px;*/
+    padding: 0 10px 0 10px;
+    border-radius: 4px;
+    cursor: default;
+    z-index: 2000;
+}
+.notice_inline>.message_box {
+    position: relative;
+    top: -9px;
+}
+.notice_inline:before {
+    content: "";
+    display: inline-block;
+    position: relative;
+    /*top: -13px;*/
+    top: -12px;
+    left: -8px;
+    width: 0px;
+    height: 0px;
+    border-top: none;
+    border-left: solid 4px transparent;
+    border-right: solid 4px transparent;
+    background: transparent;
+}
+.notice_inline:after {
+    content: "";
+    clear: both;
+}
+.notice_inline.success {
+    background: #95B75D;    /* noty の success と同色 */
+}
+.notice_inline.success:before {
+    border-bottom: solid 8px #95B75D;
+    color: #95B75D;
+}
+.notice_inline.danger {
+    background: #b64645;    /* noty の error と同色 */
+}
+.notice_inline.danger:before {
+    border-bottom: solid 8px #b64645;
+    color: #b64645;
+}
+.notice_inline.info {
+    background: #3FBAE4;    /* noty の information と同色 */
+}
+.notice_inline.info:before {
+    border-bottom: solid 8px #3FBAE4;
+    color: #3FBAE4;
+}
+
+/*
+テキスト領域の右下の文字数表示
+*/
+.character_counter {
+    color: white;
+    font-weight: bold;
+    padding: 0.06rem 0.2rem 0.06rem 0.2rem;
+    border-radius: 4px;
+}
+.character_counter.success {
+    background: #95B75D;    /* noty の success と同色 */
+    border: solid 1px #95B75D;
+}
+.character_counter.danger {
+    background: #b64645;    /* noty の error と同色 */
+    border: solid 1px #b64645;
+}
+
+/*
+pull-right ボタンの間隔をあける
+*/
+button.btn.pull-right + button.btn.pull-right {
+    margin-right: 0.4rem;
+}
+
+/*
+.panel-body-table の最後の行に下端の境界線を付ける。
+*/
+/*
+.panel-body.panel-body-table .table > tbody > tr:last-child > td {
+    border-bottom: solid 1px #e5e5e5;
+}
+*/
+
+table.table-hover>tbody>tr:hover {
+    background: #f1f5f9;
+}
+
+table.selectable>tbody>tr.selected {
+    background: #e8f0fe;
+}
+
+.panel .panel-body table.table .support_case_message_text {
+    white-space: pre-wrap;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.label-default {
+    background-color: #cccccc;
+}
+
+/*
+panel-body の上部右詰めに表示されるボタンの並びのコンテナ
+*/
+.panel .panel_buttons {
+    text-align: right;
+    padding-bottom: 1rem;
+}
+.panel .panel_buttons::before,
+.panel .panel_buttons::after {
+    content: "";
+    display: block;
+}
+.panel .panel_buttons::after {
+    clear: both;
+}
+
+/*
+shell の端末画面的な何か
+*/
+.shell {
+    font-family: monospace;
+    background-color: black;
+    color: white;
+    padding: 10px;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    white-space: nowrap;
+    overflow-x: scroll;
+    max-width: 100%;
+    border-radius: 5px;
+}
+.shell .prompt {
+    margin: 0;
+    font-weight: bold;
+}
+
+/*
+画像のコンテナ
+common.js の AdjustImageContainer() で幅を調整し、スクロールバーの表示・非表示を切り替える。
+*/
+.panel .panel-body .image_container {
+    margin: 1rem 0 1rem 0;
+}
+.panel .panel-body .image_container img {
+    border: solid 1px #d5d5d5;
+}
+
+/*
+左上のユーザーアイコン
+svg で文字列を画像化する
+*/
+svg.svg_icon_user {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    margin-right: 0;    /* TODO: 効果・副作用確認 */
+    margin-left: 0;     /* TODO: 効果・副作用確認 */
+    cursor: pointer;
+}
+@media only screen and (min-width: 1024px) {
+    svg.svg_icon_user {
+        left: 50px;
+    }
+}
+@media only screen and (max-width: 1024px) {
+    svg.svg_icon_user {
+        left: 140px;    /* /js/common.js で計算する。この値はテキトー。 */
+    }
+}
+svg.svg_icon_user>rect {
+    stroke: white;
+    stroke-width: 5;
+    fill-opacity: 1;
+    stroke-opacity: 1;
+}
+svg.svg_icon_user>text {
+    font-size: 32px;
+    font-weight: bold;
+}
+/* 普通の画像のアイコン */
+img.img_icon_user {
+    cursor: pointer;
+    position: relative;
+    top: 4px;
+    left: 1px;
+}
+
+/*
+pre_render は、プリレンダリング API サーバーにページの内容を登録する処理のきっかけとなるアイコンボタンのクラス。
+a.pre_render は通常は hidden クラスで隠しておく。
+詳しくは /js/common.js の UploadCurrentPage() の能書きを参照。
+*/
+a.pre_render {
+    cursor: pointer;
+}
+
+.preference {
+    cursor: pointer;
+}
+
+/* 印刷時の強制改ページ */
+.pagebreak {
+    page-break-before: always;
+}

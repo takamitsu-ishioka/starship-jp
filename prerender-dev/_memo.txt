@@ -1,0 +1,13 @@
+■2023-06-05
+
+TODO: 次の文字列が未修正
+
+./db/prerender.sql:status                      VARCHAR(24) NOT NULL,               -- See PayPalSubscription._statuses in www-dev1.tcpdetective.com/js/paypal.js
+./db/prerender.sql:status                      VARCHAR(24) NOT NULL,               -- See PayPalSubscription._statuses in www-dev1.tcpdetective.com/js/paypal.js
+./lib/line.php:    private $token = LINE_CHANNEL_TOKEN_TCPDETECTIVE;
+./lib/line_config.php:// TCPDetective チャンネル用恒久アクセストークン
+./lib/line_config.php:define('LINE_CHANNEL_TOKEN_TCPDETECTIVE',   'xUpsE5vCr85YfnPzxAqUEHipMhYZQlueKN6UsPrXIsZqDGvxQEPmvqHFfz3/6RVnylFM1uHhNPAyBC4Qmou4EwbXwURt8PPmX8P8kMHaG6myaM1NrTKGklnGvsxDEsH2XeecKmAdGYhbtbYrpkX9TQdB04t89/1O/w1cDnyilFU=');
+./_client.sh:_server_uri='http://www-dev1.tcpdetective.com'
+
+TODO: ./db/init.sh から ./lib/config.php を読み込んだとき、ENV の値が CLI になるため DB_NAME が *_rel になってしまう。
+これは全てのプロジェクトと環境の ./db/init.sh にある問題。

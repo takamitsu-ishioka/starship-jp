@@ -1,0 +1,124 @@
+<!-- ログイン・ダイアログ -->
+<div class="modal fade login_dialog" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close command-cancel" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Login or create an account.</h4>
+            </div>
+            <!-- START MODAL BODY -->
+            <form>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label class="col-md-3 col-xs-12 control-label">Account</label>
+                    <div class="col-md-9 col-xs-12">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span class="fa fa-at"></span></span>
+                            <input type="text" class="form-control login_text_account" autocomplete="username" required/>
+                        </div>
+                        <span class="help-block">Your mail address</span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-md-3 col-xs-12 control-label">Password</label>
+                    <div class="col-md-9 col-xs-12">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span class="fa fa-unlock-alt"></span></span>
+                            <input type="password" class="form-control login_password" autocomplete="new-password" required/>
+                        </div>
+                        <span class="pull-right" style="margin-left: 1rem;"><label id="login_checkbox_show_password" class="check"><input type="checkbox" class="icheckbox"/> Show password.</label></span>
+                        <span class="help-block">8 or more characters including at least 1 alphabet and 1 number.</span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-md-3 col-xs-12 control-label">Create?</label>
+                    <div class="col-md-9 col-xs-12">
+                        <label id="login_checkbox_create_account" class="check"><input type="checkbox" class="icheckbox"/> Yes, I want to create an account.</label>
+                        <span class="help-block">Check the box to create a new account.</span>
+                    </div>
+                </div>
+
+            </div>
+            <!-- END MODAL BODY -->
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left command-cancel" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary command-ok" data-dismiss="modal">Login</button>
+            </div>
+            <input type="submit" value="Submit" class="hidden"/>    <!-- これはブラウザに「安全なパスワードを生成」させるのに必要らしい。 -->
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/js/plugins/bootstrap/bootstrap-datepicker.js"></script>
+<script type="text/javascript" src="/js/plugins/bootstrap/bootstrap-file-input.js"></script>
+<script type="text/javascript" src="/js/plugins/bootstrap/bootstrap-select.js"></script>
+<script type="text/javascript" src="/js/plugins/tagsinput/jquery.tagsinput.min.js"></script>
+<script>
+/*
+jquery のレベルで id="login_checkbox_show_password" に click イベントハンドラーをセットしても呼ばれない。
+次のように DOM レベルでイベントハンドラーをセットすると呼ばれる。
+ただし第三引数が true でなければならない。
+これを見つけるのに何時間かかったやら。やはり GUI プログラムは消耗する。
+*/
+document.getElementById('login_checkbox_show_password').addEventListener('click', function(e) {
+    if (e.isTrusted) {
+        var checkbox = $('.login_dialog label#login_checkbox_show_password input[type=checkbox]');
+        var password = $('.login_dialog input.login_password');
+        if (checkbox.prop('checked')) {
+            password.prop('type', 'password');
+        } else {
+            password.prop('type', 'text');
+        }
+    }
+}, true/*このtrueが肝*/);
+
+document.getElementById('login_checkbox_create_account').addEventListener('click', function(e) {
+    if (e.isTrusted) {
+        var checkbox = $('.login_dialog label#login_checkbox_create_account input[type=checkbox]');
+        var button = $('.login_dialog button.command-ok');
+        //console.log('checkbox>', checkbox);
+        //console.log('button>', button);
+        if (checkbox.prop('checked')) {
+            button.html('Login');
+        } else {
+            button.html('Create Account');
+        }
+    }
+}, true/*このtrueが肝*/);
+
+// Cancel をクリック
+$('.login_dialog .command-cancel').click(function(e) {
+    ShowLoginNoty();
+});
+
+// Login をクリック
+$('.login_dialog .command-ok').click(function(e) {
+    /*
+    e.stopPropagation();
+    Notice({message: 'Login not implemented yet.', target: $('.login_dialog .modal-title')});
+    return;
+    */
+    return Login($('.login_dialog'));
+});
+
+/*
+ENTER を .command-ok と解釈
+このハンドラーは最初
+①keyupに対するものであり、また
+②e.preventDefault()を呼んでいなかったが、
+問題なく動作していた。
+ところが後に Chrome に「安全なパスワード生成」させるために <form> と <input type="submit"> を挿入したところ、ENTER が submit を実行してしまうようになった。
+それを防ぐためにe.preventDefault()を入れ、keyup から keydown のハンドラーに変えた（そうしないと手遅れなので）。
+*/
+$('.login_dialog').keydown(function(e) {
+    if (e.which == 13) {
+        e.preventDefault();
+        $(e.currentTarget).find('.command-ok').trigger('click');
+    }
+});
+
+</script>
+<!-- END ログイン・ダイアログ -->

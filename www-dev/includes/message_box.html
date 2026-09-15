@@ -1,0 +1,168 @@
+<!-- メッセージボックス・ダイアログ -->
+<style type="text/css">
+.message_box_dialog .message_box_dialog_message {
+    font-size: 1.4rem;
+    line-height: 1.5;
+    padding: 0 1.2rem 0 1.2rem;
+}
+</style>
+<div class="modal fade message_box_dialog" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close command-cancel" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title"><span class="icon"></span>&nbsp;&nbsp;<span class="text">Starship.jp</span></h4>
+            </div>
+            <!-- START MODAL BODY -->
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="message_box_dialog_message" style="padding: 0; line-height: 1.2;">
+                    </div>
+                </div>
+
+            </div>
+            <!-- END MODAL BODY -->
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default command-cancel pull-left hidden" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success copy_to_clipboard hidden"  data-toggle="tooltip" data-placement="bottom" title="Copy the message to Clipboard"><span class="fa fa-copy"></span>&nbsp;Copy</button>
+                <button type="button" class="btn btn-primary command-ok" data-dismiss="modal">OK</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+function ShowMessageBox(argv) {
+
+    // 部品へのポインターを取得
+    let dialog = $('.message_box_dialog');
+    let title_icon = dialog.find('.modal-content>.modal-header>.modal-title>.icon');
+    let title_text = dialog.find('.modal-content>.modal-header>.modal-title>.text');
+    let btn_cancel = dialog.find('button.btn.command-cancel');
+    let copy_to_clipboard = dialog.find('button.copy_to_clipboard');
+
+    // 引数解釈
+    const icon_user = '<span class="fa-solid fa-xl fa-user-secret"></span>';
+    const icon_question = '<span class="fa-solid fa-xl fa-circle-question"></span>';
+    const icon_exclamation = '<i class="fa-solid fa-xl fa-triangle-exclamation text-danger bold"></i>';
+    const text_default = 'Starship.jp';
+    const text_error = '<span class="text-danger bold">ERROR</span>';
+    let message;
+    let on_close;
+    if (typeof argv == 'string') {
+        message = argv;
+        title_icon.html(icon_user);
+        btn_cancel.addClass('hidden');
+    } else {
+        message = argv.message;
+        if (typeof argv.on_close == 'function') {
+            on_close = argv.on_close;
+        }
+        if (argv.mode == undefined || argv.mode == 'info') {
+            title_icon.html(icon_user);
+            title_text.html(text_default);
+            btn_cancel.addClass('hidden');
+        } else if (argv.mode == 'confirm') {
+            title_icon.html(icon_question);
+            title_text.html(text_default);
+            btn_cancel.removeClass('hidden');
+        } else if (argv.mode == 'error') {
+            title_icon.html(icon_exclamation);
+            title_text.html(text_error);
+            btn_cancel.addClass('hidden');
+        } else {
+            throw 'ShowMessageBox(): unknown mode "' + argv.mode + '"';
+        }
+    }
+
+    // メッセージ
+    let message_div = dialog.find('.message_box_dialog_message');
+    message_div.html(message);
+    if (argv.isHTML) {
+        message_div.css({
+            'white-space': 'normal',
+        });
+    } else {
+        message_div.css({
+            'white-space': 'pre-wrap',
+        });
+        MessageBoxAdjustGeometry(dialog);
+    }
+
+    // Copy ボタン
+    if (argv.enableCopy) {
+        copy_to_clipboard.removeClass('hidden');
+        copy_to_clipboard.off('click').click((e) => {
+            let current_top_offset_x = Notice.setTopOffsetX(-8);
+            // コピー成功
+            if (Clipboard.copy(message.replace(/<br>/g, ''))) {
+                Notice({
+                    message: 'This message has been copied to Clipboard.<br>\nGo to "Support" and push "Create Case".',
+                    type: 'info',
+                    target: message_div,
+                    top_offset_x: 8,
+                    container: dialog.find('.modal-dialog'),
+                });
+            // コピー失敗
+            } else {
+                Notice({
+                    message: 'Can\'t copy this message.',
+                    type: 'danger',
+                    target: message_div,
+                    top_offset_x: 8,
+                    container: dialog.find('.modal-dialog'),
+                });
+            }
+            Notice.setTopOffsetX(current_top_offset_x);
+            return false;
+        });
+    } else {
+        copy_to_clipboard.addClass('hidden');
+    }
+
+    // 表示
+    dialog.modal({
+        show: true,
+        keyboard: true,
+        backdrop: 'static',
+    });
+
+    // コールバック
+    if (on_close != undefined) {
+        dialog.find('.command-ok, .command-cancel').off('click').click(function(e1) {
+            dialog.on('hidden.bs.modal', function (e2) {
+                if (on_close != undefined) {
+                    on_close($(e1.currentTarget).hasClass('command-cancel'));
+                    on_close = undefined;
+                }
+            })
+        });
+    }
+}
+
+const _message_box_textarea_rows = 16;
+function MessageBoxAdjustGeometry(dialog) {
+    let message_div = dialog.find('.message_box_dialog_message');
+    let text = message_div.html();
+    let line_count = (text.match(/\n/g) || []).length;
+    if (0 < text.length && text.charAt(text.length - 1) != '\n') {
+        line_count++;
+    }
+    if (_message_box_textarea_rows < line_count) {
+        let textarea = $('<textarea rows="' + _message_box_textarea_rows + '" readonly style="width: 100%; border: none; resize: none;">');
+        textarea.html(text);
+        message_div.html(textarea);
+    }
+}
+
+// ENTER を .command-ok と解釈
+$('.message_box_dialog').keyup(function(e) {
+    if (e.which == 13) {
+        $(e.currentTarget).find('.command-ok').trigger('click');
+    }
+});
+
+</script>
+<!-- END メッセージボックス・ダイアログ -->

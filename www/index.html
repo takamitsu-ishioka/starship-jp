@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- META SECTION -->
+<title>Starship.jp - It's philosophy that matters</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="Takamitsu Ishioka - Master of System Architecture and Innovative Software Development">
+<meta name="robots" content="index,follow">
+<!-- END META SECTION -->
+<!-- META SECTION FOR TWITTER CARD -->
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:site" content="@kisaburo_y" />
+<meta name="twitter:domain" content="www.starship.jp" />
+<meta name="twitter:title" content="Takamitsu Ishioka - Master of System Architecture and Innovative Software Development" />
+<meta name="twitter:description" content="Software Engineer: No matter the OS, language, or framework" />
+<meta name="twitter:image" content="https://www.starship.jp/img/portfolio.png" />
+<!-- END META SECTION FOR TWITTER CARD -->
+<link rel="icon" type="image/png" href="/starship.png"/>
+<!-- CSS INCLUDE START -->
+<link rel="stylesheet" type="text/css" id="theme" href="/css/theme-default.css"/>
+<link rel="stylesheet" type="text/css" href="/css/common.css?v=2023-07-18T10:22:52ZJST"/>
+<!-- CSS INCLUDE END -->
+
+<!-- START PLUGINS -->
+<script src="https://kit.fontawesome.com/7910b039f8.js" crossorigin="anonymous"></script>
+<script src="/js/plugins/jquery/jquery.min.js"></script>
+<script src="/js/plugins/jquery/jquery-ui.min.js"></script>
+<script src="/js/plugins/bootstrap/bootstrap.min.js"></script>
+<script src="/js/website.js?v=2023-06-26T15:28:46ZJST"></script>
+<script src="/js/common.js?v=2023-07-10T17:01:44ZJST"></script>
+<script src="/js/paypal.js?v=2023-06-26T15:28:46ZJST"></script>
+<!-- END PLUGINS -->
+
+<script>
+
+////////////////////////////////////////////////////////////////////////
+// 関数
+
+function GetHTML(uri, on_response) {
+    $.ajax({
+        type: 'GET',
+        url: uri,
+        dataType: 'html',
+        cache: false,
+        success: function(response, responseType) {
+            if (responseType == 'success') {
+                if (on_response._success) {
+                    on_response._success(response, responseType);
+                }
+                if (on_response._finally) {
+                    on_response._finally(true/*成功*/);
+                }
+            } else {
+                if (on_response._error) {
+                    on_response._error(response, responseType);
+                }
+                if (on_response._finally) {
+                    on_response._finally(false/*失敗*/);
+                }
+            }
+        },
+        error: function(xhr, status, error) {
+            if (on_response._fatal) {
+                on_response._fatal(status, error + ': ' + uri);
+            }
+            if (on_response._finally) {
+                on_response._finally(false/*失敗*/);
+            }
+        }
+    });
+}
+
+function GetIncludeHTMLs(includes, body, include_uris, on_response) {
+    var uri = include_uris.shift();
+    //console.log('GetIncludeHTMLs(): uri>', uri);
+    $.ajax({
+        type: 'GET',
+        url: uri,
+        dataType: 'html',
+        cache: false,
+        success: function(html, responseType) {
+            if (responseType == 'success') {
+/*
+                includes.push({
+                    uri: uri,
+                    html: html
+                });
+*/
+                includes[uri] = html;
+                if (0 < include_uris.length) {
+                    GetIncludeHTMLs(includes, body, include_uris, on_response);
+                    return;
+                }
+                if (on_response._success) {
+                    on_response._success(body, includes);
+                }
+                if (on_response._finally) {
+                    on_response._finally(true/*成功*/);
+                }
+            } else {
+                if (on_response._error) {
+                    on_response._error(response, responseType);
+                }
+                if (on_response._finally) {
+                    on_response._finally(false/*失敗*/);
+                }
+            }
+        },
+        error: function(xhr, status, error) {
+            if (on_response._fatal) {
+                on_response._fatal(status, error + ': ' + uri);
+            }
+            if (on_response._finally) {
+                on_response._finally(false/*失敗*/);
+            }
+        }
+    });
+}
+
+function ReplaceBody(body, mincl, includes) {
+    var replaced_body;
+    if (mincl) {
+        replaced_body = body.replace(/<!--[ \t]*__INCLUDE__[ \t]*.+\.(html|js)[ \t]*-->/g, function(str) {
+            for (var i = 0; i < mincl.length; i++) {
+                //console.log('str>', str);
+                var m = mincl[i].match(/<!--[ \t]*__INCLUDE__[ \t]*(.+\.html|.+\.js)[ \t]*-->/);
+                //console.log('m>', m);
+                var include_uri = m[1];
+                if (str.indexOf(include_uri) != -1) {
+                    var html = includes[include_uri];
+                    //console.log('str>', str);
+                    //console.log('html>', html);
+                    return html;
+                }
+            };
+        });
+    } else {
+        replaced_body = body;
+    }
+    $('body').html(replaced_body);
+    $('a[href$=".html"]').each(function(i, o) {
+        var href = $(o).attr('href');             // prop('href') で取り出すとスキーマとホスト名の無い形式（てゆうか書いてある通り）の href が出てくる。
+        let href_absolute = href.toAbsolutePath();
+        var href_js = 'javascript:LoadBody("' + href_absolute + '");';
+        $(o).attr('href', href_js);
+    });
+}
+
+function LoadBody(uri) {
+
+    if (typeof ShowLoading == 'function') {
+        ShowLoading();
+    }
+
+    ////////////////////////////////////////////////////////////////////////
+    // index ページ（つまり、このページ）が要求されていればデフォルトページを表示する。
+
+    if (uri == undefined || uri == '' || uri == '/' || uri == './' || uri == 'index.html' || uri == '/index.html' || uri == './index.html') {
+        uri = User.getCurrent().getIndexPath();
+    }
+
+    ////////////////////////////////////////////////////////////////////////
+    // 指定されたページのデータを取得し、body 部を置換する。
+
+    // TODO: ここから
+    let language = Location.getCurrent().getQueryValueOf('lang');
+    if (language == undefined) {
+        language = Preferences.get('language', true);
+        //Console.debug(language, '>>>>>>> LoadBody::Preference:');
+    }
+    if (language == undefined) {
+        language = User.getCurrent().getLanguage();
+    }
+    // TODO: ここまでを、User.getCurrent().getCurrentLanguage() に変更する。
+    let redirected_to_uri = WebSite.map(uri, User.getCurrent().account, language);
+    Console.debug(uri, '>>>>>>> uri:');
+    Console.debug(language, '>>>>>>> language:');
+    Console.debug(redirected_to_uri, '>>>>>>> redirected_to_uri:');
+
+    User.getCurrent().pushURI(uri);
+
+    //GetHTML(uri, {
+    GetHTML(redirected_to_uri, {
+        _success: function(response, responseType) {
+            var mbody = response.match(/<body>([\.\s\S]*)<\/body>/i);   // . は改行にマッチしない。\s はアスキーの、\S はユニコードの改行にマッチする。
+            if (mbody == undefined) {
+                alert('body not found in ' + uri);
+                return;
+            }
+            var include_uris = [];
+            var body = mbody[1];
+            var mincl = body.match(/<!--[ \t]*__INCLUDE__[ \t]*.+\.(html|js)[ \t]*-->/g);
+            if (mincl) {
+                for (var i = 0; i < mincl.length; i++) {
+                    console.log('mincl[' + i + ']>', mincl[i]);
+                    var m = mincl[i].match(/<!--[ \t]*__INCLUDE__[ \t]*(.+\.html|.+\.js)[ \t]*-->/);
+                    var include_uri = m[1];
+                    console.log('include_uri>', include_uri);
+                    include_uris.push(include_uri);
+                };
+                //console.log('include_uris>', include_uris);
+                GetIncludeHTMLs([], body, include_uris, {
+                    _success: function(body, includes) {
+                        //console.log('includes>', includes);
+                        ReplaceBody(body, mincl, includes);
+                    },
+                    _error: function(response, responseType) {
+                        console.log('GetHTML::GetIncludeHTMLs(): _error: response>', response, ', responseType>', responseType);
+                    },
+                    _fatal: function(status, error) {
+                        console.log('GetHTML::GetIncludeHTMLs(): _fatal: status>', status, ', error>', error);
+                    },
+                    _finally: function(success) {
+                        //console.log('GetHTML::GetIncludeHTMLs(): _finally: success>', success);
+                    }
+                });
+            } else {
+                ReplaceBody(body);
+            }
+        },
+        _error: function(response, responseType) {
+            console.log('GetHTML(): _error: response>', response, ', responseType>', responseType);
+        },
+        _fatal: function(status, error) {
+            console.log('GetHTML(): _fatal: status>', status, ', error>', error);
+        },
+        _finally: function(success) {
+            console.log('GetHTML():  _finally: uri==' + uri + ', success==' + success);
+        }
+    });
+}
+
+////////////////////////////////////////////////////////////////////////
+// 最初のページを表示する
+/*
+このウェブアプリは一切ページ遷移をしない。
+ユーザーから指定されたページのデータを $.ajax() で取得し、その body 部をカレントページの DOM の body 部に挿入することで表示内容のみを変更する。
+従って、「プロセス」（状態遷移を行うための状態のデータと手続きのデータ）は、すべて常にローカルメモリ上に存在することになり、画面の変化とは全く関係が無くなった。
+「プロセス」がカレントプロセスと一致するという、昔からあるスタンドアロンプログラムの状態に戻った。
+これまでのウェブアプリでリモートホスト上に「プロセス」を擬似的に実現するために施されていた諸々の工夫（疑似セッション、クッキー、LB 制御など）は不要になり、リモートホストは単なるデータの置き場となった。
+*/
+
+$(document).ready(function(e) {
+
+    // href を解析し、クエリーがあれば読み取る。
+    try {
+        Location.setCurrent(location);
+    } catch (e) {
+        var e_str = JSON.stringify(e, null, '    ');
+        alert("can't parse location.href: e: " + e_str);
+        return;
+    }
+
+    // サイトの初期化。
+    InitializeSite();
+
+    // ユーザーの初期化（最初は常に guest）。
+    User.initialize();
+
+    LoadBody();
+});
+
+</script>
+
+<meta name="google-site-verification" content="9m1n7venPJLCq941SKwRQkTmVGBpyhyItouV1K2to_A" />
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-11242594429"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'AW-11242594429');
+</script>
+
+</head>
+
+<body>
+
+<style type="text/css">
+body {
+    background: #1d2127;
+    height: 100vh;
+    text-align: center;
+}
+body img {
+    width: 8rem;
+}
+.initial_message {
+    margin-top: 20px;
+    color: white;
+    font-size: 31px;
+    font-weight: 400;
+    line-height: 36px;
+}
+</style>
+
+<div class="initial_message">Loading...</div>
+<div>
+    <img src="/assets/images/loading.png"/>
+</div>
+
+</body>
+
+</html>

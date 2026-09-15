@@ -1,0 +1,73 @@
+2023-03-30 12:39:09 syncdb.sh: _isDev=1
+2023-03-30 12:39:09 syncdb.sh: _isTty=0
+2023-03-30 12:39:09 syncdb.sh: _syncdb_check_interval=60
+2023-03-30 12:39:09 syncdb.sh: _per_minutes=360
+2023-03-30 12:39:09 syncdb.sh: _sleep_seconds=3600
+2023-03-30 18:39:10 syncdb.sh: node ./syncdb.js 1 0
+2023-03-30 18:39:10 syncdb.js: >>>>>>> PayPalGetAccessToken()
+2023-03-30 18:39:11 syncdb.js: >>>>>>> LoadSubscriptions()
+2023-03-30 18:39:11 syncdb.js: >>>>>>> PayPalShowSubscriptionDetails() id=I-810USRN38SA5 (0/1)
+2023-03-31 00:39:12 syncdb.sh: node ./syncdb.js 1 0
+2023-03-31 00:39:12 syncdb.js: >>>>>>> PayPalGetAccessToken()
+2023-03-31 00:39:13 syncdb.js: >>>>>>> LoadSubscriptions()
+2023-03-31 00:39:13 syncdb.js: >>>>>>> PayPalShowSubscriptionDetails() id=I-810USRN38SA5 (0/1)
+2023-03-31 06:39:15 syncdb.sh: node ./syncdb.js 1 0
+2023-03-31 06:39:15 syncdb.js: >>>>>>> PayPalGetAccessToken()
+2023-03-31 06:39:16 syncdb.js: >>>>>>> LoadSubscriptions()
+2023-03-31 06:39:16 syncdb.js: >>>>>>> PayPalShowSubscriptionDetails() id=I-810USRN38SA5 (0/2)
+2023-03-31 06:39:17 syncdb.js: >>>>>>> PayPalShowSubscriptionDetails() id=I-TE9P2VVYD7UV (1/2)
+2023-03-31 12:39:18 syncdb.sh: node ./syncdb.js 1 0
+2023-03-31 12:39:18 syncdb.js: >>>>>>> PayPalGetAccessToken()
+2023-03-31 12:39:19 syncdb.js: >>>>>>> LoadSubscriptions()
+2023-03-31 12:39:19 syncdb.js: >>>>>>> PayPalShowSubscriptionDetails() id=I-810USRN38SA5 (0/2)
+2023-03-31 12:39:20 syncdb.js: >>>>>>> PayPalShowSubscriptionDetails() id=I-TE9P2VVYD7UV (1/2)
+2023-03-31 18:39:21 syncdb.sh: node ./syncdb.js 1 0
+2023-03-31 18:39:21 syncdb.js: >>>>>>> PayPalGetAccessToken()
+2023-03-31 18:39:22 syncdb.js: >>>>>>> LoadSubscriptions()
+2023-03-31 18:39:22 syncdb.js: >>>>>>> PayPalShowSubscriptionDetails() id=I-810USRN38SA5 (0/2)
+2023-03-31 18:39:23 syncdb.js: >>>>>>> PayPalShowSubscriptionDetails() id=I-TE9P2VVYD7UV (1/2)
+2023-04-01 00:39:25 syncdb.sh: node ./syncdb.js 1 0
+2023-04-01 00:39:25 syncdb.js: >>>>>>> PayPalGetAccessToken()
+2023-04-01 00:39:26 syncdb.js: >>>>>>> LoadSubscriptions()
+2023-04-01 00:39:26 syncdb.js: >>>>>>> PayPalShowSubscriptionDetails() id=I-810USRN38SA5 (0/2)
+2023-04-01 00:39:26 syncdb.js: >>>>>>> PayPalShowSubscriptionDetails() id=I-TE9P2VVYD7UV (1/2)
+2023-04-01 06:39:28 syncdb.sh: node ./syncdb.js 1 0
+2023-04-01 06:39:28 syncdb.js: >>>>>>> PayPalGetAccessToken()
+2023-04-01 06:39:29 syncdb.js: >>>>>>> LoadSubscriptions()
+2023-04-01 06:39:29 syncdb.js: >>>>>>> PayPalShowSubscriptionDetails() id=I-810USRN38SA5 (0/2)
+2023-04-01 06:39:30 syncdb.js: >>>>>>> PayPalShowSubscriptionDetails() id=I-TE9P2VVYD7UV (1/2)
+2023-04-01 12:39:32 syncdb.sh: node ./syncdb.js 1 0
+2023-04-01 12:39:32 syncdb.js: >>>>>>> PayPalGetAccessToken()
+2023-04-01 12:39:33 syncdb.js: >>>>>>> LoadSubscriptions()
+2023-04-01 12:39:33 syncdb.js: >>>>>>> PayPalShowSubscriptionDetails() id=I-810USRN38SA5 (0/2)
+2023-04-01 12:39:33 syncdb.js: >>>>>>> PayPalShowSubscriptionDetails() id=I-TE9P2VVYD7UV (1/2)
+2023-04-01 18:39:35 syncdb.sh: node ./syncdb.js 1 0
+2023-04-01 18:39:35 syncdb.js: >>>>>>> PayPalGetAccessToken()
+2023-04-01 18:39:36 syncdb.js: >>>>>>> LoadSubscriptions()
+2023-04-01 18:39:36 syncdb.js: >>>>>>> PayPalShowSubscriptionDetails() id=I-810USRN38SA5 (0/2)
+2023-04-01 18:39:37 syncdb.js: >>>>>>> PayPalShowSubscriptionDetails() id=I-TE9P2VVYD7UV (1/2)
+2023-04-02 00:39:38 syncdb.sh: node ./syncdb.js 1 0
+2023-04-02 00:39:38 syncdb.js: >>>>>>> PayPalGetAccessToken()
+2023-04-02 00:39:39 syncdb.js: >>>>>>> LoadSubscriptions()
+2023-04-02 00:39:39 syncdb.js: >>>>>>> PayPalShowSubscriptionDetails() id=I-810USRN38SA5 (0/2)
+2023-04-02 00:39:39 syncdb.js: >>>>>>> PayPalShowSubscriptionDetails() id=I-TE9P2VVYD7UV (1/2)
+2023-04-02 06:39:41 syncdb.sh: node ./syncdb.js 1 0
+2023-04-02 06:39:41 syncdb.js: >>>>>>> PayPalGetAccessToken()
+2023-04-02 06:39:42 syncdb.js: >>>>>>> LoadSubscriptions()
+2023-04-02 06:39:42 syncdb.js: >>>>>>> PayPalShowSubscriptionDetails() id=I-810USRN38SA5 (0/2)
+2023-04-02 06:39:42 syncdb.js: >>>>>>> PayPalShowSubscriptionDetails() id=I-TE9P2VVYD7UV (1/2)
+2023-04-02 12:39:44 syncdb.sh: node ./syncdb.js 1 0
+2023-04-02 12:39:44 syncdb.js: >>>>>>> PayPalGetAccessToken()
+2023-04-02 12:39:45 syncdb.js: >>>>>>> LoadSubscriptions()
+2023-04-02 12:39:45 syncdb.js: >>>>>>> PayPalShowSubscriptionDetails() id=I-810USRN38SA5 (0/2)
+2023-04-02 12:39:46 syncdb.js: >>>>>>> PayPalShowSubscriptionDetails() id=I-TE9P2VVYD7UV (1/2)
+2023-04-02 18:39:48 syncdb.sh: node ./syncdb.js 1 0
+2023-04-02 18:39:48 syncdb.js: >>>>>>> PayPalGetAccessToken()
+2023-04-02 18:39:49 syncdb.js: >>>>>>> LoadSubscriptions()
+2023-04-02 18:39:49 syncdb.js: >>>>>>> PayPalShowSubscriptionDetails() id=I-810USRN38SA5 (0/2)
+2023-04-02 18:39:50 syncdb.js: >>>>>>> PayPalShowSubscriptionDetails() id=I-TE9P2VVYD7UV (1/2)
+2023-04-03 00:39:51 syncdb.sh: node ./syncdb.js 1 0
+2023-04-03 00:39:51 syncdb.js: >>>>>>> PayPalGetAccessToken()
+2023-04-03 00:39:52 syncdb.js: >>>>>>> LoadSubscriptions()
+2023-04-03 00:39:52 syncdb.js: >>>>>>> PayPalShowSubscriptionDetails() id=I-810USRN38SA5 (0/2)
+2023-04-03 00:39:53 syncdb.js: >>>>>>> PayPalShowSubscriptionDetails() id=I-TE9P2VVYD7UV (1/2)

@@ -1,0 +1,5 @@
+SandBox accounts
+Business    ishioka-facilitator@starship.jp     いつものパスワード？
+Personal    ishioka-buyer@starship.jp           いつものパスワード
+
+テスト用に予め用意されているカードは期限もPINもテキトーで良い（登録成功した）。

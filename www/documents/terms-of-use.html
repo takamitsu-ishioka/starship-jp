@@ -1,0 +1,105 @@
+                                    <!-- 利用規約 -->
+<style type="text/css">
+.terms-of-use {
+    white-space: pre-wrap;
+    font-size: 150%;
+    /*
+    background-color: black;
+    color: orange;
+    */
+}
+.terms-of-use h2,
+.terms-of-use h3,
+.terms-of-use h4 {
+    /*
+    font-size: 150%;
+    background-color: black;
+    color: orange;
+    */
+    margin-bottom: 0rem;
+}
+</style>
+<script>
+const signature_ja =
+    '埼玉県川口市\n' +
+    '芝樋ノ爪 2-12-16-B102\n' +
+    'Starship.jp（石岡隆光）\n' +
+    '';
+const signature_uri_ja = '/img/signature_ja.png';
+const signature_en =
+    'Starship.jp (Ishioka, Takamitsu)\n' +
+    '2-12-16-B102 Shiba-hinotsume\n' +
+    'Kawaguchi, Saitama\n' +
+    'Japan\n' +
+    '';
+const signature_uri_en = '/img/signature_en.png';
+$(document).ready((e) => {
+    //console.log('>>>>>>>', User.getCurrent());
+    let language = User.getCurrent().getLanguage();
+    let signature = $('<img/>');
+    if (language && language.match(/^ja/i)) {
+        signature.prop('src', signature_uri_ja);
+    } else {
+        signature.prop('src', signature_uri_en);
+    }
+    $('.terms-of-use .signature').html(signature);
+});
+</script>
+<div class="terms-of-use"><h2>Terms of use</h2>
+<span>Updated May 16, 2023</span>
+
+<span>Thank you for using Starship.jp!</span>
+These Terms of Use apply when you use the services of Starship.jp or our affiliates, including our application programming interface, software, tools, developer services, data, documentation, and websites ("Services"). The Terms include our usage policy, documentation, guidelines, and policies we may provide in writing. By using our Services, you agree to these Terms.
+
+<h3>1. Registration and Access</h3>
+If you are under 18 you must have your parent or legal guardian's permission to use the Services. If you use the Services on behalf of another person or entity, you must have the authority to accept the Terms on their behalf. You must provide accurate and complete information to register for an account. You may not make your access credentials or account available to others outside your organization, and you are responsible for all activities that occur using your credentials.
+
+<h3>2. Usage Requirements</h3>
+(a) Use of Services. You may access, and we grant you a non-exclusive right to use, the Services in accordance with these Terms. You will comply with these Terms and all applicable laws when using the Services. We and our affiliates own all rights, title, and interest in and to the Services.
+
+(b) Feedback. We appreciate feedback, comments, ideas, proposals and suggestions for improvements. If you provide any of these things, we may use it without restriction or compensation to you.
+
+(c) Restrictions. You may not (i) use the Services in a way that infringes, misappropriates or violates any person's rights; (ii) reverse assemble, reverse compile, decompile, translate or otherwise attempt to discover the source code or underlying components of models, algorithms, and systems of the Services (except to the extent such restrictions are contrary to applicable law); (iii) use output from the Services to develop models that compete with Starship.jp; (iv) except as permitted through the API, use any automated or programmatic method to extract data or output from the Services, including scraping, web harvesting, or web data extraction; (v) represent that output from the Services was human-generated when it is not or otherwise violate our Usage Policies; (vii) buy, sell, or transfer API keys without our prior consent; or (viii), send us any personal information of children under the applicable age of digital consent. You will comply with any rate limits and other requirements in our documentation. You may use Services only in geographies currently supported by Starship.jp.
+
+(d) Third Party Services. Any third party software, services, or other products you use in connection with the Services are subject to their own terms, and we are not responsible for third party products.
+
+<h3>3. Fees and Payments</h3>
+(a) Fees and Billing. You will pay all fees charged to your account ("Fees") according to the prices and terms on the applicable pricing page, or as otherwise agreed between us in writing. We have the right to correct pricing errors or mistakes even if we have already issued an invoice or received payment. You will provide complete and accurate billing information including a valid and authorized payment method. We will charge your payment method on an agreed-upon periodic basis, but may reasonably change the date on which the charge is posted. You authorize Starship.jp and its affiliates, and our third-party payment processor(s), to charge your payment method for the Fees. If your payment cannot be completed, we will provide you written notice and may suspend access to the Services until payment is received. Fees are payable in U.S. dollars and are due upon invoice issuance. Payments are nonrefundable except as provided in this Agreement.
+
+(b) Taxes. Unless otherwise stated, Fees do not include local, and foreign taxes, duties, and other similar assessments ("Taxes"). You are responsible for all Taxes associated with your purchase, excluding Taxes based on our net income, and we may invoice you for such Taxes. You agree to timely pay such Taxes and provide us with documentation showing the payment, or additional evidence that we may reasonably require. Starship.jp uses the name and address in your account registration as the place of supply for tax purposes, so you must keep this information accurate and up-to-date.
+
+(c) Price Changes. We may change our prices by posting notice to your account and/or to our website. Price increases will be effective 14 days after they are posted, except for increases made for legal reasons, which will be effective immediately. Any price changes will apply to the Fees charged to your account immediately after the effective date of the changes.
+
+(d) Disputes and Late Payments. If you want to dispute any Fees or Taxes, please contact information@starship.jp within thirty (30) days of the date of the disputed invoice. Undisputed amounts past due may be subject to a finance charge of 1.5% of the unpaid balance per month. If any amount of your Fees are past due, we may suspend your access to the Services after we provide you written notice of late payment.
+
+(e) Free Tier. You may not create more than one account to benefit from credits provided in the free tier of the Services. If we believe you are not using the free tier in good faith, we may charge you standard fees or stop providing access to the Services.
+
+<h3>4. Confidentiality and Security</h3>
+(a) Confidentiality. You may be given access to Confidential Information of Starship.jp, its affiliates and other third parties. You may use Confidential Information only as needed to use the Services as permitted under these Terms. You may not disclose Confidential Information to any third party, and you will protect Confidential Information in the same manner that you protect your own confidential information of a similar nature, using at least reasonable care. Confidential Information means nonpublic information that Starship.jp or its affiliates or third parties designate as confidential or should reasonably be considered confidential under the circumstances, including software, specifications, and other nonpublic business information. Confidential Information does not include information that: (i) is or becomes generally available to the public through no fault of yours; (ii) you already possess without any confidentiality obligations when you received it under these Terms; (iii) is rightfully disclosed to you by a third party without any confidentiality obligations; or (iv) you independently developed without using Confidential Information. You may disclose Confidential Information when required by law or the valid order of a court or other governmental authority if you give reasonable prior written notice to Starship.jp and use reasonable efforts to limit the scope of disclosure, including assisting us with challenging the disclosure requirement, in each case where possible.
+
+(b) Security. You must implement reasonable and appropriate measures designed to help secure your access to and use of the Services. If you discover any vulnerabilities or breaches related to your use of the Services, you must promptly contact Starship.jp and provide details of the vulnerability or breach.
+
+<h3>5. Term and Termination</h3>
+(a) Termination; Suspension. These Terms take effect when you first use the Services and remain in effect until terminated. You may terminate these Terms at any time for any reason by discontinuing the use of the Services and Content. We may terminate these Terms for any reason by providing you at least 30 days' advance notice. We may terminate these Terms immediately upon notice to you if you materially breach Sections 2 (Usage Requirements), 4 (Confidentiality and Security) or 7 (General Terms), if there are changes in relationships with third party technology providers outside of our control, or to comply with law or government requests. We may suspend your access to the Services if you do not comply with these Terms, if your use poses a security risk to us or any third party, or if we suspect that your use is fraudulent or could subject us or any third party to liability.
+
+(b) Effect on Termination. Upon termination, you will stop using the Services and you will promptly return or, if instructed by us, destroy any Confidential Information. The sections of these Terms which by their nature should survive termination or expiration should survive, including but not limited to Sections 3-7.
+
+<h3>6. Indemnification; Disclaimer of Warranties; Limitations on Liability</h3>
+(a) Indemnity. You will defend, indemnify, and hold harmless us, our affiliates, and our personnel, from and against any claims, losses, and expenses (including attorneys' fees) arising from or relating to your use of the Services, including your Content, products or services you develop or offer in connection with the Services, and your breach of these Terms or violation of applicable law.
+
+(b) Disclaimer. THE SERVICES ARE PROVIDED "AS IS." EXCEPT TO THE EXTENT PROHIBITED BY LAW, WE AND OUR AFFILIATES AND LICENSORS MAKE NO WARRANTIES (EXPRESS, IMPLIED, STATUTORY OR OTHERWISE) WITH RESPECT TO THE SERVICES, AND DISCLAIM ALL WARRANTIES INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, SATISFACTORY QUALITY, NON-INFRINGEMENT, AND QUIET ENJOYMENT, AND ANY WARRANTIES ARISING OUT OF ANY COURSE OF DEALING OR TRADE USAGE. WE DO NOT WARRANT THAT THE SERVICES WILL BE UNINTERRUPTED, ACCURATE OR ERROR FREE, OR THAT ANY CONTENT WILL BE SECURE OR NOT LOST OR ALTERED.
+
+(c) Limitations of Liability. NEITHER WE NOR ANY OF OUR AFFILIATES OR LICENSORS WILL BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL OR EXEMPLARY DAMAGES, INCLUDING DAMAGES FOR LOSS OF PROFITS, GOODWILL, USE, OR DATA OR OTHER LOSSES, EVEN IF WE HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. OUR AGGREGATE LIABILITY UNDER THESE TERMS SHALL NOT EXCEED ​​THE GREATER OF THE AMOUNT YOU PAID FOR THE SERVICE THAT GAVE RISE TO THE CLAIM DURING THE 12 MONTHS BEFORE THE LIABILITY AROSE OR ONE HUNDRED DOLLARS ($30). THE LIMITATIONS IN THIS SECTION APPLY ONLY TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW.
+
+<h3>7. General Terms</h3>
+(a) Relationship of the Parties. These Terms do not create a partnership, joint venture or agency relationship between you and Starship.jp or any of Starship.jp's affiliates. Starship.jp and you are independent contractors and neither party will have the power to bind the other or to incur obligations on the other's behalf without the other party's prior written consent.
+
+(b) Use of Brands. You may not use Starship.jp's or any of its affiliates' names, logos, or trademarks, without our prior written consent.
+
+(c) Copyright Complaints. If you believe that your intellectual property rights have been infringed, please send notice to the address below. We may delete or disable content alleged to be infringing and may terminate accounts of repeat infringers.
+
+
+<div id="signature" class="signature">
+</div>
+</div>
+                                    <!-- END 利用規約 -->

@@ -1,0 +1,240 @@
+<!-- 購読ダイアログ -->
+<div class="modal fade subscribe_dialog" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close command-cancel" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Add a subscription.</h4>
+            </div>
+            <!-- START MODAL BODY -->
+            <div class="modal-body">
+
+                <div class="form-group row">
+                    <label class="col-md-3 col-xs-12 control-label">Plan Name</label>
+                    <div class="col-md-9 col-xs-12">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span class="fa fa-paypal"></span></span>
+                            <input type="text" class="form-control subscribe_plan_name" readonly/>
+                        </div>
+                        <span class="help-block">Subscription plan name.</span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-md-3 col-xs-12 control-label">Host Name</label>
+                    <div class="col-md-9 col-xs-12">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span class="fa fa-linux"></span></span>
+                            <input type="text" class="form-control subscribe_host_name" placeholder="www.starship.jp"/>
+                        </div>
+                        <span class="help-block">Name of the linux host you are installing TCPDetective to.<br>Use an FQDN-like name even if the host doesn't have an FQDN.</span>
+                    </div>
+                </div>
+
+                <div class="form-group row row_paypal_button_container">
+                    <label class="col-md-3 col-xs-12 control-label">Add Subscription</label>
+                    <div class="col-md-9 col-xs-12">
+                        <div class="paypal_button_container">
+                        </div>
+                        <span class="help-block">Click to add a subscription to TCPDetective.</span>
+                    </div>
+                </div>
+
+            </div>
+            <!-- END MODAL BODY -->
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left command-cancel footer_button" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary command-ok" data-dismiss="modal">OK</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+
+// paypal のボタンを作成
+function CreatePayPalButtons(panel) {
+    paypal.Buttons({
+        createSubscription: function(data, actions) {
+            return actions.subscription.create({
+                application_context: {
+                    shipping_preference: 'NO_SHIPPING',
+                    user_action: 'SUBSCRIBE_NOW',
+                    brand_name: ' TCPDetective.com ',
+                },
+                plan_id: PayPal.getCurrent().plan_id
+            });
+        },
+        onClick: function() {
+            // すぐに trigger() すると、PayPal の小窓がブラウザの背後に出てしまう。→関係ないかも… → 関係無かった。→ trigger() するかしないか自体、全く関係が無かった。
+            $('.subscribe_dialog .command-cancel.footer_button').trigger('click');
+            //$('.subscribe_dialog .command-cancel.footer_button').click(); これも関係ない。
+        },
+        onApprove: function(data, actions) {
+            // Google Ads Conversion Event
+            let google_ads_transaction_id = GenerateRandomPassword(64);
+            gtag('event', 'conversion', {
+                'send_to': 'AW-11242594429/gfD2CKz90rYYEP3A8fAp',
+                'transaction_id': google_ads_transaction_id,        // この値が同じものは重複とみなされる。
+            });
+            // End Google Ads Conversion Event
+            let host_name = $('.subscribe_dialog input[type=text].subscribe_host_name').val();
+            RefreshPanel(panel, true);
+            try {
+                let argv = {
+                    paypal_product_id: PayPal.getCurrent().product_id,
+                    paypal_plan_id: PayPal.getCurrent().plan_id,
+                    paypal_subscription_id: data.subscriptionID,
+                    host_name: host_name,
+                };
+                PayPalSubscription.add({
+                    data: argv,
+                    success: function(response) {
+                        panel.find('a.panel-refresh').trigger('click');
+                    },
+                    error: function(response) {
+                        ShowAPIErrorDialog({
+                            data: argv,         // _command は、この時点で argv のプロパティになっている
+                            response: response,
+                        });
+                    },
+                    fatal: function(xhr) {
+                        ShowHTTPErrorDialog({
+                            data: argv,         // _command は、この時点で argv のプロパティになっている
+                            xhr: xhr,
+                        });
+                    },
+                    complete: function(xhr) {
+                        RefreshPanel(panel, false);
+                    },
+                });
+            } catch (e) {
+                RefreshPanel(panel, false);
+            }
+        },
+        onCancel: function(data) {
+            //console.log('>>>>>onCancel data', data);
+            //data = {orderID: '1H660170KG531325G'}
+            ShowMessageBox('Subscription canceled.');
+            RefreshPanel(panel, false);
+        },
+        onError: function(err) {
+            //Console.debug(err.toString());
+            if (err.name == 'Error') {
+                const message = findJSON(err.message);
+                if (message) {
+                    ShowAPIErrorDialog({
+                        onError: message,
+                    });
+                } else {
+                    ShowAPIErrorDialog({
+                        onError: err.message,
+                    });
+                }
+            } else {
+                ShowAPIErrorDialog({
+                    onError: err.toString(),
+                });
+            }
+            RefreshPanel(panel, false);
+        }
+    }).render('.subscribe_dialog .paypal_button_container');
+    $('.subscribe_dialog .command-ok').removeClass('hidden');
+}
+
+function DeletePayPalButtons() {
+    $('.subscribe_dialog .row_paypal_button_container').addClass('hidden');
+    $('.subscribe_dialog .paypal_button_container').empty();
+}
+
+function ShowSubscribeDialog(panel) {
+    if (!User.getCurrent().isValidated()) {
+        ShowMessageBox({
+            message:
+                'Dear <strong>' + User.getCurrent().account + '</strong>, your account is <strong>not yet validated</strong>.\n' +
+                'If you have validated it, please <strong>reload this website</strong> by clicking/tapping on the browser\'s reload button.\n' +
+                'If you have not validated it, please check your email for the validation link.\n' +
+                'If you did not receive it, please <a href="javascript:StartAccountValidation();"><strong>request a new one</strong></a>.\n' +
+                'Thank you for your understanding and cooperation.',
+        });
+        return;
+    }
+    DeletePayPalButtons();
+    var dialog = $('.subscribe_dialog');
+    dialog.find('input[type=text].subscribe_plan_name').val(PayPal.getCurrent().plan_name);
+    dialog.modal({
+        show: true,
+        keyboard: true,
+        backdrop: 'static',
+    });
+    CreatePayPalButtons(panel);
+}
+
+function SubscribeDialogOnOK(ok) {
+    var dialog = ok.parents('.subscribe_dialog');
+    var subscribe_host_name = dialog.find('input[type=text].subscribe_host_name');
+    if (subscribe_host_name.val().match(/^[ 　]*$/)) {
+        Notice({
+            message: 'Host name missing.',
+            type: 'danger',
+            target: subscribe_host_name,
+            container: dialog,
+        });
+        return;
+    }
+    if (MAX_HOST_NAME_LENGTH < subscribe_host_name.val().length) {
+        Notice({
+            message: 'Host name too long.<br>&nbsp;&nbsp;&nbsp;Must be equal to or less than ' + MAX_HOST_NAME_LENGTH + '.',
+            type: 'danger',
+            target: subscribe_host_name,
+            container: dialog,
+        });
+        return;
+    }
+    if (!subscribe_host_name.val().match(/^[a-z][0-9a-z\-]+(\.[a-z][0-9a-z\-]+){1,4}$/)) {
+        Notice({
+            message: "Host name not an FQDN.<br>&nbsp;&nbsp;&nbsp;Use an FQDN-like name even if the host doesn't have an FQDN.",
+            type: 'danger',
+            target: subscribe_host_name,
+            container: dialog,
+        });
+        return;
+    }
+    var subscription = PayPalSubscription.getByHostName(subscribe_host_name.val());
+    if (subscription && subscription.status != 'CANCELLED') {
+        Notice({
+            message: 'This host already has a subscription.',
+            type: 'danger',
+            target: subscribe_host_name,
+            container: dialog,
+        });
+        return;
+    }
+    ok.addClass('hidden');
+    $('.subscribe_dialog .row_paypal_button_container').removeClass('hidden');
+}
+
+// Cancel/x をクリック
+$('.subscribe_dialog .command-cancel').click(function(e) {
+    //$('.subscribe_dialog .paypal_button_container').empty();
+    //return false; これをやると次（？）のハンドラーが実行されず、ダイアログが非表示にならない。
+});
+
+// OK をクリック
+$('.subscribe_dialog .command-ok').click(function(e) {
+    e.stopPropagation();
+    SubscribeDialogOnOK($(e.currentTarget));
+    return false;
+});
+
+$('.subscribe_dialog').keyup(function(e) {
+    if (e.which == 13 && !e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
+        e.stopPropagation();
+        SubscribeDialogOnOK($(e.currentTarget).find('.command-ok'));
+        return false;
+    }
+});
+
+</script>
+<!-- END 購読ダイアログ -->

@@ -1,0 +1,2380 @@
+
+////////////////////////////////////////////////////////////////////////
+// ■定数
+
+// 使っていない。てか変数だし。
+var _env_name;
+var _remote_addr;
+var _page;
+
+// サイト固有
+const APP_NAME = 'TCPDetective';
+const APP_TITLE = 'TCPDetective - Intrusion Detection System';
+const INDEX_PATH_ADMIN = '/admin_dashboard.html';
+const INDEX_PATH_GUEST = '/guest_dashboard.html';
+const INDEX_PATH_OTHER = '/dashboard.html';
+
+// エラーコード
+const ERROR_PARAMETER_INVALID = 1;
+const ERROR_USER_UNKNOWN = 2;
+const ERROR_PASSWORD_WRONG = 3;
+const ERROR_ACCOUNT_OR_PASSWORD_WRONG = 4;
+
+// ユーザータイプ
+const USER_TYPE_ADMIN = 0;
+const USER_TYPE_PARENT = 1;
+const USER_TYPE_CHILD = 2;
+
+// 定義済みユーザー
+const GUEST_ID = 2;
+const GUEST_ACCOUNT = 'guest@tcpdetective.com';
+const GUEST_PASSWORD = 'iXdMT24592j9Cblr';
+
+// 最大値と最小値
+const MAX_ACCOUNT_LENGTH = 64;
+const MIN_ACCOUNT_LENGTH = 8;
+const MAX_PASSWORD_LENGTH = 32;
+const MIN_PASSWORD_LENGTH = 8;
+const MAX_PHONE_SCREEN_WIDTH = 500;
+
+////////////////////////////////////////////////////////////////////////
+// ■変数
+
+var _body_height;
+
+////////////////////////////////////////////////////////////////////////
+// ■定義済みクラスの拡張
+
+// 関数から関数名を取得
+Function.prototype.getName = function() {
+    var str = this.toString();
+    var paren_pos = str.indexOf('(');
+    var name = str.slice(9, paren_pos);
+    return name;
+};
+
+// Date クラスの値のうち、指定のフォーマット文字列に対応するものを返す
+Date.prototype.getValueOf = function(type) {
+    switch (type) {
+    case 'YYYY':
+        return this.getFullYear();
+    case 'YY':
+        return pad0(this.getYear());
+    case 'mm':
+        return pad0(this.getMonth() + 1);
+    case 'dd':
+        return pad0(this.getDate());
+    case 'HH':
+        return pad0(this.getHours());
+    case 'MM':
+        return pad0(this.getMinutes());
+    case 'SS':
+        return pad0(this.getSeconds());
+    case 'T':
+        return this.getTime();
+    default:
+        throw 'unknown date element type: ' + type;
+    }
+}
+
+// Date クラスの値を指定のフォーマットに従って文字列化する
+Date.prototype.format = function(format) {
+    if (format == undefined) {
+        return this.toString();
+    }
+    var s = '';
+    var type = '';
+    var type_c;
+    for (var pos = 0; pos < format.length; pos++) {
+        var c = format.charAt(pos);
+        if (type_c != c) {
+            if (0 < type.length) {
+                s += this.getValueOf(type);
+            }
+            type = '';
+        }
+        if (c == 'Y' || c == 'm' || c == 'd' || c == 'H' || c == 'M' || c == 'S' || c == 'T') {
+            type += c;
+            type_c = c;
+        } else {
+            s += c;
+        }
+    }
+    if (0 < type.length) {
+        s += this.getValueOf(type);
+    }
+    return s;
+}
+
+Date.prototype.toUTC = function() {
+    var offset = this.getTimezoneOffset();              // JST (+09) なら -540 と出る。単位が分で符合が逆
+    this.setTime(this.getTime() + offset * 60 * 1000);  // UTC に変換
+    return this;
+}
+
+Math.roundFloat = function(f, digits) {
+    var m = Math.pow(10, digits);
+    return Math.round(f * m) / m;
+}
+
+Math.max = function(a, b) {
+    if (a < b) {
+        return b;
+    } else {
+        return a;
+    }
+}
+
+Math.min = function(a, b) {
+    if (a < b) {
+        return a;
+    } else {
+        return b;
+    }
+}
+
+String.prototype.trim = function() {
+    return this.replace(/^[ \r\n　]*/, '').replace(/[ \r\n　]*$/, '');
+}
+// メールアドレスの形式になっているか
+String.prototype.isValidMailAddress = function() {
+    return this.match(/^[a-z0-9\-_.]+@[a-z][a-z0-9\-_]+[a-z](\.([a-z][a-z0-9\-_]+[a-z]|[a-z][a-z]))*\.[a-z]+$/) ? true : false;
+}
+// ASCII 文字列か
+String.prototype.isAsciiString = function() {
+    for (var i = 0; i < this.length; i++) {
+        var code = this.charCodeAt(i);
+        if (code < 0 || 127 < code) {
+            return false;
+        }
+    }
+    return true;
+}
+// 整数の形式なら整数に変換
+String.prototype.toInteger = function(error_value) {
+    if (this.match(/^-?[1-9][0-9]*$/)) {
+        return parseInt(this, 10);
+    } else {
+        return error_value;
+    }
+}
+// 日本語アラビア数字をアスキーコードに変換し、更にアラビア数字のみ抽出する
+String._code0 = '0'.charCodeAt(0);
+String._code9 = '9'.charCodeAt(0);
+String._codeWide0 = '０'.charCodeAt(0);
+String._codeWide9 = '９'.charCodeAt(0);
+String._offsetNarrowWide = String._codeWide0 - String._code0;
+String.prototype.extractDigits = function() {
+    var digits = this.replace(/./g, function(c) {
+        var code = c.charCodeAt(0);
+        if (String._codeWide0 <= code && code <= String._codeWide9) {
+            return String.fromCharCode(code - String._offsetNarrowWide);
+        } else if (String._code0 <= code && code <= String._code9) {
+            return c;
+        } else {
+            return '';
+        }
+    });
+    return digits
+}
+String.prototype.parseURI = function() {return ParseURI(this);}
+
+Array.prototype.getIndex = function(o, prop) {
+    if (prop) {
+        return this.findIndex(function(element) {return element[prop] == o});
+    } else {
+        return this.findIndex(function(element) {return element == o});
+    }
+}
+
+////////////////////////////////////////////////////////////////////////
+// ■関数（汎用共通）
+
+function CallAPI(uri, method, command, timeout, data, on_response) {
+//if (uri == './sms_api/') {
+//    console.log(">>>>>>> " + command);
+//}
+    if (data == undefined) {
+        data = {};
+    }
+    if (on_response == undefined) {
+        on_response = {success: function(response) {}, error: function(response) {}};
+    }
+    if (typeof on_response != 'object') {
+        throw 'illegal type of argument on_response';
+    }
+    if (on_response.success == undefined) {
+        on_response.success = function(response) {};
+    }
+    if (on_response.error == undefined) {
+        on_response.error = function(response) {};
+    }
+    if (on_response.finally == undefined) {
+        on_response.finally = function(data) {};
+    }
+    var ajax_params = {
+        url: uri,
+        type: method,
+        async: true,
+        timeout: timeout,
+        cache: false,
+        success: function(response, responseType) {
+//if (uri == './sms_api/') {
+//    console.log("<<<<<<< " + command + " success!");
+//}
+            if (response.status == 'success') {
+                on_response.success(response);
+                on_response.finally(data);
+            } else {
+                on_response.error(response);
+                on_response.finally(data);
+            }
+        },
+        error: function(xhr, status, error) {
+//if (uri == './sms_api/') {
+//    console.log("<<<<<<< " + command + " error!");
+//}
+            on_response.fatal(status, error);
+            on_response.finally(data);
+        }
+    };
+    // data がフォームデータの場合は普通のプロパティは読まれず、ajax のパラメータも微妙に違う
+    if (typeof data == 'object' && data.toString() == '[object FormData]') {
+        ajax_params.processData = false;
+        ajax_params.contentType = false;
+        ajax_params.xhr = function() {
+            var xhr = $.ajaxSettings.xhr();
+            if (xhr.upload) {
+                xhr.upload.addEventListener('progress', function(e) {
+                    var progress = Math.floor(e.loaded / e.total * 100);
+                    var bar;
+                    if (data.progress_bar != undefined) {
+                        bar = data.progress_bar;
+                    }
+                    if (bar != undefined && 0 < bar.length) {
+                        bar.attr('aria-valuenow', progress);
+                        bar.css('width', progress + '%');
+                        bar.html(progress + '%');
+                    }
+                    //console.log(progress + '%');
+                }, false); 
+            }
+            return xhr;
+        };
+        if (data.set != undefined) {    // 毎度おなじみクソ IE 対策。IE の場合は FormData を作る前に dom レベルでパラメータを埋め込まねばならない
+            if (_user && data.get('_account') == undefined) {
+                data.set('_account', _user.account);
+                data.set('_password', _user.password);
+            }
+            data.set('_command', command);
+        }
+    } else {
+        if (_user && data._account == undefined) {
+            data._account = _user.account;
+            data._password = _user.password;
+        }
+        data._command = command;        // 書き換えているのは DOM ではなく DOM から作成されたオブジェクト（なのでオリジナルは当然不変）
+        data = CallAPI.sortData(data);
+    }
+    ajax_params.data = data;
+    $.ajax(ajax_params);
+}
+
+CallAPI.sortData = function(data) {
+    var a = Object.entries(data).sort(function(a1, a2) {
+        if (a1[0] == '_command') {
+            return -1;
+        } else {
+            if (a1[0] < a2[0]) {
+                return -1;
+            } else {
+                return 1;
+            }
+        }
+    });
+    var o = {};
+    for (var i = 0; i < a.length; i++) {
+        o[a[i][0]] = a[i][1];
+    }
+    return o;
+}
+
+// 自分定義のクラスを ajax に渡すと発狂するので、システムで定義済みのオブジェクトに戻す（というかコピーする）
+CallAPI.toPlainObject = function(o) {
+    if (o == undefined) {
+        return o;
+    } else if (Array.isArray(o)) {
+        var a = [];
+        for (var i = 0; i < o.length; i++) {
+            a.push(CallAPI.toPlainObject(o[i]));
+        }
+        return a;
+    } else if (typeof o == 'object') {
+        var p = {};
+        for (var name in o) {
+            if (typeof o[name] != 'function') {
+                p[name] = CallAPI.toPlainObject(o[name]);
+            }
+        }
+        return p;
+    } else {
+        return o;
+    }
+}
+
+/*
+電話帳は従来の電話帳ではなく、新しいデータ構造（タグ名、タグ値を持てる）
+一括送信時の宛先番号ファイルは「使い捨ての電話帳」という位置づけ
+UploadTable() はテーブル形式のファイルをアップロードし、そのまま ajax でダウンロードするための汎用的な関数であり、カラムの数も名前も知らない。
+*/
+function UploadTable(form, uploaded_file, title, on_success, on_success_argv) {
+    var timeout = Math.floor(uploaded_file.size / 1024 * 2) + 7013;     // TODO: 往復で 1 KB 2 ミリ秒と想定。妥当かどうかは知らん。Excel と CSV で全然サイズが違うから妥当であるはずがないか…
+    var loader = new Loader();
+    loader.show(timeout, {title: title + 'をアップロード中...'});
+    var user = User.getCurrent();
+    var fd = new FormData(form.get(0));
+    if (fd.set == undefined) {
+        form.find('[name=command]').val('upload_table');    // IE 対策
+        form.find('[name=account]').val(user.account);      // IE 対策
+        form.find('[name=password]').val(user.password);    // IE 対策
+    } else {
+        fd.set('uploaded_file', uploaded_file);             // D&D またはファイル選択ダイアログで取得したファイルのデータをセット（IE では無効）
+    }
+    CallAPI('./sms_api/', 'POST', 'upload_table', timeout, fd, {
+        success: function(response) {
+            if (on_success) {
+                on_success(response.table, on_success_argv);
+            }
+            loader.remove();
+        },
+        error: function(response) {
+            noty({text: response.message, layout: 'topRight', type: 'error'});
+            loader.remove();
+        }
+    });
+}
+
+// DownoadTable() はテーブル形式のデータをアップロードし、そのままファイルとしてダウンロードするための汎用的な関数であり、カラムの数も名前も知らない。
+function DownloadTable(table, on_end) {
+    var user = User.getCurrent();
+    var head = JSON.stringify(table.head);
+    var body = JSON.stringify(table.body);
+    var form = $('<form id="download_form" action="./sms_api/" method="POST" target="_blank"></form>');
+    form.append('<input type="hidden" name="command" value="download_table"/>');
+    form.append('<input type="hidden" name="account" value="' + user.account + '"/>');
+    form.append('<input type="hidden" name="password" value="' + user.password + '"/>');
+    form.append('<input type="hidden" name="file_name" value="' + table.file_name + '"/>');
+    var input = $('<input type="hidden" name="head"/>');
+    input.val(head);
+    form.append(input);
+    input = $('<input type="hidden" name="body"/>');
+    input.val(body);    // TODO: 100 万件でも OK?
+    form.append(input);  
+    $('body').append(form);
+    form.submit();
+    $('#download_form').remove();
+    if (on_end) {
+        on_end();
+    }
+}
+
+// 先頭から必要な数だけ '0' を付加して指定の桁数の数字列を作成
+function pad0(n, digits) {
+    if (digits == undefined) {
+        digits = 2;
+    }
+    return ('00000000' + n).slice(-digits);
+}
+
+function Compare(o1, o2, reverse) {
+    var result;
+    if (o1 == undefined) {
+        if (o2 == undefined) {
+            result = 0;
+        } else {
+            result = -1;
+        }
+    } else if (o2 == undefined) {
+        if (o1 == undefined) {
+            result = 0;
+        } else {
+            result = 1;
+        }
+    } else {
+        if (o1 < o2) {
+            result = -1;
+        } else if (o2 < o1) {
+            result = 1;
+        } else {
+            result = 0;
+        }
+    }
+    if (reverse && result != 0) {
+        result *= -1;
+    }
+    return result
+}
+
+// ネットワークバイトオーダーはリトルエンディアン（下位バイトがアドレスの若い方に置かれる）
+function ip_aton(a) {
+    var m = a.match(/^(\d+)\.(\d+)\.(\d+)\.(\d+)$/);
+    if (!m || m.length != 5) {
+        throw 'IP アドレスの形式が間違っています';
+    }
+    var n = (parseInt(m[1], 10) << 0) | (parseInt(m[2], 10) << 8) | (parseInt(m[3], 10) << 16) | (parseInt(m[4], 10) << 24);
+    return n;
+}
+
+function ip_ntoa(n) {
+    var a0 = ((n >> 0) & 0xff).toString();
+    var a1 = ((n >> 8) & 0xff).toString();
+    var a2 = ((n >> 16) & 0xff).toString();
+    var a3 = ((n >> 24) & 0xff).toString();
+    var a = a0 + '.' + a1 + '.' + a2 + '.' + a3;
+    return a;
+}
+
+function CIDRToAddress(cidr) {
+    var ip_a;
+    var mask_length;
+    var slash_pos = cidr.indexOf('/');
+    if (slash_pos == -1) {
+        ip_a = cidr;
+        mask_length = 32;
+    } else {
+        ip_a = cidr.substring(0, slash_pos);
+        mask_length = parseInt(cidr.substring(slash_pos + 1), 10);
+        if (mask_length < 0 || 32 < mask_length) {
+            throw 'ネットマスクの長さが異常です';
+        }
+    }
+    var ip_n = ip_aton(ip_a);
+    var addr = {ip: ip_n, mask_length: mask_length}
+    return addr;
+}
+
+function escapeHtml(s) {
+    if (s == undefined) {
+        return '';
+    }
+    var HTML_SPECIAL_CHARACTERS = {
+        "&": "&amp;",
+        "\"": "&quot;",
+        "<": "&lt;",
+        ">": "&gt;",
+        " ": "&nbsp;"
+    }
+    return s.replace(/[&"<> ]/g, function(match) {
+        return HTML_SPECIAL_CHARACTERS[match];
+    });
+}
+
+// TODO: これはアカン。なんとかして css で実現せねば
+function ellipsis(str, max, el) {
+    if (el === undefined) {
+        el = '…';
+    }
+    return max < str.length ? str.slice(0, max) + el : str;
+}
+
+function CreateRandomPassword(digits) {
+    var table = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    var password = '';
+    for (var i = 0; i < digits; i++) {
+        var pos = Math.floor(table.length * Math.random());
+        var c = table.charAt(pos);
+        password += c;
+    }
+    return password;
+}
+
+// 時刻指定送信の指定日時の作成（バリデーション付き）
+function CreateSendAt(send_at_date, send_at_time) {
+    if (send_at_date == '') {
+        throw {message: '日付を選択してください', target: $('#send_at_date')};
+    }
+    var ymd = send_at_date.match(/^(\d\d\d\d)-(\d\d)-(\d\d)$/);
+    if (!ymd || ymd.length != 4) {
+        throw {message: '日付の形式が間違っています', target: $('#send_at_date')};
+    }
+    if (send_at_time == '') {
+        throw {message: '時刻を選択してください', target: $('#send_at_time')};
+    }
+    var hm = send_at_time.match(/^(\d\d):(\d\d)$/);
+    if (!hm || hm.length != 3) {
+        throw {message: '時刻の形式が間違っています', target: $('#send_at_time')};
+    }
+    var send_at = new Date(ymd[1], parseInt(ymd[2], 10) - 1, ymd[3], hm[1], hm[2]);
+    var now = new Date();
+    if (send_at.getTime() < now.getTime()) {
+        throw {message: '過去の日時は指定できません'};
+    } else if (send_at.getTime() < now.getTime() + 1000 * 60 * 30) {
+        throw {message: '現在から 30 分以内の日時は指定できません'};
+    }
+    return send_at.format('YYYY-mm-dd HH:MM:SS');
+}
+
+// ログ表示画面の表示範囲指定コントロールの初期化
+function InitializeViewDateRange() {
+    var now = new Date();
+    var first_day = new Date(now.getFullYear(), now.getMonth(), 1);
+    $('#view_date_from').val(first_day.format('YYYY-mm-dd'));
+    $('#view_date_from').datepicker({
+        format: 'yyyy-mm-dd',
+        language: 'ja',
+        autoclose: true
+    });
+    $('#view_date_to').val(now.format('YYYY-mm-dd'));
+    $('#view_date_to').datepicker({
+        format: 'yyyy-mm-dd',
+        language: 'ja',
+        autoclose: true
+    });
+}
+
+// ダイアログを画面の中央に表示する
+function ShowCentered(dialog, argv) {
+    dialog.css({
+        display: 'block'
+    });
+    if (screen.width < 400) {
+        dialog.css('width', '98%');
+    }
+    dialog.css({
+        left: Math.floor((dialog.parent().outerWidth() - dialog.outerWidth()) / 2) + 'px',
+        top: $(document).scrollTop() + Math.floor(($(window).outerHeight() - dialog.outerHeight()) / 2) + 'px'
+    });
+    if (argv) {
+        if (argv.css) {
+            dialog.css(argv.css);
+        }
+        if (argv.on_end) {
+            argv.on_end();
+        }
+    }
+}
+
+// ダイアログを非表示状態に変えるとき、微妙にまったり感を出す
+function Fadable(dialog) {
+    dialog.find('.panel-remove').click(function(e) {
+        dialog.animate({'opacity': 0}, 200, function() {
+            dialog.remove();
+        });
+    });
+}
+
+// ダイアログをドラッグ可能にする
+function Draggable(dialog) {
+    var header = $(dialog.find('.panel-heading').get(0));
+    header.mousedown(function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        dialog._mousedown = {
+            offsetX: e.pageX - dialog.offset().left,    // ダイアログの左上隅の x 座標とマウスポインタの x 座標の変位
+            offsetY: e.pageY - dialog.offset().top      // 同じく y
+        }
+        $(document).mouseup(function(e) {
+            e.preventDefault();
+            dialog._mousedown = null;
+            $(document).off();
+        });
+        $(document).mousemove(function(e) {
+            e.preventDefault();
+            if (dialog._mousedown) {
+                var dialogX = e.pageX - dialog.parent().offset().left - dialog._mousedown.offsetX;
+                var dialogY = e.pageY - dialog.parent().offset().top - dialog._mousedown.offsetY;
+                dialogX = Math.max(dialogX, 0);
+                dialogY = Math.max(dialogY, 0);
+                dialogX = Math.min(dialogX, dialog.parent().width() - dialog.outerWidth());
+                dialogY = Math.min(dialogY, $(document).scrollTop() + dialog.parent().height() - dialog.outerHeight() - 20);    // - 20 はスクロールバーの領域？ここより下に表示しようとすると縦のスクロールバーが表示されてウザい
+                dialog.css({
+                    left: dialogX + 'px',
+                    top: dialogY + 'px'
+                });
+            }
+        });
+    });
+}
+
+/*
+遅まきながら bootstrap の dialog が良さそうであることがわかったので、先にそっちを試す。
+https://codepen.io/adamcjoiner/pen/PNbbbv
+draggable な bootstrap dialog
+
+// 確認ダイアログ（javascript 組み込みの confirm() に相当）
+function ShowConfirmDialog_(argv) {
+    var container = $('.page-content');
+    if (container.length == 0) {
+        container = $('body');
+    }
+    var dialog = $('.confirm_dialog');
+    //console.log('dialog>', dialog);
+    dialog.CreateDialog({
+        container: container
+    });
+    dialog.find('.panel-body').append(argv.body);
+    var button_help = dialog.find('.button_help');
+    if (0 < button_help.length) {
+        button_help.click(function(e) {
+            if (argv.on_help && typeof argv.on_help == 'function') {
+                argv.on_help();
+            }
+        });
+    }
+    dialog.find('.button_ok').click(function(e) {
+        if (argv.on_ok && typeof argv.on_ok == 'function') {
+            argv.on_ok();
+        }
+    });
+    dialog.ShowModal();
+}
+*/
+/*
+こっちは prod.sms.starship.jp/js/common.js にあったやつ
+argv = {
+    message: <メッセージ>,
+    on_cancel: <キャンセルボタンクリック時の動作>,
+    on_ok: <OKボタンクリック時の動作>
+};
+bootstrap dialog を使おうとしているが、ここへ持ってくると動かない。なんでや？
+*/
+/*
+function ShowConfirmDialog(argv) {
+    var dialog = $('#confirm_dialog');
+    console.log('dialog>', dialog);
+    dialog.find('.modal-body').html(argv.message);
+    dialog.find('.btn_cancel').off().click(argv.on_cancel);
+    dialog.find('.btn_ok').off().click(argv.on_ok);
+    //var title = '<span class="fa fa-rocket"></span> ' + _service_name;
+    var title = '<span class="fa fa-rocket"></span> ' + 'TCPDetective';
+    dialog.find('#smallModalHead').html(title);
+    dialog.modal('show');
+}
+*/
+/*
+function DoYouWantToLogin() {
+    ShowConfirmDialog({
+        message: '<p>Your are currently a guest user.<br>Do you want to login?</p>',
+        on_ok: function() {
+            alert('OK button pressed');
+        },
+        on_cancel: function() {
+            alert('Cancel button pressed');
+        }
+    });
+}
+*/
+
+// 見た目のかっこいいドロップダウンリスト（bootstrap の selectpicker の外観だけ利用しコードはスクラッチから。bootstrap の selectpicker はいろいろ挙動不審なので）
+var _picker_instance_count = 0;
+
+function CreateSelectPicker(select, argv) {
+    _picker_instance_count++;
+    select.css('display', 'none');
+    var picker = $(
+'<div class="btn-group bootstrap-select" style="z-index: 1000;">' +    // ここの open と
+    '<button type="button" class="btn dropdown-toggle selectpicker btn-default" data-toggle="dropdown" aria-expanded="false">' +    // この true/false は同期してトグルする
+        '<span class="filter-option pull-left"></span>&nbsp;<span class="caret"></span>' +
+    '</button>' +
+    '<div class="dropdown-menu open" style="max-height: 426px; overflow: hidden; min-height: 0px;">' +  // ここは常に open
+        '<ul class="dropdown-menu inner selectpicker" role="menu" style="max-height: 424px; overflow-y: auto; min-height: 0px;">' +
+        '</ul>' +
+    '</div>' +
+'</div>'
+);
+    var container = select.parent();
+    container.append(picker);
+    var option = select.find('option[value=' + select.val() + ']');
+    var button = picker.find('.dropdown-toggle');
+    var button_text = button.find('.filter-option');
+    var menu = picker.find('ul.dropdown-menu');
+    button.attr('title', option.attr('title'));
+    var icon_name = option.attr('icon');
+    if (icon_name != undefined && icon_name != '') {
+        button_text.append('<span class="fa ' + icon_name + ' icon"></span>');
+    }
+    button_text.append(option.html());
+    select.find('option').each(function(i, o) {
+        var li = $('<li><a tabindex="0"><span class="text"></span></a></li>');
+        li.attr('value', $(o).val());
+        li.attr('rel', i);
+        li.attr('title', $(o).attr('title') ? $(o).attr('title') : '');
+        if ($(o).prop('selected')) {
+            li.addClass('selected');
+        }
+        icon_name = $(o).attr('icon');
+        if (icon_name != undefined && icon_name != '') {
+            li.find('.text').append('<span class="fa ' + icon_name + ' icon"></span>');
+        }
+        li.find('.text').append($(o).html());
+        li.hover(
+            function(e) {
+                if (select.val() != $(o).val()) {
+                    button.attr('title', $(e.currentTarget).attr('title'));
+                    button_text.html($(e.currentTarget).find('a').html());
+                    select.val($(o).val());
+                    if (!argv || argv.trigger_change_on_hover) {
+                        select.trigger('change');
+                    }
+                }
+            }
+        );
+        menu.append(li);
+    });
+    // select が持っているクラスを picker にコピー
+    var select_classes = select.attr('class').split(/\s+/);
+    for (var i = 0; i < select_classes.length; i++) {
+        picker.addClass(select_classes[i]);
+    }
+    menu.mousedown(function(e) {
+        // スクロールバー上の mousedown
+        if (e.target.localName == 'ul') {
+            e.stopPropagation();            // button.blur の発生を防ぐ
+        } else {
+            if (argv && !argv.trigger_change_on_hover) {
+                select.trigger('change');
+            }
+        }
+    });
+    var data = {
+        picker: picker,
+        button: button,
+        menu: menu
+    };
+    button.blur(function(e) {
+        if (menu.css('display') == 'block') {
+            OpenSelectPickerMenu(data, false);
+        }
+    });
+    button.click(function(e) {
+/*
+DONE: picker が open クラスを持っているかどうかで判定すべきところだが、な
+ぜか一個目のインスタンスでは addClass/removeClass すると動作が逆になり、、
+当然ながら付くべきときに inset な box_shadow が付かず、付くべきでないとき
+に付く。
+全くあり得ない話だが事実だからしょうがない。
+コードを全く変えずに 2 つ目以降のインスタンスを作成すると普通に動く。
+絶対にあり得ない話だが事実だからしょうがない。
+そこで hasClass('open') による判定は諦め、css('display') で判定する。
+→ SetActivePage() 内の $(document).off() により、この問題は解決した。
+*/
+        if (menu.css('display') == 'block') {
+            OpenSelectPickerMenu(data, false);
+        } else {
+            OpenSelectPickerMenu(data, true);
+        }
+    });
+/*  全然呼ばれてないやないか～い！→ click イベントは mousedown, mouseup から作られるものらしい。jquery をロードする時点では picker は DOM 上に存在しないから、その処理を行うハンドラーがセットされない（のか？）
+    menu.click(function(e) {
+        console.log(e);
+    });
+    menu.find('li').click(function(e) {
+        console.log(e);
+    });
+    menu.find('li a').click(function(e) {
+        var a = $(e.currentTarget);
+        button_text.html(a.html());
+        OpenSelectPickerMenu(data, false);
+        select.trigger('change');
+    });
+*/
+    select.change(function(e) {
+        var value = select.val();
+        menu.find('li.selected').removeClass('selected');
+        var li = menu.find('li[value=' + value + ']');
+        li.addClass('selected');
+        button.attr('title', li.attr('title'));
+        button_text.html(li.find('a').html());
+    });
+    menu.css('display', 'none');
+    //OpenSelectPickerMenu(data, false);
+}
+
+function OpenSelectPickerMenu(data, open) {
+    if (open) {
+        data.picker.addClass('open');
+        data.button.attr('aria-expanded', true);
+        data.menu.parent().css('display', 'block');
+        data.menu.css('display', 'block');
+    } else {
+        data.picker.removeClass('open');
+        data.button.attr('aria-expanded', false);
+        data.menu.parent().css('display', 'none');
+        data.menu.css('display', 'none');
+    }
+}
+
+function DestroySelectPicker(select) {
+    var picker = select.parent().find('.bootstrap-select');
+    if (0 < picker.length) {
+        picker.remove();
+    }
+}
+
+// div をまったりと開く／閉じる
+function Accordion(o, open, duration) {
+    if (open) {
+        o.removeClass('closed');
+        o.css('display', 'block');
+        o.css('height', '0px');
+        o.animate({height: o.get(0)._accordion_height + 'px'}, duration, 'swing', function() {
+        });
+    } else {
+        o.css({
+            display: 'block',
+            height: 'auto'
+        });
+        o.get(0)._accordion_height = o.height();
+        o.animate({height: '0px'}, duration, 'swing', function() {
+            o.get(0).height = o.height();
+            o.css('display', 'none');
+            o.addClass('closed');
+        });
+    }
+}
+
+/*
+tagsinput だが、これもスクラッチから自作。オリジナルの tagsinput はイマイチ機能不足なので
+<input type="text" class="tags" value="First,Second,Third" id="tags1529914034638" style="display: none;">
+<div id="tags1529914034638_tagsinput" class="tagsinput" style="width: 100%; height: auto;">
+    <span class="tag">
+        <span>First&nbsp;&nbsp;</span>
+        <a href="#" title="Removing tag"></a>
+    </span>
+    <span class="tag">
+        <span>Second&nbsp;&nbsp;</span>
+        <a href="#" title="Removing tag"></a>
+    </span>
+    <span class="tag">
+        <span>Third&nbsp;&nbsp;</span>
+        <a href="#" title="Removing tag"></a>
+    </span>
+    <div id="tags1529914034638_addTag">
+        <input id="tags1529914034638_tag" value="" data-default="" style="color: rgb(102, 102, 102); width: 80px;">
+    </div>
+    <div class="tags_clear"></div>
+</div>
+*/
+var _tagsinput_tag_id_to_value_map = {};
+
+function CreateTagsInput(input, options, tags_data) {
+    var tagsinput = $('<div class="tagsinput"></div>');
+    if (options == undefined || options.add != 'no') {
+        var add_tag = $(
+'<div class="add_tag">' +
+    '<input placeholder="タグを追加" style="color: rgb(102, 102, 102); width: 256px;">' +
+'</div>'
+);
+        add_tag.find('input').keydown(function(e) {
+            var input = $(e.currentTarget);
+            if (e.which == 13) {
+                if (options == undefined || options.onAdd == undefined) {
+                    return;
+                }
+                var tag_count = 0;
+                tagsinput.find('.tag').each(function() {
+                    tag_count++;
+                });
+                var label = input.val();
+                var response = options.onAdd(tag_count, label);
+                if (response == undefined || typeof response != 'object' || response.value == undefined) {
+                    return;
+                }
+                var tag = CreateTagsInputTag(tag_count, {label: label, value: response.value}, options);
+                input.before(tag);
+                input.val('');
+                if (response.onAdded && typeof response.onAdded == 'function') {
+                    response.onAdded();
+                }
+            } else if (e.which == 27) {
+                input.val('');
+            }
+        });
+        tagsinput.append(add_tag);
+    }
+    if (tags_data) {
+        AddTagsInputTags(/*input, */tagsinput, tags_data, options);
+        tagsinput.css('opacity', 0);
+        tagsinput.animate({opacity: 1.0}, 200, 'linear');
+    }
+    var api = tagsinput.get(0);
+    api.removeTags = function() {
+        tagsinput.find('.tag').each(function(i, o) {
+            var tag_id = $(o).prop('id');
+            delete _tagsinput_tag_id_to_value_map[tag_id];
+        });
+        tagsinput.find('.tag').remove();
+    }
+    api.addTags = function(tags_data) {
+        AddTagsInputTags(/*input, */tagsinput, tags_data, options);
+        tagsinput.css('opacity', 0);
+        tagsinput.animate({opacity: 1.0}, 200, 'linear');
+    };
+    api.selectAllTags = function(select) {
+        if (select) {
+            tagsinput.find('.tag').addClass('selected');
+        } else {
+            tagsinput.find('.tag').removeClass('selected');
+        }
+    };
+    api.selectTagByLabel = function(label, select) {
+        var selected_tag_index = -1;
+        tagsinput.find('.tag .tag_label').each(function(i, o) {
+            if ($(o).html() == label) {
+                if (select) {
+                    $(o).parent().addClass('selected');
+                } else {
+                    $(o).parent().removeClass('selected');
+                }
+                selected_tag_index = i;
+            }
+        });
+        return selected_tag_index;
+    };
+    api.isTagSelected = function(label) {
+        var result = false;
+        tagsinput.find('.tag.selected>.tag_label').each(function(i, o) {
+            if ($(o).html() == label) {
+                result = true;
+            }
+        });
+        return result;
+    };
+    api.getSelectedValues = function() {
+        var values = [];
+        tagsinput.find('.tag.selected').each(function(i, o) {
+            values.push(o.getValue());
+        });
+        return values;
+    };
+    input.after(tagsinput);         // 引数で渡された input はここでしか使っていない
+    input.css('display', 'none');
+    return tagsinput.get(0);        // jQuery の DOM オブジェクトラッパーはライフタイムが不明なので、生の DOM オブジェクトを返す（それが「API オブジェクト」という趣向）
+}
+
+function AddTagsInputTags(/*input, */tagsinput, tags_data, options) {
+    var add_tag = tagsinput.find('.add_tag');
+    for (var index = 0; index < tags_data.length; index++) {
+        var tag = CreateTagsInputTag(index, tags_data[index], options);
+        if (add_tag.length == 0) {
+            tagsinput.append(tag);
+        } else {
+            add_tag.before(tag);
+        }
+    }
+}
+
+function CreateTagsInputTag(index, tag_data, options) {
+    var tag = $(
+'<span class="tag">' +
+    '<span class="tag_label">' + tag_data.label + '</span>' +
+    '<span class="fa fa-times tag_remove" title="【' + tag_data.label + '】タグを削除する"></span>' +
+'</span>'
+);
+    var tag_id = CreateTagsInputTagId();
+    tag.prop('id', tag_id);
+    _tagsinput_tag_id_to_value_map[tag_id] = tag_data.value;    // 新規作成時にユーザーが中身を指定しなければ undefined
+    tag.get(0).getValue = function() {
+        var tag_id = tag.prop('id');
+        return _tagsinput_tag_id_to_value_map[tag_id];
+    }
+    if (options && options.remove == 'no') {
+        tag.find('.tag_remove').addClass('hidden');
+    }
+    tag.click(function(e) {
+        var tag = $(e.currentTarget);
+        if (options == undefined || options.onSelect == undefined || options.onSelect(index, tag_data.label, tag_data.value, !tag.hasClass('selected'), tag_data)) {
+            tag.toggleClass('selected');
+        }
+    });
+    tag.find('.tag_remove').click(function(e) {
+        var tag = $(e.currentTarget).parent();
+        if (options == undefined || options.onRemove == undefined || options.onRemove(index, tag_data.label, tag_data.value, tag_data)) {
+            tag.animate({opacity: 0}, 200, 'linear', function() {
+                tag.remove();
+            });
+        }
+    });
+    return tag;
+}
+
+function CreateTagsInputTagId() {
+    var now = new Date();
+    var suffix = Math.floor(1024 * 1024 * 1024 * 20 * Math.random());
+    var id = 'tag_id_' + now.format('YYYYmmddHHMMSS') + '_' + suffix;
+    return id;
+}
+
+// noty のインライン表示がイマイチなので。同じようなものを作った。トゲ付き。
+var _notices = {};  // TODO: Notice を親（コンテナ）の子供として表示するように変えたので、RemoveAllNotices() は、要らなくなった。当然、_notices も要らなくなった。
+
+/*
+argv = {
+    message: <メッセージの html>,
+    target: <ドゲが指し示す対象の jquery オブジェクト>,
+    container: <コンテナ。コンテナが動くと Notice も一緒に動く>,
+    duration: <見せる／消すアニメーションの時間。ミリ秒>,
+}
+*/
+function Notice(argv) {
+    // 親が明示されていなければ body が親
+    var container;
+    if (argv.container == undefined) {
+        container = $('body');
+    } else {
+        container = argv.container;
+    }
+
+    // アニメーションの長さ
+    var duration;
+    if (argv.duration == undefined) {
+        duration = 100;
+    } else {
+        duration = argv.duration;
+    }
+
+    // 通知のターゲットが既に別の通知のターゲットになっている
+    var target_of_notice = argv.target.attr('target_of_notice');
+    if (target_of_notice && target_of_notice != '') {
+        var prev_notice = _notices[target_of_notice];
+        prev_notice.remove();
+        argv.target.attr('target_of_notice', null);
+        delete _notices[target_of_notice];
+    }
+    // 新しい通知を作る
+    var notice = $('<div class="notice_inline">' + argv.message + '</div>');
+    if (argv.type == 'info') {
+        notice.addClass('info');
+    } else {
+        notice.addClass('danger');
+    }
+    var notice_id = 'notice_' + Math.floor(20 * 1024 * 1024 * 1024 * Math.random());
+    notice.prop('id', notice_id);
+    argv.target.attr('target_of_notice', notice_id);
+    _notices[notice_id] = notice;
+    notice.css({
+        top: argv.target.offset().top - container.offset().top + argv.target.outerHeight() + 'px',
+        left: argv.target.offset().left - container.offset().left + 'px',
+        //width: argv.target.outerWidth() + 'px',
+        width: 'auto',
+        opacity: 0
+    });
+    container.on('click keydown', function(e) {
+        notice.fadeOut();
+    });
+    notice.click(function(e) {
+        notice.fadeOut();
+    });
+    container.append(notice);
+    notice.animate({opacity: 1.0}, duration);
+
+    // メソッド
+    this.fadeOut = function() {
+        this.animate({opacity: 0}, duration, function() {
+            notice.remove();
+            argv.target.attr('target_of_notice', null);
+            delete _notices[notice_id];
+        });
+    }
+}
+
+function RemoveAllNotices() {
+    for (var notice_id in _notices) {
+        var notice = _notices[notice_id];
+        if (notice != undefined) {
+            notice.remove();
+        }
+    }
+    $('[target_of_notice]').attr('target_of_notice', null);
+    _notices = {};
+}
+
+// 指定の DataTable セルにトゲ付きエラーメッセージを表示する（指定のセルが表示されていなければ表示して）
+function TableCellNotice(
+datatable_api,          // table に対応する DataTable API オブジェクト
+table,                  // table タグに対応する jQuery オブジェクト
+position,               // エラーメッセージを表示する対象となるセルの [行番号, 列番号]（どちらも 0 起源）
+index_attribute_name,   // position[0] で指定されたテーブルの行番号は、テーブルの全ての行のデータを保持する配列の中で何番目か
+message                 // メッセージ文字列（タグ入り可）
+)
+{
+    var target_row_index = position[0];
+    var target_column_index = position[1];
+    var target_row;
+    table.find('tbody tr').each(function(relative_row_index, row_dom) {
+        var current_row_index = $(row_dom).find('[' + index_attribute_name + ']').attr(index_attribute_name);
+        if (current_row_index == target_row_index) {
+            target_row = $(row_dom);
+        }
+    });
+    if (target_row) {
+        var td = target_row.find('>td:nth-child(' + (target_column_index + 1) + ')');
+        Notice({message: message, target: td});
+        return;
+    }
+    var page_length = datatable_api.page.len();
+    var target_page = Math.floor(target_row_index / page_length);
+    datatable_api._on_drawn = function() {
+        TableCellNotice(datatable_api, table, position, index_attribute_name, message);
+    };
+    datatable_api.page(target_page).draw(false);
+}
+
+// URI を解析して部品に分ける
+function ParseURI(s) {
+    //var m = s.match(/^(https?):\/\/([a-z][0-9a-z\-]*[0-9a-z]*)(\.[a-z][0-9a-z\-]*[0-9a-z]*)*(\.[a-z]{2,8})(:[\d]+)?(\/[^\?]*)?(\?.+)?$/);
+    //                                                                          ↑このパターンだと繰り返しマッチしたものが出力されない！
+    var m = s.match(/^(https?):\/\/([a-z][0-9a-z\-]*[0-9a-z]*)(\.[a-z][0-9a-z\-]*[0-9a-z]*)?(\.[a-z][0-9a-z\-]*[0-9a-z]*)?(\.[a-z][0-9a-z\-]*[0-9a-z]*)?(\.[a-z][0-9a-z\-]*[0-9a-z]*)?(\.[a-z][0-9a-z\-]*[0-9a-z]*)?(\.[a-z]{2,8})(:[\d]+)?(\/[^\?]*)?(\?.+)?$/);
+    //console.log(m);
+    if (!m) {
+        throw 'invalid uri';
+    }
+    // プロトコル
+    var protocol = m[1];
+    // FQDN の最初の単語
+    var fqdn = m[2];
+    // FQDN の残りの単語
+    var undefined_count = 0;
+    var prev_word;
+    var i = 3;
+    for (; i < m.length; i++) {
+        if (m[i] == undefined) {
+            undefined_count++;
+            if (1 < undefined_count && prev_word != undefined) {
+                break;
+            }
+        } else if (m[i].charAt(0) == '.') {
+            fqdn += m[i];
+        } else {
+            break;
+        }
+        prev_word = m[i];
+    }
+    // ポート番号
+    var port;
+    if (i < m.length) {
+        if (m[i] == undefined) {
+        } else if (m[i].charAt(0) == ':') {
+            port = parseInt(m[i].slice(1), 10);
+        }
+        i++;
+    }
+    // パス
+    var path;
+    if (i < m.length) {
+        if (m[i] == undefined) {
+        } else if (m[i].charAt(0) == '/') {
+            path = m[i];
+        }
+        i++;
+    }
+    // クエリー
+    var query;
+    //var query_array = [];
+    var query_map = {};
+    if (i < m.length) {
+        if (m[i] == undefined) {
+        } else if (m[i].charAt(0) == '?') {
+            query = m[i].slice(1);
+            var pairs = query.split('&');
+            if (Array.isArray(pairs)) {
+                for (var i = 0; i < pairs.length; i++) {
+                    var pair = pairs[i];
+                    //console.log('pair>', pair);
+                    var name_and_value = pair.split('=');
+                    if (Array.isArray(name_and_value) && 1 < name_and_value.length && name_and_value[0] != '') {
+                        /*
+                        query_array.push({
+                            name: name_and_value[0],
+                            value: name_and_value[1]
+                        });
+                        */
+                        query_map[name_and_value[0]] = name_and_value[1];
+                    }
+                }
+            }
+        }
+        i++;
+    }
+    var uri = new URI({
+        protocol: protocol,
+        fqdn: fqdn,
+        port: port,
+        path: path,
+        query: query,
+        query_map: query_map
+    });
+    return uri;
+}
+
+function OpenURI(uri) {
+    var form = $('<form method="get" target="_blank"></form>');
+    form.attr('action', uri);
+    $('body').prepend(form);
+    form.submit();
+    form.remove();
+}
+
+// ドラッグ・アンド・ドロップで順序を変えられるリスト
+function CreateDraggableList(container, argv) {
+    // パラメータ
+    var draggable = true;
+    var fade = -1;
+    if (argv) {
+        draggable = (argv.draggable == undefined || argv.draggable);
+        if (argv.fade != undefined && 0 < argv.fade) {
+            fade = argv.fade;
+        }
+    }
+    // 隠しリスト（位置計算用）を取得
+    var hidden_list = container.find('>.draggable_list:not(.visible)');
+    if (hidden_list.length == 0) {
+        throw 'draggable list not found';
+    }
+    if (1 < hidden_list.length) {
+        throw 'illegal multiple draggable lists found';
+    }
+    hidden_list.find('>.item').each(function(item_index, item_dom) {
+        if (item_index == 0) {
+            $(item_dom).addClass('top');    // 一番上のアイテムの border-top を描画させるため
+        }
+    });
+    // 表示用リスト（あれば）を削除
+    container.find('>.draggable_list.visible').remove();
+    // カラムの位置ごとに全スロット内で最大の幅の値を調べる
+    var max_column_widths = [];
+    var padding_left;
+    var padding_right;
+    hidden_list.find('>.item').each(function(item_index, item_dom) {
+        var item = $(item_dom);
+        item.attr('item_index', item_index); // アイテムの位置（順序）の初期値
+        item.find('>.column').each(function(column_index, column_dom) {
+            var column = $(column_dom);
+            if (item_index == 0 && column_index == 0) {
+                padding_left = parseInt(column.css('padding-left'), 10);
+                padding_right = parseInt(column.css('padding-right'), 10);
+            }
+            if (column_index < max_column_widths.length) {
+                max_column_widths[column_index] = Math.max(max_column_widths[column_index], column.width());
+            } else {
+                max_column_widths.push(column.width());
+            }
+        });
+    });
+    // ヘッダーがあれば、ヘッダーカラムの幅も調べる（てゆうかヘッダー必須）
+    var headers = container.find('.draggable_list_headers');
+    if (headers.length == 0) {
+        throw 'headers not found';
+    }
+    if (headers.parent().find('div.clearfix').length == 0) {
+        headers.after('<div class="clearfix"></div>');
+    }
+    var header_height;
+    headers.find('>.header').each(function(header_index, header_dom) {
+        var header = $(header_dom);
+        header_height = header.outerHeight();
+        if (header_index < max_column_widths.length) {
+            max_column_widths[header_index] = Math.max(max_column_widths[header_index], header.width());
+        } else {
+            max_column_widths.push(header.width());
+        }
+    });
+    headers.css({height: header_height + 'px'});
+    // カラムの幅を全スロット内の同位置のカラムの最大のものに合わせる
+    hidden_list.find('>.item').each(function(item_index, item_dom) {
+        $(item_dom).find('>.column').each(function(column_index, column_dom) {
+            var width = 1 + padding_left + max_column_widths[column_index] + padding_right + 1;
+            $(column_dom).css({
+                width: width + 'px'
+            });
+        });
+    });
+    // ヘッダーがあれば、ヘッダーカラムの幅も合わせる
+    headers.find('>.header').each(function(header_index, header_dom) {
+        var width = 1 + padding_left + max_column_widths[header_index] + padding_right + 1;
+        $(header_dom).css({
+            //background: 'black',
+            //color: 'white',
+            width: width + 'px'
+        });
+    });
+    headers.addClass('visible');
+    // hidden_list（リストとアイテムの位置とサイズのデータを計算・保持するためのリスト）から表示用のリストをクローンで作成・表示
+    var list = hidden_list.clone(true, true);
+    list.addClass('visible');
+    list.css({
+        //position: 'absolute', css へ移動
+        //visibility: 'visible' css へ移動
+        top: hidden_list.position().top + 'px',
+        left: hidden_list.position().left + 'px',
+        opacity: (0 < fade ? 0.0 : 1.0)
+    });
+    container.append(list);
+    list.find('>.item').each(function(item_index, item_dom) {
+        var hidden_item = hidden_list.find('>.item:nth-child(' + (item_index + 1) + ')');
+        var hidden_item_height = hidden_item.height();
+        $(item_dom).css({
+            position: 'absolute',
+            top: hidden_item.offset().top - hidden_list.offset().top + 'px',
+            left: hidden_item.offset().left - hidden_list.offset().left + 'px',
+            width: hidden_item.outerWidth() + 'px',
+            height: hidden_item.outerHeight() + 'px',
+        });
+        $(item_dom).find('>.column').each(function(column_index, column_dom) {
+            var hidden_column = hidden_item.find('>.column:nth-child(' + (column_index + 1) + ')');
+            $(column_dom).css({
+                left: hidden_column.offset().left - hidden_item.offset().left + 'px',
+                width: hidden_column.outerWidth() - 1 + 'px',   // -1 は border-left の幅（左端のカラムには左のボーダーが無いので、厳密には誤り。あと定数にしてるのがケシカランが面倒）
+                height: hidden_item_height + 'px'
+            });
+        });
+        if (draggable) {
+            $(item_dom).addClass('draggable');
+            DraggableListItem(hidden_list, list, $(item_dom));
+        }
+    });
+    if (0 < fade) {
+        list.animate({opacity: 1.0}, fade, 'swing');
+    }
+}
+
+function DraggableListItem(hidden_list, list, item) {
+    item.mousedown(function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        item._mousedown = {
+            pageX: e.pageX,
+            pageY: e.pageY,
+            offsetX: e.pageX - item.offset().left,  // アイテムの左上隅を原点としたマウスの X 座標
+            offsetY: e.pageY - item.offset().top    // アイテムの左上隅を原点としたマウスの Y 座標
+        }
+        hidden_list._item_moved = false;
+        list.addClass('dragged');
+        item.addClass('dragged');
+        $(document).mouseup(function(e) {
+            e.preventDefault();
+            delete item._mousedown;
+            $(document).off();
+            list.removeClass('dragged');
+            item.removeClass('dragged');
+            // アイテムを穴の位置へ移動（表示位置。元の位置という可能性もある）
+            var item_index = item.attr('item_index');
+            var hidden_item = hidden_list.find('>.item[item_index=' + item_index + ']');
+            item.css({
+                top: hidden_item.offset().top - hidden_list.offset().top + 'px',
+                left: hidden_item.offset().left - hidden_list.offset().left + 'px',
+                width: hidden_item.outerWidth() + 'px',
+                height: hidden_item.outerHeight() + 'px',
+            });
+            // アイテムの移動（順序の移動）は起きていない
+            if (!hidden_list._item_moved) {
+                return;     // その場合、表示の変更もイベントのトリガーも不要
+            }
+            // DOM レベルでアイテムの順序を入れ替える
+/*
+            …のは無理。
+            取り除くのに remove() を使うとハンドラーが消える。
+             detach() を使うとハンドラーは保存されるが子の順序の情報も残ってしまい、append の順序に関係なく each では元通りの順序で来る。
+*/
+            // アイテムの外観の変更とイベント生成（てか色を決め打ちしたらアカンやろ、とは思うが順序による css 属性指定における「順序」は DOM のデータであるらしく、リスト初期化以降に remove() + append() で順序を変更することはできない。どうするんだ？→色等を直接指定するのはやめ、クラス名を付け直すことにした）
+            list.find('>.item').each(function(item_index, item_dom) {
+                var current_item_index = $(item_dom).attr('item_index');
+                $(item_dom).removeClass('even');
+                $(item_dom).removeClass('odd');
+                $(item_dom).removeClass('top');
+                if (current_item_index % 2) {
+                    $(item_dom).addClass('odd');
+                } else {
+                    $(item_dom).addClass('even');
+                }
+                if (current_item_index == 0) {
+                    $(item_dom).addClass('top');
+                }
+                hidden_list.trigger('draggable_list:item_change', {item_index: current_item_index, item_dom: item_dom});
+            });
+            // リストのイベント生成
+            var item_count = list.find('>.item').length;
+            var items = [];
+            for (var item_index = 0; item_index < item_count; item_index++) {           // item_index 属性値の昇順のアイテム配列を作成
+                items.push(list.find('>.item[item_index=' + item_index + ']').get(0));
+            }
+            list.css('display', 'none');
+            list.css('display', 'block');
+            hidden_list.trigger('draggable_list:change', {type: 'order', items: items});
+        });
+        $(document).mousemove(function(e) {
+            if (item._mousedown) {
+                if (item._mouse) {
+                    item._prev_mouse = item._mouse;
+                }
+                item._mouse = {x: e.pageX, y: e.pageY};
+                var itemX = e.pageX - item._mousedown.offsetX;  // アイテムの左上隅を原点としたマウスの X 座標がマウスダウン時と同じになるようなアイテムの左上隅の新しい X 座標
+                var itemY = e.pageY - item._mousedown.offsetY;  // アイテムの左上隅を原点としたマウスの Y 座標がマウスダウン時と同じになるようなアイテムの左上隅の新しい Y 座標
+                itemX -= item.parent().offset().left;   // アイテムの親に対する相対座標に変換
+                itemY -= item.parent().offset().top;    // アイテムの親に対する相対座標に変換
+                item.css({
+                    left: itemX + 'px',
+                    top: itemY + 'px'
+                });
+                var rectDragged = new Rect(item.offset().left, item.offset().top, item.outerWidth(), item.outerHeight());
+                var evaded = false;
+                list.find('>.item:not(.dragged)').each(function(item_index, item_dom) {
+                    if (!evaded) {
+                        var itemTarget = $(item_dom);
+                        var rectTarget = new Rect(itemTarget.offset().left, itemTarget.offset().top, itemTarget.outerWidth(), itemTarget.outerHeight());
+                        if (rectDragged.isCenterPointInRect(rectTarget)) {
+                            if (item._prev_mouse && item._prev_mouse.y < item._mouse.y) {
+                                if (DraggableListEvadeItem(list, hidden_list, itemTarget, item, 'upward')) {
+                                    evaded = true;
+                                }
+                            } else {
+                                if (DraggableListEvadeItem(list, hidden_list, itemTarget, item, 'downward')) {
+                                    evaded = true;
+                                }
+                            }
+                        }
+                        if (evaded) {
+                            hidden_list._item_moved = true;
+                        }
+                    }
+                });
+            }
+        });
+    });
+}
+
+// 移動により mousemove が発生するやもしれぬ
+function DraggableListEvadeItem(list, hidden_list, target/*自アイテム*/, dragged/*ドラッグ中のアイテム*/, direction) {
+    var target_index = parseInt(target.attr('item_index'), 10);
+    var dragged_index = parseInt(dragged.attr('item_index'), 10);
+    // 上方向に穴（ドラッグ中のアイテムが抜けた穴）を探す
+    if (direction == 'upward') {
+        // 穴は上方向にある
+        if (dragged_index < target_index) {
+            // 一つ上が穴（ドラッグ中のアイテムを空いたスペースに入れる）
+            if (dragged_index == target_index - 1) {
+                DraggableListSwapItems(list, hidden_list, target, dragged_index, dragged, target_index);
+                return true;
+            // 穴は一つ上より更に上にある
+            } else {
+                var upper_target = list.find('>.item[item_index=' + (target_index - 1) + ']');
+                // 上をどかして
+                if (DraggableListEvadeItem(list, hidden_list, upper_target, dragged, direction)) {
+                    // ドラッグ中のアイテムを空いたスペースに入れる（この時点で、穴はターゲットアイテムの一つ上に移動している）
+                    DraggableListSwapItems(list, hidden_list, target, target_index - 1, dragged, target_index);
+                    return true;
+                }
+            }
+        // 上方向に穴はない
+        } else {
+            return false;
+        }
+    // 下方向に穴を探す
+    } else {
+        // 穴は下方向にある
+        if (target_index < dragged_index) {
+            // 一つ下が穴（ドラッグ中のアイテムを空いたスペースに入れる）
+            if (target_index + 1 == dragged_index) {
+                DraggableListSwapItems(list, hidden_list, target, dragged_index, dragged, target_index);
+                return true;
+            // 穴は一つ下より更に下にある
+            } else {
+                var downer_target = list.find('>.item[item_index=' + (target_index + 1) + ']');
+                // 下をどかして
+                if (DraggableListEvadeItem(list, hidden_list, downer_target, dragged, direction)) {
+                    // ドラッグ中のアイテムを空いたスペースに入れる（この時点で、穴はターゲットアイテムの一つ下に移動している）
+                    DraggableListSwapItems(list, hidden_list, target, target_index + 1, dragged, target_index);
+                    return true;
+                }
+            }
+        // 下方向に穴はない
+        } else {
+            return false;
+        }
+    }
+}
+
+function DraggableListSwapItems(list, hidden_list, target, new_target_index, dragged, new_dragged_index) {
+    // 隠しアイテムを入れ替える
+    var hidden_target = hidden_list.find('>.item[item_index=' + new_dragged_index + ']');   // ターゲットアイテムに対応する隠しアイテム（現在の位置は new_dragged_index）
+    var hidden_dragged = hidden_list.find('>.item[item_index=' + new_target_index + ']');   // 穴アイテムに対応する隠しアイテム（現在の位置は new_target_index）
+    hidden_target.attr('item_index', new_target_index);
+    hidden_dragged.attr('item_index', new_dragged_index);
+    hidden_target.detach();
+    if (new_target_index < new_dragged_index) {
+        hidden_dragged.before(hidden_target);
+    } else {
+        hidden_dragged.after(hidden_target);
+    }
+    // 見えるアイテムを入れ替える
+    target.attr('item_index', new_target_index);
+    dragged.attr('item_index', new_dragged_index);
+    target.animate({
+        left: hidden_target.offset().left - list.offset().left + 'px',
+        top: hidden_target.offset().top - list.offset().top + 'px'
+    }, 103, 'swing');
+}
+
+var _panel_types = [
+'panel-primary',
+'panel-default',
+'panel-danger',
+'panel-warning',
+'panel-success',
+'panel-info'
+];
+
+// checkbox_wrap を複数行に綺麗に並べる
+function TileCheckboxes(container) {
+    container.ready(function(e) {
+        var rows = [];
+        var cols;
+        var last_top;
+        container.find('.checkbox_wrap').each(function(i, o) {
+            var top = parseInt($(o).offset().top, 10);
+            if (last_top == undefined || last_top < top) {
+                if (cols) {
+                    rows.push(cols);
+                }
+                cols = [];
+            }
+            cols.push(o);
+            last_top = top;
+        });
+        rows.push(cols);
+        console.log(rows);
+        for (var i = 1; i < rows.length; i++) {
+            var cols = rows[i];
+            for (var j = 0; j < cols.length; j++) {
+                if (j == 1) {
+                    break;
+                }
+                var chexkbox_wrap = $(cols[j]);
+                chexkbox_wrap.css({
+                    'margin-top': '6px',
+                    'margin-left': 0
+                });
+            }
+        }
+    });
+}
+
+////////////////////////////////////////////////////////////////////////
+// ■クラス
+
+// 全てのオブジェクトのベースクラス
+function BaseClass(arg) {
+    if (arg != undefined && typeof arg == 'object' && arg.toString() == '[object Object]') {
+        for (var name in arg) {
+            var value = arg[name];
+            if (typeof value == 'string') {
+                if (value == '0') {
+                    value = 0;
+                } else if (value.match(/^-?[1-9][0-9]*$/)) {    // 「parseInt() をかけて出力が数値ならばその値を使う」方式でやったら日付、時刻が数値に変換される大惨事になった。ので正規表現に戻した。
+                    value = parseInt(value, 10);
+                }
+            }
+            this[name] = value;
+        }
+    }
+    if (typeof this == 'object') {
+        if (this.id == undefined) {
+            this.id = -1;               // クライアントが新しく作ったオブジェクト
+        }
+    }
+}
+
+// URI
+function URI(uri) {
+    BaseClass.call(this, uri);
+    this.build = function() {
+        var uri = this.protocol + '://' + this.fqdn + (this.port ? (':' + this.port) : '') + (this.path ? this.path : '') + (this.query ? ('?' + this.query) : '');
+        return uri;
+    }
+    this.buildBase = function() {
+        var base = this.protocol + '://' + this.fqdn + (this.port ? (':' + this.port) : '');
+        return base;
+    }
+    this.buildExtension = function() {
+        var ext = (this.path ? this.path : '') + (this.query ? ('?' + this.query) : '');
+        return ext;
+    }
+}
+URI.prototype = BaseClass.prototype;
+
+// Location
+function Location(location) {
+    try {
+        this.href = location.href.parseURI();
+    } catch (e) {
+        throw 'Location(): ' + e;
+    }
+    this.getQueryValueOf = function(name) {
+        return this.href.query_map[name];
+    }
+    this.deleteQuery = function(name) {
+        delete this.href.query_map[name];
+    }
+}
+Location._current;
+Location.setCurrent = function(location) {
+    console.log('Location.setCurrent()');
+    try {
+        //Location._current = new Location(location);
+        _location = new Location(location);
+    } catch (e) {
+        throw 'Location.setCurrent(): ' + e;
+    }
+};
+Location.getCurrent = function() {
+    //return Location._current;
+    return _location;
+};
+
+// User
+function User(user) {
+    BaseClass.call(this, user);
+    this.isGuest = function() {
+        return (this.id == GUEST_ID);
+    }
+    this.isAdmin = function() {
+        return (this.type == USER_TYPE_ADMIN);
+    }
+    this.isParent = function() {
+        return (this.type == USER_TYPE_PARENT);
+    }
+    this.isChild = function() {
+        return (this.type == USER_TYPE_CHILD);
+    }
+    this.getIndexPath = function() {
+        if (this.isAdmin()) {
+            return INDEX_PATH_ADMIN;
+        } else if (this.isGuest()) {
+            return INDEX_PATH_GUEST;
+        } else {
+            return INDEX_PATH_OTHER;
+        }
+    }
+    // カレントユーザーの情報に合わせて画面の各部を更新する。
+    this.updateWindow = function() {
+
+        // 左上隅のプロフィールを書き換える。
+        var name = this.account.replace(/^([^@]+)@.*$/, function(match, p1) {return p1});
+        $('.xn-profile a.profile-mini img').attr('alt', name);
+        //$('.xn-profile .profile .profile-image img').attr('alt', name);
+        this.setProfileImage();
+        $('.xn-profile .profile .profile-data .profile-data-name').html(name);
+        $('.xn-profile .profile .profile-data .profile-data-title').html(this.account);
+
+        // 右上隅のアイコン・ボタンの外観と機能を切り替える。
+        if (this.isGuest()) {
+            $('a.mb-control').html('<span class="fa fa-sign-in" title="Login"></span>');
+            $('a.mb-control').off().click(function(e) {
+                DoYouWantToLogin(true);
+                //DoYouWantToLogout(e);
+                return false;
+            });
+            //var location_ = Location.getCurrent();
+            //console.log('location_>', location_);
+            //console.log('Location.getCurrent().getQueryValueOf("as")>', location_.getQueryValueOf("as"));
+            if (Location.getCurrent().getQueryValueOf('as')) {
+                Location.getCurrent().deleteQuery('as');        // これをやらないと、ログアウトして guest に戻った時もログインダイアログが表示される。
+                DoYouWantToLogin(false);
+            } else {
+                ShowMessageBox({
+                    message: 'You are a guest now.',
+                    on_close: ShowLoginNoty,
+                });
+            }
+        } else {
+            $('a.mb-control').html('<span class="fa fa-sign-out" title="Logout"></span>');
+            $('a.mb-control').off().click(function(e) {
+                DoYouWantToLogout(e);
+                return false;
+            });
+            ShowMessageBox('Now you have logged in as ' + this.account + '.');
+        }
+    }
+    // プロフィール画像
+    this.setProfileImage = function() {
+        var color;
+        if (this.isGuest()) {
+            color = 'rgb(192, 192, 192)';
+        } else if (this.isAdmin()) {
+            color = '#E04B4A';
+        } else {
+            color = '#1caf9a';
+        }
+        var parent = $('.xn-profile .profile .profile-image');
+        var cx = screen.width < MAX_PHONE_SCREEN_WIDTH ? Math.floor(screen.width / 2 - parent.offset().left) : 100;
+        var user_svg_gray =
+        '<svg>\n' +
+            '<defs>\n' +
+                '<radialGradient id="user_grad_gray" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">\n' +
+                    '<stop offset="0%" style="stop-color: rgb(255, 255, 255); stop-opacity: 1;" />\n' +
+                    '<stop offset="100%" style="stop-color: ' + color + '; stop-opacity: 1;" />\n' +
+                '</radialGradient>\n' +
+            '</defs>\n' +
+            '<ellipse cx="' + cx + '" cy="80" rx="40" ry="50" fill="url(#user_grad_gray)" />\n' +
+        '</svg>\n'
+        '';
+        parent.html(user_svg_gray);
+    }
+}
+User.createGuest = function() {
+    return new User({
+        id: GUEST_ID,
+        type: USER_TYPE_PARENT,
+        account: GUEST_ACCOUNT,
+        password: GUEST_PASSWORD,
+    });
+};
+// DONE: これ↓があると、index.html を介さず普通に guest_dashboard.html を表示しようとするだけで例外が飛ぶ (intermediate value)(...) is not a function
+// 何と最後の '}' の後に ';' が無いと例外が飛び、あると正常に処理される。何だこりゃ？ javascript はようわからん。
+User.getCurrent = function() {
+    return _user;
+};
+User.setCurrent = function(user) {
+    _user = new User(user);
+    LoadBody(_user.getIndexPath());
+};
+
+////////////////////////////////////////////////////////////////////////
+// ■ここまでの諸々の関数を jQuery オブジェクトメソッド化
+
+(function($) {
+    $.fn.CreateDialog = function(argv) {
+        var dialog = this.clone(true, true);
+        if (argv) {
+            if (argv.container) {
+                argv.container.append(dialog);
+            }
+            if (argv.id) {
+                dialog.prop('id', argv.id);
+            }
+            if (argv.type) {
+                for (var i = 0; i < _panel_types.length; i++) {
+                    dialog.removeClass(_panel_types[i]);
+                }
+                dialog.addClass(argv.type);
+            }
+            if (argv.title) {
+                dialog.find('.panel-heading .title').html(argv.title);
+            }
+            if (argv.subtitle) {
+                dialog.find('.panel-heading .subtitle').html(argv.subtitle);
+            }
+        } else {
+            $('body').append(dialog);
+        }
+        //ShowCentered(dialog);
+        //Fadable(dialog);      呼ぶ必要無し
+        Draggable(dialog);      // フレームワーク（Joli テンプレート）の draggable はなんか動きが変なので自力でやった
+        if (argv && argv.on_remove) {
+            dialog._on_remove = argv.on_remove;
+        }
+        dialog.find('.panel-remove').click(function(e) {
+            RemoveAllNotices();
+            if (dialog._modal_mask) {
+                dialog._modal_mask.animate({'opacity': 0}, 200, function() {
+                    dialog._modal_mask.remove();
+                });
+            }
+            if (dialog._on_remove) {
+                dialog._on_remove();
+            }
+        });
+        return dialog;
+    }
+    $.fn.ShowModeless = function(argv) {
+        var dialog = this;
+        var topmost_dialog_z_index = 1000;
+        dialog.parent().find('.dialog:visible').each(function(i, o) {
+            var z_index = parseInt($(o).css('z-index'), 10);
+            topmost_dialog_z_index = Math.max(topmost_dialog_z_index, z_index);
+        });
+        //dialog.css('z-index', 999);
+        dialog.css('z-index', topmost_dialog_z_index);
+        ShowCentered(dialog, argv);
+        return dialog;
+    }
+    $.fn.ShowModal = function(argv) {
+        var dialog = this;
+/*
+        var topmost_modal_mask_z_index = 998;
+        dialog.parent().find('.modal_mask').each(function(i, o) {
+            var z_index = parseInt($(o).css('z-index'), 10);
+            topmost_modal_mask_z_index = Math.max(topmost_modal_mask_z_index, z_index);
+        });
+*/
+        var topmost_dialog_z_index = 1000;
+        dialog.parent().find('.dialog:visible').each(function(i, o) {
+            var z_index = parseInt($(o).css('z-index'), 10);
+            topmost_dialog_z_index = Math.max(topmost_dialog_z_index, z_index);
+        });
+        var mask = $('<div class="modal_mask"></div>');
+        mask.css({
+            position: 'absolute',
+            left: '0px',
+            top: '0px',
+            width: '100%',
+            height: $(document).height() + 'px',
+            background: 'black',
+            opacity: 0.3,
+            //'z-index': topmost_modal_mask_z_index + 2
+            'z-index': topmost_dialog_z_index + 1
+        });
+        if (argv && argv.mask && argv.mask.css) {
+            mask.css(argv.mask.css);
+        }
+        mask.click(function(e) {
+            e.stopPropagation();
+        });
+        dialog.parent().prepend(mask);
+        //dialog.css('z-index', topmost_modal_mask_z_index + 3);
+        dialog.css('z-index', topmost_dialog_z_index + 2);
+        dialog._modal_mask = mask;
+        ShowCentered(dialog);
+        return dialog;
+    }
+    $.fn.DestroyDialog = function() {
+        this.find('.panel-remove').trigger('click');
+    }
+    $.fn.CreateSelectPicker = function(argv) {
+        CreateSelectPicker(this, argv);
+    }
+    $.fn.DestroySelectPicker = function(arg) {
+        DestroySelectPicker(this);
+    }
+    $.fn.Accordion = function(open, duration) {
+        if (this.hasClass('accordion_box')) {
+            Accordion(this, open, duration);
+        } else if (this.hasClass('accordion_switch')) {
+            Accordion($(this).parents('.accordion_block').find('.accordion_box'), open, duration);
+        }
+    }
+    $.fn.EnableAccordion = function(enable) {
+        if (enable) {
+            this.click(function(e) {
+                var box = $(e.currentTarget).parents('.accordion_block').find('.accordion_box');
+                box.Accordion(box.hasClass('closed'), 200);
+            });
+        } else {
+            this.off();
+        }
+    }
+    $.fn.CreateTagsInput = function(options, tags_data) {
+        return CreateTagsInput(this, options, tags_data);
+    }
+    $.fn.getCursorPosition = function() {
+        var el = $(this).get(0);
+        var pos = 0;
+        if ('selectionStart' in el) {
+            pos = el.selectionStart;
+        } else if ('selection' in document) {
+            el.focus();
+            var Sel = document.selection.createRange();
+            var SelLength = document.selection.createRange().text.length;
+            Sel.moveStart('character', -el.value.length);
+            pos = Sel.text.length - SelLength;
+        }
+        return pos;
+    }
+    $.fn.selectRange = function(start, end) {
+        if (end === undefined) {
+            end = start;
+        }
+        return this.each(function() {
+            if ('selectionStart' in this) {
+                this.selectionStart = start;
+                this.selectionEnd = end;
+            } else if (this.setSelectionRange) {
+                this.setSelectionRange(start, end);
+            } else if (this.createTextRange) {
+                var range = this.createTextRange();
+                range.collapse(true);
+                range.moveEnd('character', end);
+                range.moveStart('character', start);
+                range.select();
+            }
+        });
+    };
+    $.fn.CreateDraggableList = function(argv) {
+        return CreateDraggableList(this, argv);
+    }
+    $.fn.DestroyDraggableList = function() {
+        var container = this;
+        container.find('>.draggable_list.visible').remove();
+    }
+})(jQuery);
+
+////////////////////////////////////////////////////////////////////////
+// ■コンタクトページ
+
+var _from_name = 'Starship.jp';
+var _from_address = 'no-reply@starship.jp';
+
+function SendMail() {
+    var mail;
+    var first_name;
+    var last_name;
+    var country;
+    var state;
+    var city;
+    var message;
+    try {
+        mail = $('#mail').val();
+        if (mail.match(/^[ 　]*$/)) {
+            throw {message: 'Enter your mail address', target: $('#mail')};
+        }
+        if (!mail.isValidMailAddress()) {
+            throw {message: 'Not a valid mail address', target: $('#mail')};
+        }
+        first_name = $('#first_name').val();
+        if (first_name.match(/^[ 　]*$/)) {
+            throw {message: 'Enter your first name', target: $('#first_name')};
+        }
+        last_name = $('#last_name').val();
+        if (last_name.match(/^[ 　]*$/)) {
+            throw {message: 'Enter your last name', target: $('#last_name')};
+        }
+        country = $('#country').val();
+        if (country.match(/^[ 　]*$/)) {
+            throw {message: 'Enter your country', target: $('#country')};
+        }
+        state = $('#state').val();
+        if (state.match(/^[ 　]*$/)) {
+            throw {message: 'Enter your state/province', target: $('#state')};
+        }
+        city = $('#city').val();
+        if (city.match(/^[ 　]*$/)) {
+            throw {message: 'Enter your city/locality', target: $('#city')};
+        }
+        message = $('#message').val();
+        if (message.match(/^[ 　]*$/)) {
+            throw {message: 'Enter your message', target: $('#message')};
+        }
+    } catch (e) {
+        e.target.parent().noty({text: e.message, type: 'error'});
+        $('html, body').animate({scrollTop: e.target.offset().top});
+        return;
+    }
+    var body =
+"<pre>\n" +
+"Hello, " + first_name + ".\n" +
+"\n" +
+"Thank you for your interest in me or my products.\n" +
+"I will make best efforts to reply within 24 hours.\n" +
+"Please don't reply to this mail because it has been sent by a server automatically.\n" +
+"\n" +
+"--------\n" +
+_from_name + "\n" +
+"URI: https://www.starship.jp/\n" +
+"</pre>\n"
+;
+    var argv = {
+        to: mail,
+        from: _from_address,
+        subject: 'Thank you.',
+        body: body
+    };
+    CallAPI('./api', 'POST', 'sendmail', 7013, argv, {
+        success: function(response) {
+            var text = 
+"<div style=\"text-align: left; font-size: 12px;\">\n" +
+"I have received your message and sent an automatic reply to " + mail + ".<br>\n" +
+"If you don't receive it within a few minutes, it is highly probable that you <span style=\"font-weight: bold; color: red;\">misspelled your mail address</span>.<br>\n" +
+"In that case, corret it and push the submit button again.<br>\n" +
+"</div>\n"
+;
+            noty({text: text, layout: 'topCenter', type: 'success'});
+        },
+        error: function(response) {
+            noty({text: response.message, layout: 'topRight', type: 'error'});
+            return;
+        },
+        fatal: function(status, error) {
+            noty({text: status + ': ' + error, layout: 'topRight', type: 'error'});
+            return;
+        }
+    });
+    argv.to = 'information@starship.jp';
+    argv.subject = 'Message From Web Form';
+    argv.body =
+"<pre>\n" +
+mail + "\n" +
+first_name + "\n" +
+last_name + "\n" +
+country + "\n" +
+state + "\n" +
+city + "\n" +
+message + "\n" +
+"</pre>\n"
+;
+    CallAPI('./api', 'POST', 'sendmail', 7013, argv, {
+        success: function(response) {
+        },
+        error: function(response) {
+            noty({text: response.message, layout: 'topRight', type: 'error'});
+        },
+        fatal: function(status, error) {
+            noty({text: status + ': ' + error, layout: 'topRight', type: 'error'});
+        }
+    });
+    var message =
+'You have a message from a guest.\n' +
+'REMOTE_ADDR: ' + _remote_addr + '\n' +
+'REMOTE_HOST: ' + _remote_host + '\n' +
+'MAIL: ' + mail + '\n' +
+'FIRST NAME: ' + first_name + '\n' +
+'LAST NAME:' + last_name + '\n' +
+'COUNTRY: ' + country + '\n' +
+'STATE/PROVINCE: ' + state + '\n' +
+'CITY/LOCALITY: ' + '\n' +
+'MESSAGE:\n' +
+message
+;
+    CallAPI('./api', 'POST', 'send_line_message_to_kisaburo', 7013, {message: message}, {
+        success: function(response) {
+        },
+        error: function(response) {
+            noty({text: response.message, layout: 'topRight', type: 'error'});
+        },
+        fatal: function(status, error) {
+            noty({text: status + ': ' + error, layout: 'topRight', type: 'error'});
+        }
+    });
+}
+
+////////////////////////////////////////////////////////////////////////
+// ■ページの初期化
+
+function ActivateCurrentPage() {
+    var uri = location.href.parseURI();
+    //console.log('uri>', uri);
+    $('#menu li a[page_path]').each(function(i, o) {
+        var page_path = $(o).attr('page_path');
+        if (page_path == uri.path) {
+            $(o).addClass('current_page_item');
+        } else {
+            $(o).removeClass('current_page_item');
+        }
+    });
+}
+
+function AddPageView() {
+    var me = '121.1.142.207';
+    if (_remote_addr == me) {
+        return;
+    }
+    var message =
+'You have a visitor to https://www.starship.jp/.\n' +
+'REQUEST_URI: ' + _request_uri + '\n' +
+'REMOTE_ADDR: ' + _remote_addr + '\n' +
+'REMOTE_HOST: ' + _remote_host
+;
+    CallAPI('./api', 'POST', 'send_line_message_to_kisaburo', 7013, {message: message}, {
+        success: function(response) {
+            //noty({text: 'Welcome!', layout: 'topCenter', type: 'success'});
+        },
+        error: function(response) {
+            noty({text: response.message, layout: 'topRight', type: 'error'});
+        },
+        fatal: function(status, error) {
+            noty({text: status + ': ' + error, layout: 'topRight', type: 'error'});
+        }
+    });
+}
+
+function ConfirmNotySample_() {
+    noty({
+        text: 'Do you have a pen?',
+        layout: 'topRight',
+        buttons: [
+            {
+                addClass: 'btn btn-success btn-clean',
+                text: 'Yes',
+                onClick: function($noty) {
+                    $noty.close();
+                    noty({text: 'You have a pen.', layout: 'topRight', type: 'success'});
+                }
+            },
+            {
+                addClass: 'btn btn-danger btn-clean',
+                text: 'No',
+                onClick: function($noty) {
+                    $noty.close();
+                    noty({text: 'You do NOT have a pen.', layout: 'topRight', type: 'error'});
+                }
+            }
+        ]
+    })
+}
+
+// 右ペイン上端中央にログインを促す noty を表示する。
+function ShowLoginNoty() {
+    if (!User.getCurrent().isGuest()) {
+        return;
+    }
+    noty({
+        text: '<span style="font-size: 1rem;">Tap here to <span style="font-weight: bold; font-size: 1rem;">LOGIN</span>.</span>',
+        layout: _noty_layout,
+        //type: 'success',
+        type: 'warning',
+    });
+    $(_noty_container_id + '>li').click(function(e) {
+        $('a.mb-control').trigger('click');
+    });
+}
+
+// ログイン・ダイアログを表示する。
+function DoYouWantToLogin(bCalledOnClick) {
+    $(_noty_container_id).remove();
+    var dialog = $('.login_dialog');
+    dialog.modal({
+        show: true,
+        keyboard: true,
+        backdrop: 'static',
+    });
+
+    /*
+    ユーザーが何もイベントを起こしていない時点で playAudio() を実行すると、
+    Uncaught (in promise) DOMException: play() failed because the user didn't interact with the document first. https://goo.gl/xX8pDD
+    という例外が飛ぶ。
+    そして in promise なので、playAudio() を try ブロックに入れても、その例外を catch できない。
+    */
+    if (bCalledOnClick) {
+        playAudio('alert');
+    }
+
+/*
+    こうすると一応ドラッガブルにはなるが、かなり挙動不審。
+    それではと bootstrap のバージョンを最新にしたら、ダイアログが表示されなくなった。
+    今度は jquery が古すぎるんだろう。→違った。https://codepen.io/adamcjoiner/pen/PNbbbv の html, css, js をそのまま埋め込むと完璧に動作する。ただし、影が変。
+    この問題は後回し。
+    リリースを急ぐ。
+    let $modal = $("#myModal");
+    $modal.draggable({
+        handle: ".modal-header",
+    });
+    $modal.resizable();
+    $modal.modal('show');
+*/
+}
+
+function DoYouWantToLogout(e) {
+    //var box = $($(this).data("box"));
+    var box = $($(e.currentTarget).data("box"));
+    if (0 < box.length) {
+        box.toggleClass("open");
+        var sound = box.data("sound");
+        if (sound === 'alert') {
+            playAudio('alert');
+        } else if(sound === 'fail') {
+            playAudio('fail');
+        }
+    }
+}
+
+function LoginValidate(dialog) {
+    var account = dialog.find('.login_text_account');
+    var password = dialog.find('.login_password');
+    var create = dialog.find('label#login_checkbox_create_account input[type=checkbox]');
+    //console.log('account>', account.val());
+    //console.log('password>', password.val());
+    //console.log('create>', create.prop('checked'));
+
+    // account
+    if (account.val() == '') {
+        throw {message: 'Input your mail address.', target: account}
+    }
+    if (MAX_ACCOUNT_LENGTH < account.val().length) {
+        throw {message: 'Too long.', target: account}
+    }
+    if (account.val().length < MIN_ACCOUNT_LENGTH) {
+        throw {message: 'Too short.', target: account}
+    }
+    if (!account.val().isValidMailAddress()) {
+        throw {message: 'Invalid mail address.', target: account}
+    }
+
+    // password
+    if (password.val() == '') {
+        throw {message: 'Input your password.', target: password}
+    }
+    if (MAX_PASSWORD_LENGTH < password.val().length) {
+        throw {message: 'Too long.', target: password}
+    }
+    if (password.val().length < MIN_PASSWORD_LENGTH) {
+        throw {message: 'Too short.', target: password}
+    }
+    if (!password.val().match(/[0-9]/)) {
+        throw {message: 'Does not include a number.', target: password}
+    }
+    if (!password.val().match(/[A-Za-z]/)) {
+        throw {message: 'Does not include an alphabet.', target: password}
+    }
+
+    return {
+        account: account.val(),
+        password: password.val(),
+        create: create.prop('checked'),
+    };
+}
+
+function Logout(dialog) {
+    dialog.removeClass('open');
+    User.setCurrent(User.createGuest());
+}
+
+function Login(dialog) {
+    var argv;
+    try {
+        argv = LoginValidate(dialog);
+    } catch (error) {
+        Notice({
+            message: error.message,
+            target: error.target,
+            container: dialog.find('.modal-content')    // これが見かけ上のダイアログの jquery オブジェクト
+        });
+        return false;
+    }
+
+    //console.log('argv>', argv);
+
+    //ShowLoading('Logging in...');
+
+    CallAPI('/api/', 'POST', 'login', 7013, argv, {
+        // 指定されたアカウントを検索できた
+        success: function(response) {
+            // アカウントを作ろうとしている
+            if (argv.create) {
+                ShowMessageBox({
+                    message: 'Account ' + argv.account + ' is already registered.\nUncheck "Create?".',
+                    on_close: ShowLoginNoty,
+                });
+            // 既存のアカウントでログインしようとしている
+            } else {
+                if (argv.password == response.user.password) {
+                    User.setCurrent(response.user);
+                } else {
+                    alert('You entered a wrong password.')
+                }
+            }
+        },
+        // 指定されたアカウントの検索が失敗した
+        error: function(response) {
+            //console.log('response>', response);
+            // アカウントを作ろうとしている
+            if (argv.create) {
+                // 指定されたアカウントは未登録
+                if (response.code == ERROR_USER_UNKNOWN) {
+                    // 登録する
+                    CreateAccount(argv);
+                // 指定されたアカウントには何か問題がある
+                } else {
+                    ShowMessageBox(response.message.replace(/\n/, '<br>\n'));
+                }
+            // 既存のアカウントでログインしようとしている
+            } else {
+                // ところが指定されたアカウントは未登録
+                if (response.code == ERROR_USER_UNKNOWN) {
+                    ShowMessageBox({
+                        message: 'Account name <span class="text-danger"> ' + argv.account + ' </span> was not found.<br>Is it not misspelled?',
+                        on_close: ShowLoginNoty,
+                    });
+                // ところが指定されたアカウントには何か問題がある
+                } else {
+                    ShowMessageBox(response.message.replace(/\n/, '<br>\n'));
+                }
+            }
+        },
+        // 通信が失敗した（ほとんどの場合、サーバー側スクリプトの障害）
+        fatal: function(status, error) {
+            ShowMessageBox(status + ': ' + error);
+        }
+    });
+
+    return true;
+}
+
+/*
+アカウントを作る。
+親（顧客）アカウントは課金（請求）の対象。
+子アカウントは TCPDetective がインストールされているホストの管理者。1 ホストに 1 インストールのみ可。
+地区や部署など、それ以外の区分が必要な場合は、任意のタグを付けてもらう。「集計はそちらでご随意に」。
+*/
+function CreateAccount(argv) {
+    if (User.getCurrent().isGuest()) {
+        argv.type = USER_TYPE_PARENT;
+    } else if (User.getCurrent().isParent()) {
+        argv.type = USER_TYPE_CHILD;
+    } else {
+        /*
+        ここには来ない。
+        来たらバグ。
+        つまり、親アカウントは一つしか作れない。
+        guest でログインすればいくつでも作れるが、システム側はそれらの関係を知らない。
+        従って、それらをまとめて取り扱うことはできない。
+        */
+        alert('ありえへん！');
+        return;
+    }
+
+    CallAPI('/api/', 'POST', 'create_account', 7013, argv, {
+        success: function(response) {
+            User.setCurrent(response.user);
+        },
+        error: function(response) {
+            ShowMessageBox({
+                message: response.message.replace(/\n/, '<br>\n'),
+                on_close: ShowLoginNoty
+            });
+        },
+        fatal: function(status, error) {
+            ShowMessageBox({
+                message: status + ': ' + error,
+                on_close: ShowLoginNoty
+            });
+        },
+    });
+}
+
+function InitializePage() {
+    console.log('InitializePage() called.');
+    _body_height = $('body').css('height');
+    $(document).off();
+    //ActivateCurrentPage();
+    //AddPageView();
+    //console.log('InitializePage::_user>', _user);
+    //console.log('User.getCurrent()>', User.getCurrent());
+
+    // 検索を隠す
+    $('.xn-search').addClass('hidden');
+
+    // 右上隅のタスクリストのアイコン・ボタンを隠す。
+    $('ul.x-navigation-horizontal>li.xn-icon-button>a>span.fa-tasks').each(function(i, span) {
+        $(span).parent().parent().addClass('hidden');
+    });
+
+    // 右上隅のコメントリストのアイコン・ボタンを隠す。
+    $('ul.x-navigation-horizontal>li.xn-icon-button>a>span.fa-comments').each(function(i, span) {
+        $(span).parent().parent().addClass('hidden');
+    });
+
+    // カレントユーザーの情報に合わせて画面を更新する。
+    User.getCurrent().updateWindow();
+}
+
+/*
+これをやらないと、あれこれ（例：bootstrap select picker）挙動不審になる。
+$(document).ready() の中でやると jquery (?) をロードするたびにやらなければならなくなる。→結局こうした。
+スクリプトの地の部分でやると、効果が無い（挙動不審のまま）。
+(function($) {
+    $(document).off();
+});
+*/
+
+function InitializeSite() {
+    $('head title').html(APP_TITLE);
+}
